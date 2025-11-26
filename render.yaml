@@ -7,7 +7,7 @@ services:
     name: wiw-ae-backend
     runtime: node
     region: frankfurt
-    plan: starter
+    plan: pro
     rootDir: backend
     buildCommand: npm install && npx prisma generate && npx prisma migrate deploy
     startCommand: npm start
@@ -40,7 +40,7 @@ services:
   - type: web
     name: wiw-ae-frontend
     runtime: static
-    plan: starter
+    plan: pro
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
@@ -66,7 +66,7 @@ databases:
   # PostgreSQL Database
   - name: wiw-ae-db
     region: frankfurt
-    plan: starter
+    plan: pro
     databaseName: wiw_ae_production
     user: wiw_admin
     postgresMajorVersion: 15
