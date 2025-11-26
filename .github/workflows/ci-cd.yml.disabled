@@ -1,0 +1,25 @@
+# ⚠️ FICHIER DÉSACTIVÉ
+# Ce workflow a été désactivé pour économiser les minutes GitHub Actions
+# Render gère déjà le déploiement automatiquement via le Blueprint
+
+# Pour réactiver :
+# 1. Renommez ce fichier en ci-cd.yml
+# 2. Décommentez les sections "on: push:" et "on: pull_request:"
+# 3. Ajustez les conditions "if:" dans les jobs
+
+name: CI/CD Pipeline (Désactivé - Archive)
+
+on:
+  # Désactivé - Ne s'exécute plus
+  workflow_dispatch:
+
+jobs:
+  disabled:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Workflow désactivé
+        run: |
+          echo "⚠️ Ce workflow est désactivé"
+          echo "Render gère le déploiement automatiquement"
+          echo "Pour réactiver, voir .github/workflows/ci-cd.yml"
+
