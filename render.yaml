@@ -2,13 +2,12 @@
 # Documentation: https://render.com/docs/blueprint-spec
 
 services:
+
   # Backend API - Node.js Web Service
   - type: web
     name: wiw-ae-backend
     runtime: node
     region: frankfurt
-    # Plan: starter ($7/mois) ou free (suspendu après inactivité)
-    # Changez en 'standard' pour plus de ressources
     plan: starter
     rootDir: backend
     buildCommand: npm install && npx prisma generate && npx prisma migrate deploy
@@ -35,13 +34,15 @@ services:
           property: host
       - key: CORS_ORIGIN
         fromService:
-          type: static_site
+          type: web
+          runtime: static
           name: wiw-ae-frontend
           property: host
 
   # Frontend - Static Site (Vite/React)
-  - type: static_site
+  - type: web
     name: wiw-ae-frontend
+    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
@@ -67,9 +68,8 @@ databases:
   # PostgreSQL Database
   - name: wiw-ae-db
     region: frankfurt
-    # Plan: starter ($7/mois) ou free (90 jours gratuits puis $7/mois)
-    # Changez en 'basic-1gb' pour plus d'espace
-    plan: starter
+    # Plan: basic-1gb recommandé pour la prod
+    plan: basic-1gb
     databaseName: wiw_ae_production
     user: wiw_admin
     postgresMajorVersion: 15
