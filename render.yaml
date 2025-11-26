@@ -40,7 +40,6 @@ services:
   - type: web
     name: wiw-ae-frontend
     runtime: static
-    plan: standard
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
