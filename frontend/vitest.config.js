@@ -15,6 +15,9 @@ export default defineConfig({
     },
     threads: false,
     mockReset: true,
-    include: ['tests/**/*.test.[jt]s?(x)']
+    include: [
+      'tests/**/*.test.[jt]s?(x)',
+      'src/**/__tests__/**/*.test.[jt]s?(x)'
+    ]
   }
 })

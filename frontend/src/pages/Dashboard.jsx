@@ -8,6 +8,8 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useListesDeroulantes } from '../hooks/useListesDeroulantes';
 import AdvancedStats from '../components/AdvancedStats';
 import Charts, { BarChartComponent, LineChartComponent, PieChartComponent } from '../components/Charts';
+import OnboardingTour from '../components/OnboardingTour';
+import { defaultOnboardingSteps } from '../components/OnboardingSteps';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -554,7 +556,7 @@ export default function Dashboard() {
       )}
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-tour="stats">
         {stats.map((stat, index) => (
           <motion.div
             key={index}
@@ -577,8 +579,8 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Graphiques avec Recharts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Graphiques avec Recharts - Utilisation du composant Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6" data-tour="graphiques">
         {/* Graphique en barres - Évolution mensuelle */}
         <div className="bg-white dark:bg-dark-panel p-6 rounded-2xl border border-slate-200 dark:border-dark-border shadow-sm">
           <h3 className="font-bold text-lg mb-4 text-slate-900 dark:text-white">Évolution mensuelle des projets</h3>
@@ -610,70 +612,26 @@ export default function Dashboard() {
         </div>
 
         {/* Graphique en ligne - Tendance */}
-        <div className="bg-white dark:bg-dark-panel p-6 rounded-2xl border border-slate-200 dark:border-dark-border shadow-sm">
-          <h3 className="font-bold text-lg mb-4 text-slate-900 dark:text-white">Tendance des montants</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={generateMonthlyData(filteredProjets)}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis 
-                dataKey="month" 
-                stroke="#64748b"
-                style={{ fontSize: '12px' }}
-              />
-              <YAxis 
-                stroke="#64748b"
-                style={{ fontSize: '12px' }}
-                tickFormatter={(value) => formatMontant(value, 0)}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '8px'
-                }}
-                formatter={(value) => formatMontant(value, 0)}
-              />
-              <Legend />
-              <Line 
-                type="monotone" 
-                dataKey="montant" 
-                stroke="#7c3aed" 
-                strokeWidth={2}
-                dot={{ fill: '#7c3aed', r: 4 }}
-                activeDot={{ r: 6 }}
-                name="Montant (€)"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        <Charts
+          title="Tendance des montants"
+          type="line"
+          data={generateMonthlyData(filteredProjets)}
+          dataKey="montant"
+          xKey="month"
+          height={300}
+          strokeColor="#7c3aed"
+        />
       </div>
 
       {/* Répartition par domaine - Camembert */}
-      <div className="bg-white dark:bg-dark-panel p-6 rounded-2xl border border-slate-200 dark:border-dark-border shadow-sm">
-        <h3 className="font-bold text-lg mb-4 text-slate-900 dark:text-white">Répartition par domaine</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={generateDomainDistribution(filteredProjets)}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-              outerRadius={100}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {generateDomainDistribution(filteredProjets).map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={['#7c3aed', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6'][index % 6]} />
-              ))}
-            </Pie>
-            <Tooltip
-              formatter={(value) => formatMontant(value, 0)}
-            />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+      <Charts
+        title="Répartition par domaine"
+        type="pie"
+        data={generateDomainDistribution(filteredProjets)}
+        dataKey="value"
+        xKey="name"
+        height={300}
+      />
 
       {/* Statistiques avancées */}
       <AdvancedStats 

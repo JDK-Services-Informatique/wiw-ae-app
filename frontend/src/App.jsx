@@ -1,10 +1,12 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from './components/DashboardLayout';
 import LandingPage from './pages/LandingPage';
 import { PlanProvider } from './context/PlanContext';
 import { authService } from './services/auth.api.js';
+import AppProvider from './providers/AppProvider';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { track, AnalyticsEvents } from './services/analytics';
 
 // Pages principales
 import Dashboard from './pages/Dashboard';
@@ -41,6 +43,20 @@ import ResetPassword from './pages/ResetPassword';
 import NotFound from './pages/NotFound';
 import GlobalShortcuts from './components/GlobalShortcuts';
 
+// Composant pour tracker les changements de route
+function AnalyticsTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    track(AnalyticsEvents.PAGE_VIEW, {
+      path: location.pathname,
+      timestamp: new Date().toISOString()
+    });
+  }, [location]);
+
+  return null;
+}
+
 export default function App() {
   // Vérifier l'authentification au démarrage
   const [isAuthenticated, setIsAuthenticated] = React.useState(() => {
@@ -53,17 +69,26 @@ export default function App() {
   const handleLogin = (user) => {
     setIsAuthenticated(true);
     setCurrentUser(user);
+    track(AnalyticsEvents.LOGIN, {
+      userId: user?.id,
+      email: user?.email,
+      role: user?.role
+    });
   };
 
   const handleLogout = () => {
+    track(AnalyticsEvents.LOGOUT, {
+      userId: currentUser?.id
+    });
     authService.logout();
     setIsAuthenticated(false);
     setCurrentUser(null);
   };
 
   return (
-    <PlanProvider>
+    <AppProvider>
       <Router>
+        <AnalyticsTracker />
         <GlobalShortcuts />
         <Routes>
           {/* Route Publique : Landing Page */}
@@ -120,6 +145,6 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
-    </PlanProvider>
+    </AppProvider>
   );
 }

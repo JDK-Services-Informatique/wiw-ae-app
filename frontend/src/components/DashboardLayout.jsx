@@ -10,44 +10,14 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavigationMenu from './NavigationMenu';
+import { useTheme } from '../context/ThemeContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function DashboardLayout({ user, onLogout }) {
   const navigate = useNavigate();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [isDark, setIsDark] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  });
+  const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
-
-  // Initialiser le thème au montage
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    const shouldBeDark = savedTheme === 'dark' || (savedTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    setIsDark(shouldBeDark);
-    if (shouldBeDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
-  // Fonction pour basculer le thème
-  const toggleTheme = () => {
-    const newIsDark = !isDark;
-    setIsDark(newIsDark);
-    localStorage.setItem('theme', newIsDark ? 'dark' : 'light');
-    
-    if (newIsDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    
-    if (window.showToast) {
-      window.showToast(newIsDark ? '🌙 Mode sombre activé' : '☀️ Mode clair activé', 'success');
-    }
-  };
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-white dark:bg-dark-panel border-r border-slate-200 dark:border-dark-border">
@@ -60,6 +30,9 @@ export default function DashboardLayout({ user, onLogout }) {
       <NavigationMenu onNavigate={() => setSidebarOpen(false)} />
 
       <div className="p-4 border-t border-slate-100 dark:border-dark-border space-y-1">
+        <div className="px-4 py-2">
+          <LanguageSwitcher />
+        </div>
         <button 
           onClick={toggleTheme}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
