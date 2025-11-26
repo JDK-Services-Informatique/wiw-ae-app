@@ -1,9 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import DashboardLayout from './components/DashboardLayout';
 import LandingPage from './pages/LandingPage';
 import { PlanProvider } from './context/PlanContext';
 import { authService } from './services/auth.api.js';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 
 // Pages principales
 import Dashboard from './pages/Dashboard';
@@ -38,6 +39,7 @@ import ResetPassword from './pages/ResetPassword';
 
 // Pages utilitaires
 import NotFound from './pages/NotFound';
+import GlobalShortcuts from './components/GlobalShortcuts';
 
 export default function App() {
   // Vérifier l'authentification au démarrage
@@ -62,6 +64,7 @@ export default function App() {
   return (
     <PlanProvider>
       <Router>
+        <GlobalShortcuts />
         <Routes>
           {/* Route Publique : Landing Page */}
           <Route 

@@ -7,6 +7,7 @@ import { formatMontant } from '../utils/formatNumber';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useListesDeroulantes } from '../hooks/useListesDeroulantes';
 import AdvancedStats from '../components/AdvancedStats';
+import Charts, { BarChartComponent, LineChartComponent, PieChartComponent } from '../components/Charts';
 
 export default function Dashboard() {
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ListesDeroulantesManager from '../components/ListesDeroulantesManager';
 import TwoFactorSettings from '../components/TwoFactorSettings';
+import ConfirmModal from '../components/ConfirmModal';
 import { BarChart3, ClipboardList, Trophy, FolderOpen } from 'lucide-react';
 
 export default function Settings() {
@@ -116,48 +117,51 @@ export default function Settings() {
     }
   };
 
+  const [deleteAllDataModal, setDeleteAllDataModal] = useState(false);
+  const [resetAppModal, setResetAppModal] = useState(false);
+
   const handleDeleteAllData = () => {
-    if (confirm('⚠️ ATTENTION: Cette action supprimera TOUTES les données de manière irréversible. Confirmer ?')) {
-      if (confirm('⚠️ Êtes-vous VRAIMENT sûr ? Cette action ne peut pas être annulée !')) {
-        try {
-          const keysToKeep = ['wiw-user', 'wiw-theme', 'wiw-langue'];
-          const allKeys = [];
-          for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('wiw-') && !keysToKeep.includes(key)) {
-              allKeys.push(key);
-            }
-          }
-          allKeys.forEach(key => localStorage.removeItem(key));
-          if (window.showToast) {
-            window.showToast('✅ Toutes les données ont été supprimées', 'success');
-          }
-          setTimeout(() => window.location.reload(), 1500);
-        } catch (error) {
-          console.error('Erreur suppression:', error);
-          if (window.showToast) {
-            window.showToast('❌ Erreur lors de la suppression', 'error');
-          }
+    setDeleteAllDataModal(true);
+  };
+
+  const confirmDeleteAllData = () => {
+    try {
+      const keysToKeep = ['wiw-user', 'wiw-theme', 'wiw-langue'];
+      const allKeys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('wiw-') && !keysToKeep.includes(key)) {
+          allKeys.push(key);
         }
+      }
+      allKeys.forEach(key => localStorage.removeItem(key));
+      if (window.showToast) {
+        window.showToast('✅ Toutes les données ont été supprimées', 'success');
+      }
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (error) {
+      console.error('Erreur suppression:', error);
+      if (window.showToast) {
+        window.showToast('❌ Erreur lors de la suppression', 'error');
       }
     }
   };
 
   const handleResetApp = () => {
-    if (confirm('⚠️ ATTENTION: Cette action réinitialisera complètement l\'application. Confirmer ?')) {
-      if (confirm('⚠️ Êtes-vous VRAIMENT sûr ? Toutes les données et configurations seront perdues !')) {
-        try {
-          localStorage.clear();
-          if (window.showToast) {
-            window.showToast('✅ Application réinitialisée aux paramètres d\'usine', 'success');
-          }
-          setTimeout(() => window.location.reload(), 1500);
-        } catch (error) {
-          console.error('Erreur réinitialisation:', error);
-          if (window.showToast) {
-            window.showToast('❌ Erreur lors de la réinitialisation', 'error');
-          }
-        }
+    setResetAppModal(true);
+  };
+
+  const confirmResetApp = () => {
+    try {
+      localStorage.clear();
+      if (window.showToast) {
+        window.showToast('✅ Application réinitialisée aux paramètres d\'usine', 'success');
+      }
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (error) {
+      console.error('Erreur réinitialisation:', error);
+      if (window.showToast) {
+        window.showToast('❌ Erreur lors de la réinitialisation', 'error');
       }
     }
   };
@@ -1003,6 +1007,29 @@ export default function Settings() {
           </div>
         </div>
       </div>
+
+      {/* Modals de confirmation */}
+      <ConfirmModal
+        isOpen={deleteAllDataModal}
+        onClose={() => setDeleteAllDataModal(false)}
+        onConfirm={confirmDeleteAllData}
+        title="Supprimer toutes les données"
+        message="⚠️ ATTENTION: Cette action supprimera TOUTES les données de manière irréversible. Cette action ne peut pas être annulée !"
+        confirmText="Supprimer toutes les données"
+        cancelText="Annuler"
+        variant="danger"
+      />
+
+      <ConfirmModal
+        isOpen={resetAppModal}
+        onClose={() => setResetAppModal(false)}
+        onConfirm={confirmResetApp}
+        title="Réinitialiser l'application"
+        message="⚠️ ATTENTION: Cette action réinitialisera complètement l'application. Toutes les données et configurations seront perdues !"
+        confirmText="Réinitialiser"
+        cancelText="Annuler"
+        variant="danger"
+      />
     </div>
   );
 }

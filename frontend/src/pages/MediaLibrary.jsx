@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Edit } from 'lucide-react';
+import ConfirmModal from '../components/ConfirmModal';
 
 export default function MediaLibrary() {
   const [viewMode, setViewMode] = useState('grille'); // 'grille' ou 'liste'
@@ -208,15 +209,22 @@ export default function MediaLibrary() {
     input.click();
   };
 
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, mediaId: null, mediaName: '' });
+
   const handleDeleteMedia = (id) => {
     const media = mediaLibrary.find(m => m.id === id);
-    if (confirm(`Supprimer "${media.nom}" de la médiathèque ?`)) {
-      setMediaLibrary(mediaLibrary.filter(m => m.id !== id));
+    setDeleteModal({ isOpen: true, mediaId: id, mediaName: media?.nom || '' });
+  };
+
+  const confirmDeleteMedia = () => {
+    if (deleteModal.mediaId) {
+      setMediaLibrary(mediaLibrary.filter(m => m.id !== deleteModal.mediaId));
       setSelectedMedia(null);
       if (window.showToast) {
         window.showToast('🗑️ Média supprimé', 'info');
       }
     }
+    setDeleteModal({ isOpen: false, mediaId: null, mediaName: '' });
   };
 
   const handleAddTag = (mediaId, newTag) => {
@@ -973,6 +981,18 @@ export default function MediaLibrary() {
           </div>
         </div>
       )}
+
+      {/* Modal de confirmation de suppression */}
+      <ConfirmModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, mediaId: null, mediaName: '' })}
+        onConfirm={confirmDeleteMedia}
+        title="Supprimer le média"
+        message={`Êtes-vous sûr de vouloir supprimer "${deleteModal.mediaName}" de la médiathèque ?`}
+        confirmText="Supprimer"
+        cancelText="Annuler"
+        variant="danger"
+      />
     </div>
   );
 }
