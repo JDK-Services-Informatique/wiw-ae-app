@@ -29,17 +29,17 @@ services:
         value: 7d
       - key: FRONTEND_URL
         fromService:
-          type: static
+          type: static_site
           name: wiw-ae-frontend
           property: host
       - key: CORS_ORIGIN
         fromService:
-          type: static
+          type: static_site
           name: wiw-ae-frontend
           property: host
 
   # Frontend - Static Site (Vite/React)
-  - type: static
+  - type: static_site
     name: wiw-ae-frontend
     rootDir: frontend
     buildCommand: npm install && npm run build
