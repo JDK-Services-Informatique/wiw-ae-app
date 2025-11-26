@@ -262,16 +262,16 @@ export default function Honoraires() {
           Équipe constituée - Répartition des honoraires
         </h2>
         
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
+        <div className="overflow-x-auto -mx-4 sm:mx-0">
+          <table className="w-full border-collapse min-w-[800px]">
             <thead>
               <tr className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
-                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Poste</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Coût horaire moyen HT / Minimum (€/h)</th>
-                <th className="px-4 py-3 text-center text-sm font-semibold text-slate-700 dark:text-slate-300">Pourcentage (%)</th>
-                <th className="px-4 py-3 text-center text-sm font-semibold text-slate-700 dark:text-slate-300">Montant prévisionnel (€ HT)</th>
-                <th className="px-4 py-3 text-center text-sm font-semibold text-slate-700 dark:text-slate-300">Heures estimées</th>
-                <th className="px-4 py-3 text-center text-sm font-semibold text-slate-700 dark:text-slate-300">Total heures (€)</th>
+                <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Poste</th>
+                <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 hidden md:table-cell">Coût horaire moyen HT / Minimum (€/h)</th>
+                <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Pourcentage (%)</th>
+                <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Montant prévisionnel (€ HT)</th>
+                <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 hidden lg:table-cell">Heures estimées</th>
+                <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 hidden lg:table-cell">Total heures (€)</th>
               </tr>
             </thead>
             <tbody>
@@ -294,10 +294,10 @@ export default function Honoraires() {
                     key={partenaire.id || index}
                     className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                   >
-                    <td className="px-4 py-3 text-slate-900 dark:text-white font-medium">
+                    <td className="px-2 sm:px-4 py-3 text-slate-900 dark:text-white font-medium text-xs sm:text-sm">
                       {partenaire.nom}
                     </td>
-                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300">
+                    <td className="px-2 sm:px-4 py-3 text-slate-700 dark:text-slate-300 hidden md:table-cell">
                       <div className="space-y-2">
                         <div>
                           <label className="text-xs text-slate-500 dark:text-slate-400 block mb-1">Moyen HT (€/h)</label>
@@ -318,7 +318,7 @@ export default function Honoraires() {
                               };
                               setPartenaires(newPartenaires);
                             }}
-                            className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm"
+                            className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm"
                             step="0.01"
                             min="0"
                           />
@@ -337,14 +337,14 @@ export default function Honoraires() {
                               };
                               setPartenaires(newPartenaires);
                             }}
-                            className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm"
+                            className="w-full px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm"
                             step="0.01"
                             min="0"
                           />
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-2 sm:px-4 py-3">
                       <input
                         type="number"
                         value={partenaire.pourcentage}
@@ -363,13 +363,13 @@ export default function Honoraires() {
                           };
                           setPartenaires(newPartenaires);
                         }}
-                        className="w-24 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm text-center"
+                        className="w-20 sm:w-24 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm text-center"
                         step="0.01"
                         min="0"
                         max="100"
                       />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-2 sm:px-4 py-3">
                       <input
                         type="number"
                         value={montantCalc.toFixed(2)}
@@ -390,12 +390,12 @@ export default function Honoraires() {
                           };
                           setPartenaires(newPartenaires);
                         }}
-                        className="w-32 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm text-center"
+                        className="w-28 sm:w-32 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm text-center"
                         step="0.01"
                         min="0"
                       />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-2 sm:px-4 py-3 hidden lg:table-cell">
                       <input
                         type="number"
                         value={heuresCalc.toFixed(1)}
@@ -414,12 +414,12 @@ export default function Honoraires() {
                           };
                           setPartenaires(newPartenaires);
                         }}
-                        className="w-24 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm text-center"
+                        className="w-20 sm:w-24 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm text-center"
                         step="0.1"
                         min="0"
                       />
                     </td>
-                    <td className="px-4 py-3 text-center text-slate-700 dark:text-slate-300 font-medium">
+                    <td className="px-2 sm:px-4 py-3 text-center text-slate-700 dark:text-slate-300 font-medium text-xs sm:text-sm hidden lg:table-cell">
                       {totalHeures.toFixed(2)} €
                     </td>
                   </tr>
@@ -428,8 +428,8 @@ export default function Honoraires() {
             </tbody>
             <tfoot>
               <tr className="bg-slate-100 dark:bg-slate-800 border-t-2 border-slate-300 dark:border-slate-600 font-bold">
-                <td className="px-4 py-3 text-slate-900 dark:text-white">TOTAL</td>
-                <td className="px-4 py-3 text-slate-700 dark:text-slate-300">
+                <td className="px-2 sm:px-4 py-3 text-slate-900 dark:text-white text-xs sm:text-sm">TOTAL</td>
+                <td className="px-2 sm:px-4 py-3 text-slate-700 dark:text-slate-300 text-xs sm:text-sm hidden md:table-cell">
                   {partenaires.length > 0 
                     ? (partenaires.reduce((sum, p) => sum + (p.coutHoraire || p.coutHoraireMoyen || 0), 0) / partenaires.length).toFixed(2)
                     : '0.00'
@@ -438,16 +438,16 @@ export default function Honoraires() {
                     : '0.00'
                   } €/h (min.)
                 </td>
-                <td className="px-4 py-3 text-center text-slate-900 dark:text-white">
+                <td className="px-2 sm:px-4 py-3 text-center text-slate-900 dark:text-white text-xs sm:text-sm">
                   {partenaires.reduce((sum, p) => sum + p.pourcentage, 0).toFixed(2)}%
                 </td>
-                <td className="px-4 py-3 text-center text-slate-900 dark:text-white">
+                <td className="px-2 sm:px-4 py-3 text-center text-slate-900 dark:text-white text-xs sm:text-sm">
                   {formatMontant(partenaires.reduce((sum, p) => sum + (p.montantPrevisionnel || (montantTravaux * p.pourcentage / 100)), 0), 2)}
                 </td>
-                <td className="px-4 py-3 text-center text-slate-700 dark:text-slate-300">
+                <td className="px-2 sm:px-4 py-3 text-center text-slate-700 dark:text-slate-300 text-xs sm:text-sm hidden lg:table-cell">
                   {partenaires.reduce((sum, p) => sum + p.heuresEstimees, 0).toFixed(1)} h
                 </td>
-                <td className="px-4 py-3 text-center text-slate-900 dark:text-white">
+                <td className="px-2 sm:px-4 py-3 text-center text-slate-900 dark:text-white text-xs sm:text-sm hidden lg:table-cell">
                   {partenaires.reduce((sum, p) => sum + (p.coutHoraire * p.heuresEstimees), 0).toFixed(2)} €
                 </td>
               </tr>

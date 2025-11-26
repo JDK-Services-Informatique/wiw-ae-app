@@ -9,6 +9,7 @@ import ValidationAPI from '../services/validation.api';
 import { useListesDeroulantes } from '../hooks/useListesDeroulantes';
 import { Search, BarChart3, FileText, Lightbulb, Settings, ClipboardList, Users, Edit } from 'lucide-react';
 import { formatMontant } from '../utils/formatNumber';
+import FinancialProtection from '../components/FinancialProtection';
 
 export default function MissionsConseil({ onNavigate }) {
   const [missions, setMissions] = useLocalStorage('wiw-missions-conseil', []);
@@ -290,11 +291,13 @@ export default function MissionsConseil({ onNavigate }) {
       if (mission.equipe && mission.equipe.length > 0) {
         rows.push(['Nom', 'Fonction', 'Coût horaire', 'Total estimé']);
         mission.equipe.forEach(p => {
+          const { useFinancialAccess } = require('../components/FinancialProtection');
+          const { canViewCoutHoraires } = useFinancialAccess();
           rows.push([
             p.nom,
             p.fonction,
-            `${p.coutHoraire} €/h`,
-            formatMontant(p.coutHoraire * (mission.dureeEstimee || 0) * 8, 2)
+            canViewCoutHoraires ? `${p.coutHoraire} €/h` : '***',
+            canViewCoutHoraires ? formatMontant(p.coutHoraire * (mission.dureeEstimee || 0) * 8, 2) : '***'
           ]);
         });
       } else {

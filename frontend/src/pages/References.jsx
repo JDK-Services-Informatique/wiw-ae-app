@@ -7,8 +7,9 @@ import VoiceInputButton from '../components/VoiceInputButton';
 import jsPDF from 'jspdf';
 import { defaultProjets } from '../data/defaultData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { BarChart3, FileText, Ruler, Euro, FolderOpen } from 'lucide-react';
+import { BarChart3, FileText, Ruler, Euro, FolderOpen, Download } from 'lucide-react';
 import { formatMontant as formatMontantUtil } from '../utils/formatNumber';
+import { exportReferencesExcel, exportReferencesPDF } from '../utils/exportReferences';
 
 export default function References({ filter = null, onNavigate }) {
   const { listes, loading } = useListesDeroulantes();
@@ -562,11 +563,33 @@ export default function References({ filter = null, onNavigate }) {
         </div>
       )}
 
-      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
-        <h2 style={{fontSize: '24px'}}>{getPageTitle()}</h2>
-        <button className="btn" onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Annuler' : '+ Ajouter une référence'}
-        </button>
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '15px'}}>
+        <h2 style={{fontSize: '24px', display: 'flex', alignItems: 'center', gap: '10px'}}>
+          <FileText size={28} className="text-brand" /> {getPageTitle()}
+        </h2>
+        <div style={{display: 'flex', gap: '10px'}}>
+          <button
+            onClick={() => exportReferencesExcel(projets)}
+            className="btn"
+            style={{display: 'flex', alignItems: 'center', gap: '8px'}}
+            title="Exporter en Excel"
+          >
+            <Download size={18} />
+            Excel
+          </button>
+          <button
+            onClick={() => exportReferencesPDF(projets)}
+            className="btn"
+            style={{display: 'flex', alignItems: 'center', gap: '8px'}}
+            title="Exporter en PDF"
+          >
+            <Download size={18} />
+            PDF
+          </button>
+          <button className="btn" onClick={() => setShowForm(!showForm)}>
+            {showForm ? 'Annuler' : '+ Ajouter une référence'}
+          </button>
+        </div>
       </div>
 
       {showForm && (

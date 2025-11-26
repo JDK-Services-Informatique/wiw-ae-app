@@ -12,9 +12,10 @@ import { useListesDeroulantes } from '../hooks/useListesDeroulantes';
 import VoiceInputButton from '../components/VoiceInputButton';
 import { defaultAOs } from '../data/defaultData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { BarChart3, ClipboardList, Building2, FileText, Euro, Lightbulb, Users, Target, FolderOpen, Ruler } from 'lucide-react';
+import { BarChart3, ClipboardList, Building2, FileText, Euro, Lightbulb, Users, Target, FolderOpen, Ruler, Download } from 'lucide-react';
 import { formatMontant as formatMontantUtil } from '../utils/formatNumber';
 import AOPipelineStats from '../components/AOPipelineStats';
+import { exportAOExcel, exportAOPDF } from '../utils/exportAO';
 
 export default function Tenders({ onNavigate }) {
   const navigate = useNavigate();
@@ -743,7 +744,31 @@ export default function Tenders({ onNavigate }) {
 
       {/* Pipeline AO - Statistiques (KPI-01) */}
       <div className="card" style={{marginBottom: '20px'}}>
-        <AOPipelineStats aos={aos} />
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+          <div style={{flex: 1}}>
+            <AOPipelineStats aos={aos} />
+          </div>
+          <div style={{display: 'flex', gap: '10px', marginLeft: '20px'}}>
+            <button
+              onClick={() => exportAOExcel(aos)}
+              className="btn"
+              style={{display: 'flex', alignItems: 'center', gap: '8px'}}
+              title="Exporter en Excel"
+            >
+              <Download size={18} />
+              Excel
+            </button>
+            <button
+              onClick={() => exportAOPDF(aos)}
+              className="btn"
+              style={{display: 'flex', alignItems: 'center', gap: '8px'}}
+              title="Exporter en PDF"
+            >
+              <Download size={18} />
+              PDF
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Filtres statut avec bouton Rappel mission */}
@@ -1440,36 +1465,36 @@ export default function Tenders({ onNavigate }) {
           </div>
         ) : (
           // Vue tableau (existante)
-          <div className="table-container">
-            <table className="table">
+          <div className="table-container overflow-x-auto -mx-4 sm:mx-0">
+            <table className="table min-w-[800px]">
               <thead>
                 <tr>
-                  <th>Titre</th>
-                  <th>Type</th>
-                  <th>Client</th>
-                  <th>Montant</th>
-                  <th>Durée</th>
-                  <th>Date rendu</th>
-                  <th>Statut</th>
-                  <th>Actions</th>
+                  <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm">Titre</th>
+                  <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm hidden md:table-cell">Type</th>
+                  <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm hidden lg:table-cell">Client</th>
+                  <th className="px-2 sm:px-4 py-3 text-right text-xs sm:text-sm">Montant</th>
+                  <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm hidden lg:table-cell">Durée</th>
+                  <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm hidden md:table-cell">Date rendu</th>
+                  <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm">Statut</th>
+                  <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredTenders.map(ao => (
                   <tr key={ao.id} onClick={() => setSelectedAO(ao)} style={{cursor: 'pointer'}}>
-                    <td>
+                    <td className="px-2 sm:px-4 py-3">
                       <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
                         <span style={{fontSize: '20px'}}>{ao.vignette || '🏗️'}</span>
-                        <span>{ao.titre}</span>
+                        <span className="text-xs sm:text-sm">{ao.titre}</span>
                       </div>
                     </td>
-                    <td>{ao.type || '-'}</td>
-                    <td>{ao.client}</td>
-                    <td>{formatMontant(ao.montant)}</td>
-                    <td>{ao.dureePrevisionnelle || '-'}</td>
-                    <td>{new Date(ao.dateRendu).toLocaleDateString('fr-FR')}</td>
-                    <td>
-                      <span className={`badge ${
+                    <td className="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">{ao.type || '-'}</td>
+                    <td className="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">{ao.client}</td>
+                    <td className="px-2 sm:px-4 py-3 text-right text-xs sm:text-sm">{formatMontant(ao.montant)}</td>
+                    <td className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm hidden lg:table-cell">{ao.dureePrevisionnelle || '-'}</td>
+                    <td className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm hidden md:table-cell">{new Date(ao.dateRendu).toLocaleDateString('fr-FR')}</td>
+                    <td className="px-2 sm:px-4 py-3 text-center">
+                      <span className={`badge text-xs ${
                         ao.statut === 'Nouveau' ? 'badge-info' : 
                         ao.statut === 'En cours' ? 'badge-warning' : 
                         ao.statut === 'Gagné' ? 'badge-success' :
@@ -1479,9 +1504,9 @@ export default function Tenders({ onNavigate }) {
                         {ao.statut}
                       </span>
                     </td>
-                    <td>
-                      <button className="btn-icon" title="Modifier" onClick={(e) => handleEditAO(ao, e)}>✏️</button>
-                      <button className="btn-icon" title="Détails" onClick={(e) => handleViewDetails(ao, e)}>👁️</button>
+                    <td className="px-2 sm:px-4 py-3 text-center">
+                      <button className="btn-icon text-xs" title="Modifier" onClick={(e) => handleEditAO(ao, e)}>✏️</button>
+                      <button className="btn-icon text-xs" title="Détails" onClick={(e) => handleViewDetails(ao, e)}>👁️</button>
                       {ao.statut !== 'Perdu' && ao.statut !== 'Gagné' && (
                         <button 
                           className="btn-icon" 

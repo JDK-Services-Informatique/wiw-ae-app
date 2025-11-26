@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import VoiceInputButton from '../components/VoiceInputButton';
+import FinancialProtection from '../components/FinancialProtection';
 import { Users, ClipboardList, Edit } from 'lucide-react';
 
 export default function Team() {
@@ -561,16 +562,18 @@ export default function Team() {
                   </select>
                 </div>
 
-                <div>
-                  <label style={{display: 'block', marginBottom: '5px', fontWeight: 500}}>Taux horaire (€)</label>
-                  <input
-                    type="number"
-                    value={editingMember.tauxHoraire}
-                    onChange={(e) => setEditingMember({...editingMember, tauxHoraire: parseFloat(e.target.value) || 0})}
-                    style={{width: '100%', padding: '8px', border: '1px solid var(--border)', borderRadius: '4px'}}
-                    placeholder="85"
-                  />
-                </div>
+                <FinancialProtection dataType="tauxHoraire" fallback={null}>
+                  <div>
+                    <label style={{display: 'block', marginBottom: '5px', fontWeight: 500}}>Taux horaire (€)</label>
+                    <input
+                      type="number"
+                      value={editingMember.tauxHoraire}
+                      onChange={(e) => setEditingMember({...editingMember, tauxHoraire: parseFloat(e.target.value) || 0})}
+                      style={{width: '100%', padding: '8px', border: '1px solid var(--border)', borderRadius: '4px'}}
+                      placeholder="85"
+                    />
+                  </div>
+                </FinancialProtection>
 
                 <div>
                   <label style={{display: 'block', marginBottom: '5px', fontWeight: 500}}>Statut</label>
@@ -682,7 +685,12 @@ export default function Team() {
                             </>
                           )}
                           <div>Métier:</div><div>{member.metier}</div>
-                          <div>Taux horaire:</div><div><strong>{member.tauxHoraire} €/h</strong></div>
+                          <div>Taux horaire:</div>
+                          <div>
+                            <FinancialProtection dataType="tauxHoraire">
+                              <strong>{member.tauxHoraire} €/h</strong>
+                            </FinancialProtection>
+                          </div>
                         </div>
                         {member.competences && member.competences.length > 0 && (
                           <div style={{marginTop: '10px'}}>

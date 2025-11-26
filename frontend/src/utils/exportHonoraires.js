@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 import { formatCurrency } from './formatNumber';
 
 /**
@@ -8,7 +9,7 @@ import { formatCurrency } from './formatNumber';
  */
 
 /**
- * Exporter les honoraires en Excel (format TSV)
+ * Exporter les honoraires en Excel (format XLSX avec SheetJS)
  * @param {object} honorairesData - Données des honoraires
  * @param {string} fileName - Nom du fichier (optionnel)
  */
@@ -21,13 +22,17 @@ export function exportHonorairesExcel(honorairesData, fileName = null) {
       partenaires = []
     } = honorairesData;
 
-    const rows = [
+    // Créer un nouveau workbook
+    const wb = XLSX.utils.book_new();
+
+    // Feuille 1 : Résumé
+    const summaryData = [
       ['CALCUL D\'HONORAIRES'],
       [''],
       ['Montant des Travaux HT', formatCurrency(montantTravaux, 0)],
       [''],
       ['ÉVOLUTIONS DES POURCENTAGES'],
-      ['Mission', 'Base', 'Évolution 1', 'Évolution 2']
+      ['Mission', ...evolutions.map(e => e.nom || 'Évolution')]
     ];
 
     // Ajouter les missions avec leurs pourcentages par évolution
@@ -38,52 +43,46 @@ export function exportHonorairesExcel(honorairesData, fileName = null) {
         const montant = (montantTravaux * pourcentage) / 100;
         row.push(`${pourcentage.toFixed(2)}% (${formatCurrency(montant, 2)})`);
       });
-      rows.push(row);
+      summaryData.push(row);
     });
 
     // Totaux
-    rows.push(['']);
-    rows.push(['TOTAL']);
+    summaryData.push(['']);
+    summaryData.push(['TOTAL']);
     const totalRow = ['Total'];
     evolutions.forEach(evolution => {
       const totalPourcentage = Object.values(evolution.pourcentages || {}).reduce((sum, p) => sum + (p || 0), 0);
       const totalMontant = (montantTravaux * totalPourcentage) / 100;
       totalRow.push(`${totalPourcentage.toFixed(2)}% (${formatCurrency(totalMontant, 2)})`);
     });
-    rows.push(totalRow);
+    summaryData.push(totalRow);
+    summaryData.push(['']);
+    summaryData.push(['Date de génération', new Date().toLocaleString('fr-FR')]);
 
-    // Partenaires
+    const ws1 = XLSX.utils.aoa_to_sheet(summaryData);
+    XLSX.utils.book_append_sheet(wb, ws1, 'Résumé');
+
+    // Feuille 2 : Partenaires
     if (partenaires && partenaires.length > 0) {
-      rows.push(['']);
-      rows.push(['PARTENAIRES']);
-      rows.push(['Nom', 'Coût horaire', 'Heures estimées', 'Montant prévisionnel']);
+      const partenairesData = [
+        ['PARTENAIRES'],
+        ['Nom', 'Coût horaire', 'Heures estimées', 'Montant prévisionnel']
+      ];
       partenaires.forEach(p => {
-        rows.push([
+        partenairesData.push([
           p.nom || '',
           `${formatCurrency(p.coutHoraire || 0, 2)}/h`,
           `${(p.heuresEstimees || 0).toFixed(1)} h`,
           formatCurrency((p.coutHoraire || 0) * (p.heuresEstimees || 0), 2)
         ]);
       });
+      const ws2 = XLSX.utils.aoa_to_sheet(partenairesData);
+      XLSX.utils.book_append_sheet(wb, ws2, 'Partenaires');
     }
 
-    // Date de génération
-    rows.push(['']);
-    rows.push(['Date de génération', new Date().toLocaleString('fr-FR')]);
-
-    // Convertir en TSV
-    const tsvContent = rows.map(row => row.join('\t')).join('\n');
-    
-    // Créer le blob et télécharger
-    const blob = new Blob([tsvContent], { type: 'application/vnd.ms-excel' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName || `Honoraires_${new Date().toISOString().split('T')[0]}.xlsx`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    // Générer le fichier Excel
+    const finalFileName = fileName || `Honoraires_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, finalFileName);
 
     if (window.showToast) {
       window.showToast('✅ Export Excel généré avec succès', 'success');
@@ -255,20 +254,22 @@ export function exportHonorairesPDF(honorairesData, fileName = null) {
 }
 
 /**
- * Exporter les missions en Excel (format TSV)
+ * Exporter les missions en Excel (format XLSX avec SheetJS)
  * @param {Array} missions - Liste des missions
  * @param {string} fileName - Nom du fichier (optionnel)
  */
 export function exportMissionsExcel(missions = [], fileName = null) {
   try {
-    const rows = [
-      ['EXPORT DES MISSIONS'],
-      [''],
+    // Créer un nouveau workbook
+    const wb = XLSX.utils.book_new();
+
+    // Préparer les données
+    const data = [
       ['Numéro', 'Client', 'Type', 'Montant Travaux HT', 'Honoraires HT', 'Durée', 'Statut', 'Date']
     ];
 
     missions.forEach(mission => {
-      rows.push([
+      data.push([
         mission.numero || '',
         mission.client?.nom || '',
         mission.typeMission || '',
@@ -280,19 +281,16 @@ export function exportMissionsExcel(missions = [], fileName = null) {
       ]);
     });
 
-    rows.push(['']);
-    rows.push(['Date de génération', new Date().toLocaleString('fr-FR')]);
+    // Ajouter les métadonnées
+    data.push(['']);
+    data.push(['Date de génération', new Date().toLocaleString('fr-FR')]);
 
-    const tsvContent = rows.map(row => row.join('\t')).join('\n');
-    const blob = new Blob([tsvContent], { type: 'application/vnd.ms-excel' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName || `Missions_${new Date().toISOString().split('T')[0]}.xlsx`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    XLSX.utils.book_append_sheet(wb, ws, 'Missions');
+
+    // Générer le fichier Excel
+    const finalFileName = fileName || `Missions_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, finalFileName);
 
     if (window.showToast) {
       window.showToast('✅ Export Excel généré avec succès', 'success');
