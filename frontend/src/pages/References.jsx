@@ -8,6 +8,7 @@ import jsPDF from 'jspdf';
 import { defaultProjets } from '../data/defaultData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { BarChart3, FileText, Ruler, Euro, FolderOpen } from 'lucide-react';
+import { formatMontant as formatMontantUtil } from '../utils/formatNumber';
 
 export default function References({ filter = null, onNavigate }) {
   const { listes, loading } = useListesDeroulantes();
@@ -153,12 +154,7 @@ export default function References({ filter = null, onNavigate }) {
 
   const formatMontant = (montant) => {
     if (!montant) return '-';
-    return new Intl.NumberFormat('fr-FR', { 
-      style: 'currency', 
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(montant);
+    return formatMontantUtil(montant, 0);
   };
 
   // Gestion des photos

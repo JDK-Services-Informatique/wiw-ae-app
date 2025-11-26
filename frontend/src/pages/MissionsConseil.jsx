@@ -7,7 +7,8 @@ import ValidationAlerts from '../components/ValidationAlerts';
 import InheritanceAPI from '../services/inheritance.api';
 import ValidationAPI from '../services/validation.api';
 import { useListesDeroulantes } from '../hooks/useListesDeroulantes';
-import { Search, BarChart3, FileText, Lightbulb, Settings, ClipboardList, Users } from 'lucide-react';
+import { Search, BarChart3, FileText, Lightbulb, Settings, ClipboardList, Users, Edit } from 'lucide-react';
+import { formatMontant } from '../utils/formatNumber';
 
 export default function MissionsConseil({ onNavigate }) {
   const [missions, setMissions] = useLocalStorage('wiw-missions-conseil', []);
@@ -280,7 +281,7 @@ export default function MissionsConseil({ onNavigate }) {
         ['Montant travaux HT', `${mission.montantTravauxHT || 0} €`],
         ['Durée estimée', `${mission.dureeEstimee || 0} jours`],
         ['Honoraires proposés', `${mission.honorairesPropose || 0} € HT`],
-        ['Total honoraires', `${calculerTotalHonoraires(mission).toFixed(2)} € HT`],
+        ['Total honoraires', formatMontant(calculerTotalHonoraires(mission), 2) + ' HT'],
         [''],
         ['Équipe'],
       ];
@@ -293,7 +294,7 @@ export default function MissionsConseil({ onNavigate }) {
             p.nom,
             p.fonction,
             `${p.coutHoraire} €/h`,
-            `${(p.coutHoraire * (mission.dureeEstimee || 0) * 8).toFixed(2)} €`
+            formatMontant(p.coutHoraire * (mission.dureeEstimee || 0) * 8, 2)
           ]);
         });
       } else {
@@ -429,7 +430,7 @@ export default function MissionsConseil({ onNavigate }) {
           p.nom,
           p.fonction,
           `${p.coutHoraire} €/h`,
-          `${(p.coutHoraire * (mission.dureeEstimee || 0) * 8).toFixed(2)} €`
+            formatMontant(p.coutHoraire * (mission.dureeEstimee || 0) * 8, 2)
         ]);
         
         doc.autoTable({
@@ -466,11 +467,11 @@ export default function MissionsConseil({ onNavigate }) {
         startY: yPos,
         body: [
           ['Durée estimée', `${mission.dureeEstimee || 0} jours`],
-          ['Honoraires architecte/BE', `${(parseFloat(mission.honorairesPropose) || 0).toFixed(2)} € HT`],
-          ['Honoraires équipe', `${honorairesEquipe.toFixed(2)} € HT`],
-          ['Total Honoraires', `${totalHonoraires.toFixed(2)} € HT`],
-          ['TVA (20%)', `${(totalHonoraires * 0.2).toFixed(2)} €`],
-          ['Total TTC', `${(totalHonoraires * 1.2).toFixed(2)} €`]
+          ['Honoraires architecte/BE', formatMontant(parseFloat(mission.honorairesPropose) || 0, 2) + ' HT'],
+          ['Honoraires équipe', formatMontant(honorairesEquipe, 2) + ' HT'],
+          ['Total Honoraires', formatMontant(totalHonoraires, 2) + ' HT'],
+          ['TVA (20%)', formatMontant(totalHonoraires * 0.2, 2)],
+          ['Total TTC', formatMontant(totalHonoraires * 1.2, 2)]
         ],
         theme: 'plain',
         styles: { fontSize: 10 },
@@ -759,7 +760,7 @@ export default function MissionsConseil({ onNavigate }) {
         </div>
         <div className="stat-card">
           <div style={{fontSize: 'clamp(18px, 4vw, 24px)', fontWeight: 'bold', color: '#f59e0b'}}>
-            {stats.totalHonoraires.toFixed(0)} €
+            {formatMontant(stats.totalHonoraires, 0)}
           </div>
           <div style={{fontSize: '9px', opacity: 0.5, marginTop: '5px'}}>Total honoraires</div>
         </div>
@@ -1461,7 +1462,7 @@ export default function MissionsConseil({ onNavigate }) {
                   <div>
                     <div style={{opacity: 0.6, fontSize: '10px'}}>Honoraires</div>
                     <div style={{fontWeight: 'bold', color: '#f59e0b'}}>
-                      {calculerTotalHonoraires(mission).toFixed(0)} € HT
+                      {formatMontant(calculerTotalHonoraires(mission), 0)} HT
                     </div>
                   </div>
                 </div>
@@ -1483,7 +1484,7 @@ export default function MissionsConseil({ onNavigate }) {
                       background: 'var(--brand)'
                     }}
                   >
-                    ✏️ Modifier
+                    <Edit size={16} /> Modifier
                   </button>
                   <button
                     onClick={() => handleExportPDF(mission)}

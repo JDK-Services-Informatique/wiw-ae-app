@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { defaultOpportunites } from '../data/defaultData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { Search, Building2 } from 'lucide-react';
+import { Search, Building2, Edit } from 'lucide-react';
+import { formatMontant } from '../utils/formatNumber';
 
 export default function Prospection() {
   const [periode, setPeriode] = useState('6mois'); // '6mois' ou '1an'
@@ -224,10 +225,10 @@ export default function Prospection() {
                     </div>
                     <div style={{textAlign: 'right'}}>
                       <div style={{fontSize: '24px', fontWeight: 'bold', color: '#10b981', marginBottom: '5px'}}>
-                        {(opp.montantEstime / 1000000).toFixed(2)} M€
+                        {formatMontant(opp.montantEstime / 1000000, 2, false)} M€
                       </div>
                       <div style={{fontSize: '11px', opacity: 0.6}}>
-                        Pondéré: {((opp.montantEstime * opp.probabilite / 100) / 1000000).toFixed(2)} M€
+                        Pondéré: {formatMontant((opp.montantEstime * opp.probabilite / 100) / 1000000, 2, false)} M€
                       </div>
                       <div style={{fontSize: '12px', marginTop: '10px', opacity: 0.7}}>
                         📅 Échéance: {new Date(opp.echeance).toLocaleDateString('fr-FR')}
@@ -294,7 +295,7 @@ export default function Prospection() {
                       <span style={{fontSize: '13px', opacity: 0.7}}>{count} opportunité(s)</span>
                     </div>
                     <div style={{fontWeight: 'bold', fontSize: '16px'}}>
-                      {(montant / 1000000).toFixed(2)} M€
+                      {formatMontant(montant / 1000000, 2, false)} M€
                     </div>
                   </div>
                 );
@@ -328,7 +329,7 @@ export default function Prospection() {
                       </span>
                     </div>
                     <div style={{fontWeight: 'bold', fontSize: '16px', color: '#3b82f6'}}>
-                      {(montant / 1000000).toFixed(2)} M€
+                      {formatMontant(montant / 1000000, 2, false)} M€
                     </div>
                   </div>
                 );
@@ -361,12 +362,32 @@ export default function Prospection() {
           }} onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <h3 className="section-title">{selectedOpportunite.nom}</h3>
-              <button 
-                className="btn-secondary"
-                onClick={() => setSelectedOpportunite(null)}
-              >
-                ✕
-              </button>
+              <div style={{display: 'flex', gap: '10px'}}>
+                <button 
+                  className="btn-secondary"
+                  onClick={() => {
+                    setShowNewOpportunite(true);
+                    setSelectedOpportunite(null);
+                  }}
+                  style={{
+                    background: 'rgba(59, 130, 246, 0.1)',
+                    border: '1px solid rgba(59, 130, 246, 0.3)',
+                    color: '#3b82f6',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 16px'
+                  }}
+                >
+                  <Edit size={16} /> Modifier
+                </button>
+                <button 
+                  className="btn-secondary"
+                  onClick={() => setSelectedOpportunite(null)}
+                >
+                  ✕
+                </button>
+              </div>
             </div>
             
             {/* Section Informations générales */}
@@ -411,7 +432,7 @@ export default function Prospection() {
                 <div className="info-item">
                   <span className="info-item-label">Montant estimé:</span>
                   <span className="info-item-value font-semibold text-emerald-600 dark:text-emerald-400">
-                    {(selectedOpportunite.montantEstime / 1000000).toFixed(2)} M€
+                    {formatMontant(selectedOpportunite.montantEstime / 1000000, 2, false)} M€
                   </span>
                 </div>
                 <div className="info-item">

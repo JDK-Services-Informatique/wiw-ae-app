@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { TrendingUp, Users, FileCheck, Clock, ArrowUpRight, MoreHorizontal, AlertCircle, Edit } from 'lucide-react';
+import { formatMontant } from '../utils/formatNumber';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useListesDeroulantes } from '../hooks/useListesDeroulantes';
 
@@ -153,7 +154,7 @@ export default function Dashboard() {
     return [
       { 
         label: 'Commandes validées', 
-        value: montantTotal.toLocaleString('fr-FR') + ' €', 
+        value: formatMontant(montantTotal, 0), 
         change: parseFloat(evolution) >= 0 ? `+${evolution}%` : `${evolution}%`, 
         icon: TrendingUp, 
         color: parseFloat(evolution) >= 0 ? 'text-emerald-500' : 'text-red-500',
@@ -474,7 +475,7 @@ export default function Dashboard() {
                   <div key={domaine} className="flex justify-between text-sm">
                     <span>{domaine}</span>
                     <span className="font-semibold">
-                      {data.count} projet{data.count > 1 ? 's' : ''} - {data.montant.toLocaleString('fr-FR')} €
+                      {data.count} projet{data.count > 1 ? 's' : ''} - {formatMontant(data.montant, 0)}
                     </span>
                   </div>
                 ))}
@@ -487,7 +488,7 @@ export default function Dashboard() {
                   <div key={type} className="flex justify-between text-sm">
                     <span>{type}</span>
                     <span className="font-semibold">
-                      {data.count} projet{data.count > 1 ? 's' : ''} - {data.montant.toLocaleString('fr-FR')} €
+                      {data.count} projet{data.count > 1 ? 's' : ''} - {formatMontant(data.montant, 0)}
                     </span>
                   </div>
                 ))}
@@ -500,7 +501,7 @@ export default function Dashboard() {
                   <div key={annee} className="flex justify-between text-sm">
                     <span>{annee}</span>
                     <span className="font-semibold">
-                      {data.count} projet{data.count > 1 ? 's' : ''} - {data.montant.toLocaleString('fr-FR')} €
+                      {data.count} projet{data.count > 1 ? 's' : ''} - {formatMontant(data.montant, 0)}
                     </span>
                   </div>
                 ))}
@@ -561,7 +562,7 @@ export default function Dashboard() {
                   <div className="flex-1">
                     <h4 className="font-semibold text-sm text-slate-900 dark:text-white">{projet.nom || 'Projet sans nom'}</h4>
                     <p className="text-xs text-slate-500">
-                      {projet.domaine} - {projet.type} | {(projet.montantTravauxHT || 0).toLocaleString('fr-FR')} €
+                      {projet.domaine} - {projet.type} | {formatMontant(projet.montantTravauxHT || 0, 0)}
                     </p>
                   </div>
                   <div className="flex gap-2">

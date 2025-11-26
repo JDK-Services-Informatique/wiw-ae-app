@@ -4,7 +4,8 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { usePlan } from '../context/PlanContext';
 import { LimitReached } from '../components/PlanRestriction';
 import VoiceInputButton from '../components/VoiceInputButton';
-import { Building2 } from 'lucide-react';
+import { Building2, Edit } from 'lucide-react';
+import { formatMontant } from '../utils/formatNumber';
 
 export default function Company() {
   const { canAdd, getPlanInfo } = usePlan();
@@ -620,7 +621,24 @@ export default function Company() {
         <div className="card" style={{marginTop: '20px'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
             <h3 style={{margin: 0}}>{selectedClient.nom}</h3>
-            <button className="btn-secondary" onClick={() => setSelectedClient(null)}>Fermer</button>
+            <div style={{display: 'flex', gap: '10px'}}>
+              <button 
+                className="btn-secondary" 
+                onClick={() => handleEditClient(selectedClient)}
+                style={{
+                  background: 'rgba(59, 130, 246, 0.1)',
+                  border: '1px solid rgba(59, 130, 246, 0.3)',
+                  color: '#3b82f6',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '8px 16px'
+                }}
+              >
+                <Edit size={16} /> Modifier
+              </button>
+              <button className="btn-secondary" onClick={() => setSelectedClient(null)}>Fermer</button>
+            </div>
           </div>
 
           <div style={{display: 'grid', gap: '20px'}}>
@@ -685,7 +703,7 @@ export default function Company() {
                   {selectedClient.informationsLegales.capital && (
                     <div>
                       <div style={{fontSize: '12px', opacity: 0.7, marginBottom: '5px'}}>Capital social</div>
-                      <div style={{fontWeight: 'bold'}}>{selectedClient.informationsLegales.capital.toLocaleString('fr-FR')} €</div>
+                      <div style={{fontWeight: 'bold'}}>{formatMontant(selectedClient.informationsLegales.capital)}</div>
                     </div>
                   )}
                 </div>
@@ -706,7 +724,7 @@ export default function Company() {
                     }}>
                       <div style={{fontWeight: 'bold', marginBottom: '5px'}}>{projet.nom}</div>
                       <div style={{fontSize: '13px', opacity: 0.8}}>
-                        Statut: {projet.statut} | Montant: {projet.montant.toLocaleString('fr-FR')} €
+                        Statut: {projet.statut} | Montant: {formatMontant(projet.montant)}
                       </div>
                     </div>
                   ))}
@@ -778,7 +796,7 @@ export default function Company() {
                       }}>
                         <div style={{fontWeight: 'bold'}}>{projet.nom}</div>
                         <div style={{fontSize: '13px', opacity: 0.7}}>
-                          Statut: {projet.statut} | Montant: {projet.montant.toLocaleString('fr-FR')} €
+                          Statut: {projet.statut} | Montant: {formatMontant(projet.montant)}
                         </div>
                       </div>
                     ))}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { missionsCompetencesRef, matchEquipeToMission } from '../data/missionsCompetences';
 import TeamTemplates from '../components/TeamTemplates';
 import { BarChart3, Building2, ClipboardList, Target } from 'lucide-react';
+import { formatMontant as formatMontantUtil } from '../utils/formatNumber';
 
 export default function Templates() {
   const [activeTab, setActiveTab] = useState('missions'); // 'missions' ou 'equipes'
@@ -115,12 +116,7 @@ export default function Templates() {
   const coutCibleMoyen = totalHeures > 0 ? coutCibleTotal / totalHeures : 0;
 
   const formatMontant = (montant) => {
-    return new Intl.NumberFormat('fr-FR', { 
-      style: 'currency', 
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(montant);
+    return formatMontantUtil(montant, 0);
   };
 
   const getTypeBadge = (type) => {

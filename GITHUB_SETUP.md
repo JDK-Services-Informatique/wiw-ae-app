@@ -17,10 +17,17 @@ Après avoir créé le repository, GitHub vous donnera une URL. Utilisez-la dans
 
 ```bash
 # Remplacez VOTRE_USERNAME par votre nom d'utilisateur GitHub
-git remote add origin https://github.com/VOTRE_USERNAME/wiw-ae-app.git
+# Si vous n'avez pas encore de remote nommé "origin" :
+git remote add origin https://github.com/Suffix6805/JDK-Services-Informatique/wiw-ae-app.git
+
+# Si le remote "origin" existe déjà et que vous souhaitez le modifier :
+git remote set-url origin https://github.com/Suffix6805/JDK-Services-Informatique/wiw-ae-app.git
+
+# Pour vérifier vos remotes :
+git remote -v
 
 # Ou si vous utilisez SSH :
-# git remote add origin git@github.com:VOTRE_USERNAME/wiw-ae-app.git
+# git remote add origin git@github.com:Suffix6805/wiw-ae-app.git
 ```
 
 ## 🚀 Étape 3 : Pousser le code sur GitHub

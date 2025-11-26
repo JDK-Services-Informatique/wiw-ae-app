@@ -84,11 +84,35 @@ export function formatSurface(surface) {
   return `${formatNumber(surface, 2)} m²`;
 }
 
+/**
+ * Formate un montant en euros avec séparateurs de milliers
+ * @param {number} montant - Le montant à formater
+ * @param {number} decimals - Nombre de décimales (défaut: 2)
+ * @param {boolean} showCurrency - Afficher le symbole € (défaut: true)
+ * @returns {string} - Montant formaté (ex: "1 234,56 €" ou "1 234,56")
+ */
+export function formatMontant(montant, decimals = 2, showCurrency = true) {
+  if (montant === null || montant === undefined || isNaN(montant)) {
+    return showCurrency ? '0,00 €' : '0,00';
+  }
+
+  const numValue = parseFloat(montant);
+  
+  const formatted = new Intl.NumberFormat('fr-FR', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+    useGrouping: true
+  }).format(numValue);
+  
+  return showCurrency ? `${formatted} €` : formatted;
+}
+
 export default {
   formatCurrency,
   formatNumber,
   parseFormattedNumber,
   formatHours,
-  formatSurface
+  formatSurface,
+  formatMontant
 };
 

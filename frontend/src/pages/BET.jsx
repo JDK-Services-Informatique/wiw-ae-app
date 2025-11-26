@@ -3,7 +3,8 @@ import { defaultBETs } from '../data/defaultData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { usePlan } from '../context/PlanContext';
 import { LimitReached } from '../components/PlanRestriction';
-import { BarChart3, Target, Building2, ClipboardList, Trophy } from 'lucide-react';
+import { BarChart3, Target, Building2, ClipboardList, Trophy, Edit } from 'lucide-react';
+import { formatMontant } from '../utils/formatNumber';
 
 export default function BET() {
   const { canAdd, getPlanInfo } = usePlan();
@@ -925,7 +926,25 @@ export default function BET() {
               }} onClick={(e) => e.stopPropagation()}>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
                   <h2 style={{margin: 0, fontSize: '24px'}}>{selectedBET.nom}</h2>
-                  <button className="btn-secondary" onClick={() => setSelectedBET(null)} style={{cursor: 'pointer'}}>✕ Fermer</button>
+                  <div style={{display: 'flex', gap: '10px'}}>
+                    <button 
+                      className="btn-secondary" 
+                      onClick={() => handleEditBET(selectedBET)}
+                      style={{
+                        background: 'rgba(59, 130, 246, 0.1)',
+                        border: '1px solid rgba(59, 130, 246, 0.3)',
+                        color: '#3b82f6',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '8px 16px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <Edit size={16} /> Modifier
+                    </button>
+                    <button className="btn-secondary" onClick={() => setSelectedBET(null)} style={{cursor: 'pointer'}}>✕ Fermer</button>
+                  </div>
                 </div>
 
                 <div style={{display: 'grid', gap: '20px'}}>
@@ -1231,7 +1250,7 @@ export default function BET() {
                       </span>
                     </td>
                     <td>{new Date(etude.dateLivraison).toLocaleDateString('fr-FR')}</td>
-                    <td>{etude.montant.toLocaleString('fr-FR')} €</td>
+                    <td>{formatMontant(etude.montant, 0)}</td>
                     <td>
                       <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
                         <div style={{flex: 1, height: '8px', background: 'var(--panel)', borderRadius: '4px', overflow: 'hidden'}}>

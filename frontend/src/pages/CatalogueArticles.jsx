@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { Package, Search, ClipboardList, FileText } from 'lucide-react';
+import { formatMontant } from '../utils/formatNumber';
 
 export default function CatalogueArticles({ onNavigate }) {
   const [articles, setArticles] = useLocalStorage('wiw-articles', []);
@@ -787,12 +788,12 @@ function ArticleCard({ article, onEdit, onDelete, onDuplicate, onToggleActif, on
         }}>
           <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
             <span style={{fontSize: '13px', color: '#666'}}>Prix unitaire HT :</span>
-            <span style={{fontSize: '15px', fontWeight: '600'}}>{article.puHT.toFixed(2)} €</span>
+            <span style={{fontSize: '15px', fontWeight: '600'}}>{formatMontant(article.puHT, 2)}</span>
           </div>
           <div style={{display: 'flex', justifyContent: 'space-between'}}>
             <span style={{fontSize: '13px', color: '#666'}}>Prix TTC (TVA {article.tva}%) :</span>
             <span style={{fontSize: '17px', fontWeight: '700', color: '#2e7d32'}}>
-              {prixTTC.toFixed(2)} €
+              {formatMontant(prixTTC, 2)}
             </span>
           </div>
           <div style={{fontSize: '12px', color: '#999', marginTop: '5px'}}>

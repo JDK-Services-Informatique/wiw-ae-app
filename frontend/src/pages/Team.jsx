@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import VoiceInputButton from '../components/VoiceInputButton';
-import { Users, ClipboardList } from 'lucide-react';
+import { Users, ClipboardList, Edit } from 'lucide-react';
 
 export default function Team() {
   const [members, setMembers] = useLocalStorage('wiw-team-members', [
@@ -736,7 +736,25 @@ export default function Team() {
             <div style={{display: 'grid', gap: '15px'}}>
               {members.map(member => (
                 <div key={member.id} className="card" style={{padding: '20px'}}>
-                  <h4 style={{marginBottom: '15px', fontSize: '18px'}}>{member.nom} - {member.fonction}</h4>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+                    <h4 style={{fontSize: '18px', margin: 0}}>{member.nom} - {member.fonction}</h4>
+                    <button 
+                      className="btn-secondary" 
+                      onClick={() => handleEditMember(member)}
+                      style={{
+                        background: 'rgba(59, 130, 246, 0.1)',
+                        border: '1px solid rgba(59, 130, 246, 0.3)',
+                        color: '#3b82f6',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '8px 16px',
+                        fontSize: '14px'
+                      }}
+                    >
+                      <Edit size={16} /> Modifier
+                    </button>
+                  </div>
                   
                   {/* Moyens humains */}
                   <div style={{marginBottom: '20px', padding: '15px', background: 'rgba(16, 185, 129, 0.05)', borderRadius: '8px'}}>
@@ -818,7 +836,25 @@ export default function Team() {
             <div style={{display: 'grid', gap: '15px'}}>
               {members.map(member => (
                 <div key={member.id} className="card" style={{padding: '20px'}}>
-                  <h4 style={{marginBottom: '15px', fontSize: '18px'}}>{member.nom} - {member.fonction}</h4>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+                    <h4 style={{fontSize: '18px', margin: 0}}>{member.nom} - {member.fonction}</h4>
+                    <button 
+                      className="btn-secondary" 
+                      onClick={() => handleEditMember(member)}
+                      style={{
+                        background: 'rgba(59, 130, 246, 0.1)',
+                        border: '1px solid rgba(59, 130, 246, 0.3)',
+                        color: '#3b82f6',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '8px 16px',
+                        fontSize: '14px'
+                      }}
+                    >
+                      <Edit size={16} /> Modifier
+                    </button>
+                  </div>
                   
                   {/* CV */}
                   <div style={{marginBottom: '15px', padding: '15px', background: 'rgba(124, 58, 237, 0.05)', borderRadius: '8px'}}>

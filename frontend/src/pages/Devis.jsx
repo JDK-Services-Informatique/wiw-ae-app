@@ -4,6 +4,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import DevisAPI from '../services/devis.api';
 import { ClipboardList, BarChart3, Euro, FileText } from 'lucide-react';
+import { formatMontant } from '../utils/formatNumber';
 
 // Nouveaux composants professionnels
 import DevisTable from '../components/DevisTable';
@@ -236,7 +237,7 @@ export default function Devis({ onNavigate }) {
             ligne.puHT.toFixed(2) + ' €',
             ligne.quantite,
             ligne.remise ? `${ligne.remise}%` : '-',
-            montant.toFixed(2) + ' €'
+            formatMontant(montant, 2)
           ]);
         });
       
@@ -246,7 +247,7 @@ export default function Devis({ onNavigate }) {
       
       tableData.push([
         { content: 'Sous-total', colSpan: 5, styles: { fontStyle: 'bold', halign: 'right' } },
-        { content: sousTotalChapitre.toFixed(2) + ' €', styles: { fontStyle: 'bold' } }
+        { content: formatMontant(sousTotalChapitre, 2), styles: { fontStyle: 'bold' } }
       ]);
     });
     
@@ -293,29 +294,29 @@ export default function Devis({ onNavigate }) {
     
     doc.setFont('helvetica', 'normal');
     doc.text('Total HT :', 140, y);
-    doc.text(totalHT.toFixed(2) + ' €', 180, y, { align: 'right' });
+    doc.text(formatMontant(totalHT, 2), 180, y, { align: 'right' });
     
     if (formData.rabais > 0) {
       y += 6;
       doc.text(`Rabais (${formData.rabaisType === 'pourcentage' ? formData.rabais + '%' : 'montant fixe'}) :`, 140, y);
-      doc.text('- ' + montantRabais.toFixed(2) + ' €', 180, y, { align: 'right' });
+      doc.text('- ' + formatMontant(montantRabais, 2), 180, y, { align: 'right' });
       
       y += 6;
       doc.setFont('helvetica', 'bold');
       doc.text('Total HT après rabais :', 140, y);
-      doc.text(totalHTApresRabais.toFixed(2) + ' €', 180, y, { align: 'right' });
+      doc.text(formatMontant(totalHTApresRabais, 2), 180, y, { align: 'right' });
       doc.setFont('helvetica', 'normal');
     }
     
     y += 6;
     doc.text('TVA 20% :', 140, y);
-    doc.text(totalTVA.toFixed(2) + ' €', 180, y, { align: 'right' });
+    doc.text(formatMontant(totalTVA, 2), 180, y, { align: 'right' });
     
     y += 6;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
     doc.text('Total TTC :', 140, y);
-    doc.text(totalTTC.toFixed(2) + ' €', 180, y, { align: 'right' });
+    doc.text(formatMontant(totalTTC, 2), 180, y, { align: 'right' });
     
     if (formData.notes) {
       y += 15;
@@ -649,11 +650,11 @@ export default function Devis({ onNavigate }) {
                 <div className="p-4">
                   <h3 className="text-lg font-semibold mb-4">Totaux calculés</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>Total HT : <b>{formatNumber(totaux.totalHT)} €</b></div>
-                    <div>Total HT après rabais : <b>{formatNumber(totaux.totalHTRabais)} €</b></div>
-                    <div>Montant TVA : <b>{formatNumber(totaux.montantTVA)} €</b></div>
-                    <div>Total TTC : <b>{formatNumber(totaux.totalTTC)} €</b></div>
-                    <div>Sous-total : <b>{formatNumber(totaux.sousTotal)} €</b></div>
+                    <div>Total HT : <b>{formatMontant(totaux.totalHT, 2)}</b></div>
+                    <div>Total HT après rabais : <b>{formatMontant(totaux.totalHTRabais, 2)}</b></div>
+                    <div>Montant TVA : <b>{formatMontant(totaux.montantTVA, 2)}</b></div>
+                    <div>Total TTC : <b>{formatMontant(totaux.totalTTC, 2)}</b></div>
+                    <div>Sous-total : <b>{formatMontant(totaux.sousTotal, 2)}</b></div>
                     <div>Heures totales : <b>{formatNumber(totaux.totalHeures)}</b></div>
                   </div>
                 </div>
@@ -803,7 +804,7 @@ export default function Devis({ onNavigate }) {
                             {new Date(d.date).toLocaleDateString('fr-FR')}
                           </td>
                           <td className="px-4 sm:px-6 py-4 text-right font-semibold text-gray-900">
-                            {formatNumber(totalHT)} €
+                            {formatMontant(totalHT, 2)}
                           </td>
                           <td className="px-4 sm:px-6 py-4 text-center hidden lg:table-cell">
                             {getStatutBadge(d.statut)}

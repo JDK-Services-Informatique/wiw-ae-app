@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Edit } from 'lucide-react';
 
 export default function MediaLibrary() {
   const [viewMode, setViewMode] = useState('grille'); // 'grille' ou 'liste'
@@ -588,7 +588,7 @@ export default function MediaLibrary() {
                     style={{flex: 1, padding: '6px', fontSize: '12px', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6'}}
                     title="Modifier"
                   >
-                    ✏️ Modifier
+                    <Edit size={16} /> Modifier
                   </button>
                   <button
                     className="btn-secondary"
@@ -767,7 +767,7 @@ export default function MediaLibrary() {
                   }}
                   style={{padding: '6px 12px', fontSize: '13px', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6'}}
                 >
-                  ✏️ Modifier
+                  <Edit size={16} /> Modifier
                 </button>
                 <button
                   onClick={() => setSelectedMedia(null)}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUp, ArrowDown, FileCheck, PieChart, TrendingUp, Calendar, Users } from 'lucide-react';
+import { formatMontant } from '../utils/formatNumber';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export default function Analytics() {
@@ -154,7 +155,7 @@ export default function Analytics() {
                 </span>
               </div>
               <div className="text-2xl font-bold text-slate-900 dark:text-white">
-                {montantTotalCommandes.toLocaleString('fr-FR')} €
+                {formatMontant(montantTotalCommandes, 0)}
               </div>
               <div className="text-sm text-slate-500">Commandes projets validées (contrats signés)</div>
             </div>
@@ -167,7 +168,7 @@ export default function Analytics() {
                 </span>
               </div>
               <div className="text-2xl font-bold text-slate-900 dark:text-white">
-                {commandesValidees.length > 0 ? Math.round(montantTotalCommandes / commandesValidees.length).toLocaleString('fr-FR') : 0} €
+                {commandesValidees.length > 0 ? formatMontant(Math.round(montantTotalCommandes / commandesValidees.length), 0) : formatMontant(0, 0)}
               </div>
               <div className="text-sm text-slate-500">Montant moyen par projet</div>
             </div>
@@ -201,7 +202,7 @@ export default function Analytics() {
                     </div>
                     <div className="text-right">
                       <div className="font-bold text-slate-900 dark:text-white">
-                        {(projet.montantTravauxHT || 0).toLocaleString('fr-FR')} € HT
+                        {formatMontant(projet.montantTravauxHT || 0, 0)} HT
                       </div>
                       <div className="text-xs text-slate-500">{projet.statut}</div>
                     </div>
@@ -271,7 +272,7 @@ export default function Analytics() {
                           {partenaire.nom} ({partenaire.nbProjets} projet{partenaire.nbProjets > 1 ? 's' : ''})
                         </span>
                         <span className="font-bold">
-                          {partenaire.montant.toLocaleString('fr-FR')} € ({pourcentage.toFixed(1)}%)
+                          {formatMontant(partenaire.montant, 0)} ({pourcentage.toFixed(1)}%)
                         </span>
                       </div>
                       <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">

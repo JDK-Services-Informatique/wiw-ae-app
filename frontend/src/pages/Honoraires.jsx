@@ -5,6 +5,7 @@ import HonorairesVentilation from '../components/HonorairesVentilation';
 import InheritanceHelper from '../components/InheritanceHelper';
 import ValidationAlerts from '../components/ValidationAlerts';
 import { Download, Save, FileText, TrendingUp, Users } from 'lucide-react';
+import { formatMontant } from '../utils/formatNumber';
 import InheritanceAPI from '../services/inheritance.api';
 import ValidationAPI from '../services/validation.api';
 
@@ -413,7 +414,7 @@ export default function Honoraires() {
                   {partenaires.reduce((sum, p) => sum + p.pourcentage, 0).toFixed(2)}%
                 </td>
                 <td className="px-4 py-3 text-center text-slate-900 dark:text-white">
-                  {partenaires.reduce((sum, p) => sum + (p.montantPrevisionnel || (montantTravaux * p.pourcentage / 100)), 0).toFixed(2)} €
+                  {formatMontant(partenaires.reduce((sum, p) => sum + (p.montantPrevisionnel || (montantTravaux * p.pourcentage / 100)), 0), 2)}
                 </td>
                 <td className="px-4 py-3 text-center text-slate-700 dark:text-slate-300">
                   {partenaires.reduce((sum, p) => sum + p.heuresEstimees, 0).toFixed(1)} h

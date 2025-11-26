@@ -13,6 +13,7 @@ import VoiceInputButton from '../components/VoiceInputButton';
 import { defaultAOs } from '../data/defaultData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { BarChart3, ClipboardList, Building2, FileText, Euro, Lightbulb, Users, Target, FolderOpen, Ruler } from 'lucide-react';
+import { formatMontant as formatMontantUtil } from '../utils/formatNumber';
 
 export default function Tenders({ onNavigate }) {
   const navigate = useNavigate();
@@ -635,12 +636,7 @@ export default function Tenders({ onNavigate }) {
 
   const formatMontant = (montant) => {
     if (!montant) return '-';
-    return new Intl.NumberFormat('fr-FR', { 
-      style: 'currency', 
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(montant);
+    return formatMontantUtil(montant, 0);
   };
 
   const getStatusColor = (status) => {
