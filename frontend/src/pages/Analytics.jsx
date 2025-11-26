@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUp, ArrowDown, FileCheck, PieChart, TrendingUp, Calendar, Users } from 'lucide-react';
+import { BarChart, Bar, LineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { formatMontant } from '../utils/formatNumber';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import AdvancedStats from '../components/AdvancedStats';
 
 export default function Analytics() {
   const navigate = useNavigate();
@@ -231,24 +233,77 @@ export default function Analytics() {
                 <option value="3ans">3 ans</option>
               </select>
             </div>
-            <div className="flex items-end justify-between gap-4 h-64 pb-4 border-b border-slate-100 dark:border-slate-700">
-              {evolutionData.map((item, i) => (
-                <div key={i} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
-                  <div className="relative w-full max-w-[40px] bg-slate-100 dark:bg-slate-800 rounded-t-lg h-full overflow-hidden flex items-end">
-                    <div
-                      style={{ height: `${(item.value / maxValue) * 100}%` }}
-                      className="w-full bg-brand opacity-80 group-hover:opacity-100 transition-all duration-300 rounded-t-lg relative"
-                    >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        {item.value.toLocaleString('fr-FR')} €
-                      </div>
-                    </div>
-                  </div>
-                  <span className="text-xs font-medium text-slate-500">{item.label}</span>
-                </div>
-              ))}
-            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={evolutionData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis 
+                  dataKey="label" 
+                  stroke="#64748b"
+                  style={{ fontSize: '12px' }}
+                />
+                <YAxis 
+                  stroke="#64748b"
+                  style={{ fontSize: '12px' }}
+                  tickFormatter={(value) => formatMontant(value, 0)}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px'
+                  }}
+                  formatter={(value) => formatMontant(value, 0)}
+                />
+                <Legend />
+                <Bar dataKey="value" fill="#7c3aed" radius={[8, 8, 0, 0]} name="Montant (€)" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
+
+          {/* Graphique en ligne pour tendance */}
+          <div className="bg-white dark:bg-dark-panel p-6 rounded-2xl border border-slate-200 dark:border-dark-border shadow-sm">
+            <h3 className="font-bold text-lg mb-4">Tendance des commandes</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={evolutionData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis 
+                  dataKey="label" 
+                  stroke="#64748b"
+                  style={{ fontSize: '12px' }}
+                />
+                <YAxis 
+                  stroke="#64748b"
+                  style={{ fontSize: '12px' }}
+                  tickFormatter={(value) => formatMontant(value, 0)}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px'
+                  }}
+                  formatter={(value) => formatMontant(value, 0)}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="#7c3aed" 
+                  strokeWidth={2}
+                  dot={{ fill: '#7c3aed', r: 4 }}
+                  activeDot={{ r: 6 }}
+                  name="Montant (€)"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Statistiques avancées */}
+          <AdvancedStats 
+            data={projets} 
+            type="revenue" 
+            options={{ period: periodeEvolution, groupBy: periodeEvolution.includes('mois') ? 'month' : 'year' }}
+          />
         </>
       )}
 
@@ -257,33 +312,64 @@ export default function Analytics() {
         <>
           <div className="bg-white dark:bg-dark-panel p-6 rounded-2xl border border-slate-200 dark:border-dark-border shadow-sm">
             <h3 className="font-bold text-lg mb-4">Répartition par partenaires</h3>
-            <div className="space-y-4">
-              {repartitionPartenaires.length === 0 ? (
-                <div className="text-center py-8 text-slate-500">
-                  Aucun partenaire associé à des projets
+            {repartitionPartenaires.length === 0 ? (
+              <div className="text-center py-8 text-slate-500">
+                Aucun partenaire associé à des projets
+              </div>
+            ) : (
+              <>
+                <ResponsiveContainer width="100%" height={300}>
+                  <RechartsPieChart>
+                    <Pie
+                      data={repartitionPartenaires.map(p => ({ name: p.nom, value: p.montant }))}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {repartitionPartenaires.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={['#7c3aed', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6'][index % 6]} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      formatter={(value) => formatMontant(value, 0)}
+                    />
+                    <Legend />
+                  </RechartsPieChart>
+                </ResponsiveContainer>
+                <div className="mt-6 space-y-4">
+                  {repartitionPartenaires.map((partenaire, i) => {
+                    const pourcentage = totalPartenaires > 0 ? (partenaire.montant / totalPartenaires) * 100 : 0;
+                    return (
+                      <div key={i}>
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="text-slate-600 dark:text-slate-300">
+                            {partenaire.nom} ({partenaire.nbProjets} projet{partenaire.nbProjets > 1 ? 's' : ''})
+                          </span>
+                          <span className="font-bold">
+                            {formatMontant(partenaire.montant, 0)} ({pourcentage.toFixed(1)}%)
+                          </span>
+                        </div>
+                        <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                          <div style={{ width: `${pourcentage}%` }} className="h-full bg-brand" />
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              ) : (
-                repartitionPartenaires.map((partenaire, i) => {
-                  const pourcentage = totalPartenaires > 0 ? (partenaire.montant / totalPartenaires) * 100 : 0;
-                  return (
-                    <div key={i}>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-slate-600 dark:text-slate-300">
-                          {partenaire.nom} ({partenaire.nbProjets} projet{partenaire.nbProjets > 1 ? 's' : ''})
-                        </span>
-                        <span className="font-bold">
-                          {formatMontant(partenaire.montant, 0)} ({pourcentage.toFixed(1)}%)
-                        </span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div style={{ width: `${pourcentage}%` }} className="h-full bg-brand" />
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
+              </>
+            )}
           </div>
+
+          {/* Statistiques avancées pour partenaires */}
+          <AdvancedStats 
+            data={bets} 
+            type="team" 
+            options={{ period: periodeEvolution }}
+          />
         </>
       )}
     </div>

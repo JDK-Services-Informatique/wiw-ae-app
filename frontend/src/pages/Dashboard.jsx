@@ -2,9 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { TrendingUp, Users, FileCheck, Clock, ArrowUpRight, MoreHorizontal, AlertCircle, Edit } from 'lucide-react';
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { formatMontant } from '../utils/formatNumber';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useListesDeroulantes } from '../hooks/useListesDeroulantes';
+import AdvancedStats from '../components/AdvancedStats';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -192,6 +194,37 @@ export default function Dashboard() {
   };
 
   const stats = calculateStats();
+
+  // Fonctions helper pour les graphiques
+  const generateMonthlyData = (projets) => {
+    const now = new Date();
+    const data = [];
+    for (let i = 11; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthProjets = projets.filter(p => {
+        const pDate = new Date(p.dateCreation || p.annee || now);
+        return pDate.getMonth() === date.getMonth() && pDate.getFullYear() === date.getFullYear();
+      });
+      data.push({
+        month: date.toLocaleDateString('fr-FR', { month: 'short' }),
+        montant: monthProjets.reduce((sum, p) => sum + (p.montantTravauxHT || 0), 0),
+        count: monthProjets.length
+      });
+    }
+    return data;
+  };
+
+  const generateDomainDistribution = (projets) => {
+    const distribution = {};
+    projets.forEach(p => {
+      const domaine = p.domaine || 'Non renseigné';
+      distribution[domaine] = (distribution[domaine] || 0) + (p.montantTravauxHT || 0);
+    });
+    return Object.entries(distribution)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 6);
+  };
 
   const handleExport = () => {
     const data = {
@@ -542,6 +575,111 @@ export default function Dashboard() {
           </motion.div>
         ))}
       </div>
+
+      {/* Graphiques avec Recharts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Graphique en barres - Évolution mensuelle */}
+        <div className="bg-white dark:bg-dark-panel p-6 rounded-2xl border border-slate-200 dark:border-dark-border shadow-sm">
+          <h3 className="font-bold text-lg mb-4 text-slate-900 dark:text-white">Évolution mensuelle des projets</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={generateMonthlyData(filteredProjets)}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis 
+                dataKey="month" 
+                stroke="#64748b"
+                style={{ fontSize: '12px' }}
+              />
+              <YAxis 
+                stroke="#64748b"
+                style={{ fontSize: '12px' }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px'
+                }}
+                formatter={(value) => formatMontant(value, 0)}
+              />
+              <Legend />
+              <Bar dataKey="montant" fill="#7c3aed" radius={[8, 8, 0, 0]} name="Montant (€)" />
+              <Bar dataKey="count" fill="#10b981" radius={[8, 8, 0, 0]} name="Nombre de projets" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Graphique en ligne - Tendance */}
+        <div className="bg-white dark:bg-dark-panel p-6 rounded-2xl border border-slate-200 dark:border-dark-border shadow-sm">
+          <h3 className="font-bold text-lg mb-4 text-slate-900 dark:text-white">Tendance des montants</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={generateMonthlyData(filteredProjets)}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis 
+                dataKey="month" 
+                stroke="#64748b"
+                style={{ fontSize: '12px' }}
+              />
+              <YAxis 
+                stroke="#64748b"
+                style={{ fontSize: '12px' }}
+                tickFormatter={(value) => formatMontant(value, 0)}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px'
+                }}
+                formatter={(value) => formatMontant(value, 0)}
+              />
+              <Legend />
+              <Line 
+                type="monotone" 
+                dataKey="montant" 
+                stroke="#7c3aed" 
+                strokeWidth={2}
+                dot={{ fill: '#7c3aed', r: 4 }}
+                activeDot={{ r: 6 }}
+                name="Montant (€)"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Répartition par domaine - Camembert */}
+      <div className="bg-white dark:bg-dark-panel p-6 rounded-2xl border border-slate-200 dark:border-dark-border shadow-sm">
+        <h3 className="font-bold text-lg mb-4 text-slate-900 dark:text-white">Répartition par domaine</h3>
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart>
+            <Pie
+              data={generateDomainDistribution(filteredProjets)}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              outerRadius={100}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {generateDomainDistribution(filteredProjets).map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={['#7c3aed', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6'][index % 6]} />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(value) => formatMontant(value, 0)}
+            />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Statistiques avancées */}
+      <AdvancedStats 
+        data={filteredProjets} 
+        type="projects" 
+        options={{ period: filterPeriode, groupBy: 'month' }}
+      />
 
       {/* Recent Activity Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
