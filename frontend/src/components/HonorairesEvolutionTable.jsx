@@ -16,7 +16,9 @@ export default function HonorairesEvolutionTable({
   onExporterProposition
 }) {
   const [evolutions, setEvolutions] = useState([
-    { id: 'base', nom: 'Base', pourcentages: { ...basePercentages }, bloque: false }
+    { id: 'base', nom: 'Base', pourcentages: { ...basePercentages }, bloque: false },
+    { id: 'evolution-1', nom: 'Évolution 1', pourcentages: { ...basePercentages }, bloque: false },
+    { id: 'evolution-2', nom: 'Évolution 2', pourcentages: { ...basePercentages }, bloque: false }
   ]);
   const [activeEvolutionId, setActiveEvolutionId] = useState('base');
 

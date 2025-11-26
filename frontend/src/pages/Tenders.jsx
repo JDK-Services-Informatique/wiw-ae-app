@@ -14,6 +14,7 @@ import { defaultAOs } from '../data/defaultData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { BarChart3, ClipboardList, Building2, FileText, Euro, Lightbulb, Users, Target, FolderOpen, Ruler } from 'lucide-react';
 import { formatMontant as formatMontantUtil } from '../utils/formatNumber';
+import AOPipelineStats from '../components/AOPipelineStats';
 
 export default function Tenders({ onNavigate }) {
   const navigate = useNavigate();
@@ -739,6 +740,11 @@ export default function Tenders({ onNavigate }) {
           requiredPlan="PREMIUM"
         />
       )}
+
+      {/* Pipeline AO - Statistiques (KPI-01) */}
+      <div className="card" style={{marginBottom: '20px'}}>
+        <AOPipelineStats aos={aos} />
+      </div>
 
       {/* Filtres statut avec bouton Rappel mission */}
       <div className="card" style={{marginBottom: '20px', background: 'rgba(59, 130, 246, 0.05)'}}>

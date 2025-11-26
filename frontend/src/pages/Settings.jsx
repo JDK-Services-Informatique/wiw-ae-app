@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ListesDeroulantesManager from '../components/ListesDeroulantesManager';
+import TwoFactorSettings from '../components/TwoFactorSettings';
 import { BarChart3, ClipboardList, Trophy, FolderOpen } from 'lucide-react';
 
 export default function Settings() {
@@ -822,19 +823,17 @@ export default function Settings() {
           <div className="card" style={{marginBottom: '20px'}}>
             <h3 style={{marginBottom: '20px'}}>Sécurité</h3>
 
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 0', borderBottom: '1px solid var(--border-color)'}}>
-              <div>
-                <div style={{fontWeight: 'bold'}}>Authentification à deux facteurs</div>
-                <div style={{fontSize: '13px', opacity: 0.7}}>Sécurité renforcée avec 2FA</div>
-              </div>
-              <label className="switch">
-                <input 
-                  type="checkbox" 
-                  checked={settings.securite.auth2fa}
-                  onChange={() => handleToggle('securite', 'auth2fa')}
-                />
-                <span className="slider"></span>
-              </label>
+            {/* Intégration TwoFactorSettings */}
+            <div style={{marginBottom: '30px'}}>
+              <TwoFactorSettings
+                enabled={settings.securite.auth2fa}
+                onToggle={(enabled) => {
+                  handleChange('securite', 'auth2fa', enabled);
+                }}
+                onSetup={() => {
+                  // Callback optionnel pour la configuration
+                }}
+              />
             </div>
 
             <div className="form-group">

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import DevisTable from '../components/DevisTable';
 import HonorairesEvolutionTable from '../components/HonorairesEvolutionTable';
 import HonorairesVentilation from '../components/HonorairesVentilation';
+import ScenariosHonoraires from '../components/ScenariosHonoraires';
 import InheritanceHelper from '../components/InheritanceHelper';
 import ValidationAlerts from '../components/ValidationAlerts';
 import { Download, Save, FileText, TrendingUp, Users } from 'lucide-react';
 import { formatMontant } from '../utils/formatNumber';
 import InheritanceAPI from '../services/inheritance.api';
 import ValidationAPI from '../services/validation.api';
+import { exportHonorairesExcel, exportHonorairesPDF } from '../utils/exportHonoraires';
 
 export default function Honoraires() {
   // État pour le montant des travaux (unique, pré-rempli)
@@ -47,7 +49,7 @@ export default function Honoraires() {
   const [evolutions, setEvolutions] = useState([]);
 
   // État pour l'onglet actif
-  const [activeTab, setActiveTab] = useState('evolution');
+  const [activeTab, setActiveTab] = useState('scenarios');
 
   // États pour héritage et validation
   const [missionId, setMissionId] = useState(null);
@@ -151,7 +153,33 @@ export default function Honoraires() {
             <Save size={18} />
             <span>Sauvegarder</span>
           </button>
-          <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-hover shadow-lg shadow-brand/20 transition-colors">
+          <button 
+            onClick={() => {
+              const missions = Object.keys(basePercentages).map(key => ({ id: key, nom: key }));
+              exportHonorairesExcel({
+                montantTravaux,
+                evolutions: evolutions.length > 0 ? evolutions : [{ id: 'base', nom: 'Base', pourcentages: basePercentages }],
+                missions,
+                partenaires
+              });
+            }}
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-dark-panel border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          >
+            <Download size={18} />
+            <span>Exporter Excel</span>
+          </button>
+          <button 
+            onClick={() => {
+              const missions = Object.keys(basePercentages).map(key => ({ id: key, nom: key }));
+              exportHonorairesPDF({
+                montantTravaux,
+                evolutions: evolutions.length > 0 ? evolutions : [{ id: 'base', nom: 'Base', pourcentages: basePercentages }],
+                missions,
+                partenaires
+              });
+            }}
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-hover shadow-lg shadow-brand/20 transition-colors"
+          >
             <Download size={18} />
             <span>Exporter PDF</span>
           </button>
@@ -460,6 +488,17 @@ export default function Honoraires() {
       <div className="border-b border-slate-200 dark:border-slate-700">
         <nav className="flex gap-4">
           <button
+            onClick={() => setActiveTab('scenarios')}
+            className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
+              activeTab === 'scenarios'
+                ? 'border-brand text-brand'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+            }`}
+          >
+            <FileText size={18} className="inline mr-2" />
+            Scénarios (Base, Évolution 1, Évolution 2)
+          </button>
+          <button
             onClick={() => setActiveTab('evolution')}
             className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
               activeTab === 'evolution'
@@ -485,6 +524,23 @@ export default function Honoraires() {
       </div>
 
       {/* Contenu selon l'onglet */}
+      {activeTab === 'scenarios' && (
+        <ScenariosHonoraires
+          montantTravaux={montantTravaux}
+          basePercentages={basePercentages}
+          partenaires={partenaires}
+          onSave={(data) => {
+            console.log('Scénario sauvegardé:', data);
+            if (window.showToast) {
+              window.showToast('✅ Scénario sauvegardé avec succès', 'success');
+            }
+          }}
+          onExport={(data) => {
+            console.log('Scénario exporté:', data);
+          }}
+        />
+      )}
+
       {activeTab === 'evolution' && (
         <HonorairesEvolutionTable
           montantTravaux={montantTravaux}
