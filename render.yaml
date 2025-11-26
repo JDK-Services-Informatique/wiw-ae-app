@@ -29,18 +29,17 @@ services:
         fromService:
           type: web
           name: wiw-ae-frontend
-          property: hostURL
+          property: host
       - key: CORS_ORIGIN
         fromService:
           type: web
           name: wiw-ae-frontend
-          property: hostURL
+          property: host
 
   # Frontend - Static Site (Vite/React)
   - type: web
     name: wiw-ae-frontend
     runtime: static
-    region: frankfurt
     plan: starter
     rootDir: frontend
     buildCommand: npm install && npm run build
@@ -61,7 +60,7 @@ services:
         fromService:
           type: web
           name: wiw-ae-backend
-          property: hostURL
+          property: host
 
 databases:
   # PostgreSQL Database
