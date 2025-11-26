@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIW - Work in Web</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="icon" type="image/png" href="../frontend/public/favicon.png">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">W</div>
+            <span class="logo-text">WiW AE+</span>
+        </div>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#dashboard" class="nav-link active" data-page="dashboard">
+                <span class="icon">📊</span> Tableau de Bord
+            </a></li>
+            <li><a href="#honoraires" class="nav-link" data-page="honoraires">
+                <span class="icon">💰</span> Honoraires
+            </a></li>
+            <li><a href="#tenders" class="nav-link" data-page="tenders">
+                <span class="icon">📋</span> Appels d'Offres
+            </a></li>
+            <li><a href="#team" class="nav-link" data-page="team">
+                <span class="icon">👥</span> Équipe
+            </a></li>
+            <li><a href="#company" class="nav-link" data-page="company">
+                <span class="icon">🏢</span> Clients
+            </a></li>
+            <li><a href="#devis" class="nav-link" data-page="devis">
+                <span class="icon">📄</span> Devis
+            </a></li>
+            <li><a href="#analytics" class="nav-link" data-page="analytics">
+                <span class="icon">📈</span> Analytics
+            </a></li>
+            <li><a href="#references" class="nav-link" data-page="references">
+                <span class="icon">⭐</span> Références
+            </a></li>
+            <li><a href="#settings" class="nav-link" data-page="settings">
+                <span class="icon">⚙️</span> Paramètres
+            </a></li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle" title="Changer le thème">
+                <span class="icon">🌙</span> Mode sombre
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <div class="page-header">
+            <h1 id="pageTitle">Tableau de Bord</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="addBtn">+ Ajouter</button>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="page-content" id="pageContent">
+            <!-- Le contenu sera injecté dynamiquement -->
+        </div>
+    </main>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+
+    <script src="js/data/seed.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/pages/dashboard.js"></script>
+    <script src="js/pages/honoraires.js"></script>
+    <script src="js/pages/tenders.js"></script>
+    <script src="js/pages/team.js"></script>
+    <script src="js/pages/company.js"></script>
+    <script src="js/pages/devis.js"></script>
+    <script src="js/pages/analytics.js"></script>
+    <script src="js/pages/references.js"></script>
+    <script src="js/pages/settings.js"></script>
+    
+    <script>
+        // Initialiser les données de test si localStorage est vide
+        if (!localStorage.getItem('wiw-projets')) {
+            console.log('💡 Pour initialiser les données de test, exécutez: seedData()');
+        }
+    </script>
+</body>
+</html>
+
