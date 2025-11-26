@@ -27,12 +27,12 @@ on:
       run_tests:
         description: 'Exécuter les tests'
         required: false
-        default: 'false'
+        default: false
         type: boolean
       run_build:
         description: 'Exécuter le build'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 env:
