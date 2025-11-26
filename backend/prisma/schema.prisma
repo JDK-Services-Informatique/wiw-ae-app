@@ -1,0 +1,339 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Utilisateur {
+  id          Int      @id @default(autoincrement())
+  nom         String
+  prenom      String?
+  email       String   @unique
+  motDePasse  String
+  role        String   @default("USER")
+  plan        String   @default("GRATUIT")
+  coutHoraire Float?
+  coutMin     Float?
+  // 2FA
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret  String?
+  twoFactorBackupCodes String? // JSON array
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  projets     Projet[]
+  devis       Devis[]
+  references  Reference[]
+  equipe      Equipe[]
+  honoraires  Honoraire[]
+  missions    Mission[]
+  materiels   Materiel[]
+  passwordResetTokens PasswordResetToken[]
+  listesDeroulantes ListeDeroulante[]
+  analysesPostMortem AnalysePostMortem[]
+  sponsors Sponsor[]
+  scenarioVersions ScenarioVersion[]
+  teamTemplates TeamTemplate[]
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  utilisateurId Int
+  utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Projet {
+  id          Int         @id @default(autoincrement())
+  titre       String
+  domaine     String
+  type        String
+  annee       Int?
+  mois        Int?
+  statut      String      @default("En cours")
+  equipeId    Int?
+  utilisateurId Int?
+  utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  appelsOffre AppelOffre[]
+  honoraires  Honoraire[]
+  scenarioVersions ScenarioVersion[]
+  createdAt   DateTime    @default(now())
+}
+
+model AppelOffre {
+  id        Int      @id @default(autoincrement())
+  titre     String
+  description String?
+  clientNom String?
+  clientEmail String?
+  clientTel String?
+  tranche   String?
+  montant   Float?
+  montantTravaux Float? // Montant des travaux HT (unique, pré-rempli)
+  domaine   String?  // Domaine du projet
+  type      String?  // Type de projet (Neuf, Réhabilitation, etc.)
+  delai     String?
+  statut    String   @default("Nouveau") // Nouveau, En cours, Gagné, Perdu, Archivé
+  projetId  Int?
+  projet    Projet?  @relation(fields: [projetId], references: [id])
+  missions  Mission[] // Relation avec les missions
+  analysePostMortem AnalysePostMortem? // Analyse si AO perdu
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AnalysePostMortem {
+  id          Int      @id @default(autoincrement())
+  appelOffreId Int     @unique
+  appelOffre  AppelOffre @relation(fields: [appelOffreId], references: [id], onDelete: Cascade)
+  raison      String?  // Raison principale de l'échec
+  concurrentGagnant String? // Nom du concurrent qui a gagné
+  montantGagnant Float? // Montant proposé par le gagnant (si connu)
+  leconsApprises String? // Leçons apprises (texte libre)
+  pointsForts String? // Points forts de notre offre (texte libre)
+  pointsFaibles String? // Points faibles de notre offre (texte libre)
+  dateAnalyse DateTime @default(now())
+  utilisateurId Int?
+  utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Mission {
+  id          Int      @id @default(autoincrement())
+  appelOffreId Int?    // Lien avec l'AO
+  appelOffre  AppelOffre? @relation(fields: [appelOffreId], references: [id], onDelete: Cascade)
+  numero      String?
+  typeMission String   // Base, Complémentaire, Optionnelle
+  phase       String?  // CONCEPTION, RÉALISATION
+  tranche     String?  // FERME, CONDITIONNELLE, OPTIONNELLE
+  designation String
+  description String?
+  montantTravaux Float? // Hérité de l'AO (non modifiable)
+  equipe      String?  // JSON array des partenaires
+  pourcentage Float?   // % de rémunération
+  montantHT   Float?   // Montant HT calculé
+  statut      String   @default("brouillon")
+  notes       String?
+  utilisateurId Int?
+  utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  honoraires  Honoraire[] // Relation avec les honoraires
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Devis {
+  id          Int      @id @default(autoincrement())
+  numero      String   @unique
+  date        DateTime @default(now())
+  clientNom   String
+  clientAdresse String?
+  clientCodePostal String?
+  clientVille String?
+  clientTelephone String?
+  clientEmail String?
+  tauxHoraire Float    @default(0)
+  rabais      Float    @default(0)
+  rabaisType  String   @default("pourcentage") // "pourcentage" ou "montant"
+  statut      String   @default("brouillon") // "brouillon", "envoye", "accepte", "refuse"
+  notes       String?
+  conditionsReglement String @default("30 jours")
+  utilisateurId Int?
+  utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  lignes      DevisLigne[]
+  chapitres   DevisChapitre[]
+  tracabilite DevisTracabilite?
+  medias      DevisMedia[]
+  versionsPDF DevisVersionPDF[]
+  lettreEnvoi LettreEnvoi?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DevisLigne {
+  id          Int      @id @default(autoincrement())
+  designation String
+  unite       String   // "h", "u", "j", "m²", "ml", "kg", "l", "ff"
+  puHT        Float
+  quantite    Float
+  remise      Float    @default(0) // pourcentage
+  chapitreId  Int?
+  chapitre    DevisChapitre? @relation(fields: [chapitreId], references: [id])
+  devisId     Int
+  devis       Devis    @relation(fields: [devisId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+}
+
+model DevisChapitre {
+  id          Int      @id @default(autoincrement())
+  titre       String
+  ordre       Int      @default(0)
+  devisId     Int
+  devis       Devis    @relation(fields: [devisId], references: [id], onDelete: Cascade)
+  lignes      DevisLigne[]
+  createdAt   DateTime @default(now())
+}
+
+model DevisTracabilite {
+  id              Int      @id @default(autoincrement())
+  dateRemis       DateTime?
+  dateCorrige     DateTime?
+  dateValide      DateTime?
+  dureeEstimee    Float?
+  sommeHeuresPrevues Float?
+  devisId         Int     @unique
+  devis           Devis   @relation(fields: [devisId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+}
+
+model DevisMedia {
+  id          Int      @id @default(autoincrement())
+  nom         String
+  type        String   // "image" ou "pdf"
+  taille      Int
+  description String?
+  data        String   // base64 pour le stockage temporaire
+  devisId     Int
+  devis       Devis    @relation(fields: [devisId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+}
+
+model DevisVersionPDF {
+  id          Int      @id @default(autoincrement())
+  numero      String
+  taille      Int
+  data        String   // base64 pour le stockage temporaire
+  devisId     Int
+  devis       Devis    @relation(fields: [devisId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+}
+
+model LettreEnvoi {
+  id              Int      @id @default(autoincrement())
+  expediteurNom   String
+  expediteurAdresse String
+  expediteurVille String
+  destinataireNom String
+  destinataireAdresse String?
+  objet           String
+  corps           String
+  signature       String
+  mentionsLegales String?
+  devisId         Int     @unique
+  devis           Devis   @relation(fields: [devisId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+}
+
+model Reference {
+  id          Int      @id @default(autoincrement())
+  designation String
+  unite       String
+  puHT        Float
+  categorie   String
+  description String?
+  tags        String?  // JSON string array
+  utilisateurId Int?
+  utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Equipe {
+  id          Int      @id @default(autoincrement())
+  nom         String
+  role        String
+  email       String?
+  telephone   String?
+  utilisateurId Int?
+  utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model Materiel {
+  id            Int      @id @default(autoincrement())
+  designation   String
+  quantite      Int      @default(1)
+  entreprise    String?
+  fichierTechnique String?
+  utilisateurId Int?
+  utilisateur   Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  createdAt     DateTime @default(now())
+}
+
+model Honoraire {
+  id          Int      @id @default(autoincrement())
+  projetId    Int?
+  projet      Projet?  @relation(fields: [projetId], references: [id])
+  missionId   Int?     // Lien avec la mission
+  mission     Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+  montant     Float
+  montantTravaux Float? // Hérité de la mission/AO (non modifiable)
+  statut      String   @default("previsionnel")
+  dateEcheance DateTime?
+  utilisateurId Int?
+  utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ListeDeroulante {
+  id          Int      @id @default(autoincrement())
+  nom         String   @unique // Ex: "domaines", "types", "metiers", "statuts_ao"
+  label       String   // Label affiché (ex: "Domaines", "Types de projet")
+  description String?  // Description de la liste
+  type        String   @default("simple") // "simple" ou "hierarchique"
+  valeurs     String   // JSON array des valeurs
+  ordre       Int      @default(0) // Ordre d'affichage
+  actif       Boolean  @default(true)
+  utilisateurId Int?   // Créateur (admin)
+  utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Sponsor {
+  id          Int      @id @default(autoincrement())
+  nom         String   // Nom du sponsor/partenaire
+  logo        String   // URL ou base64 du logo
+  url         String?  // URL du site web du sponsor (optionnel)
+  description String?  // Description du sponsor
+  ordre       Int      @default(0) // Ordre d'affichage
+  actif       Boolean  @default(true)
+  utilisateurId Int?   // Créateur (admin)
+  utilisateur Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ScenarioVersion {
+  id            Int      @id @default(autoincrement())
+  projetId      Int
+  projet        Projet   @relation(fields: [projetId], references: [id], onDelete: Cascade)
+  versionNumber Int      // Numéro de version (1, 2, 3, ...)
+  data          String   // Données JSON du scénario
+  commentaire   String?  // Commentaire optionnel pour la version
+  utilisateurId Int
+  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id])
+  createdAt     DateTime @default(now())
+}
+
+model TeamTemplate {
+  id          Int      @id @default(autoincrement())
+  nom         String   // Nom du template
+  description String?  // Description du template
+  domaine     String   // Domaine du projet (Logements, Équipements publics, etc.)
+  typeProjet  String   // Type de projet (Neuf, Réhabilitation, etc.)
+  membres     String   // Configuration des membres (JSON)
+  competencesRequises String // Liste des compétences requises (JSON)
+  budgetEstime Float?  // Budget estimé pour cette équipe
+  dureeEstimee String? // Durée estimée du projet
+  utilisateurId Int
+  utilisateur Utilisateur @relation(fields: [utilisateurId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

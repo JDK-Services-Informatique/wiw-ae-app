@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiW - Solution complète pour architectes et bureaux d'études</title>
+    
+    <!-- Préchargement des images principales pour performance -->
+    <link rel="preload" as="image" href="image001.webp" type="image/webp">
+    <link rel="preload" as="image" href="image001.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --ink: #e5e7eb;
+            --brand: #7c3aed;
+            --brand-hover: #6d28d9;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, #1e293b 100%);
+            color: var(--ink);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background: var(--brand);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--brand-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--ink);
+            color: var(--ink);
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: var(--brand);
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--brand) 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 20px;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero .cta-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero .cta-buttons .btn,
+        .hero .cta-buttons .btn-secondary {
+            font-size: 18px;
+            padding: 15px 40px;
+        }
+
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        section h2 {
+            font-size: 42px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        section > p {
+            font-size: 18px;
+            opacity: 0.8;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .screenshots-large {
+            margin-bottom: 30px;
+        }
+
+        .screenshots-large .card {
+            padding: 0;
+            overflow: hidden;
+            cursor: pointer;
+            background: var(--panel);
+        }
+
+        .screenshots-large img,
+        .screenshots-large picture {
+            width: 100%;
+            height: auto;
+            max-height: 600px;
+            object-fit: contain;
+            display: block;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+            /* Amélioration du rendu des images */
+            image-rendering: -webkit-optimize-contrast;
+            backface-visibility: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Rendu optimal sur écrans haute résolution */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .screenshots-large img,
+            .screenshots-grid img {
+                image-rendering: auto;
+            }
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .screenshots-grid .card {
+            padding: 0;
+            overflow: hidden;
+            cursor: pointer;
+            background: var(--panel);
+            aspect-ratio: 4 / 3;  /* Ratio uniforme pour toutes les images de la grille */
+        }
+
+        .screenshots-grid img,
+        .screenshots-grid picture {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            border-radius: 16px;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.03) 0%, rgba(59, 130, 246, 0.03) 100%);
+            /* Amélioration du rendu des images */
+            image-rendering: -webkit-optimize-contrast;
+            backface-visibility: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            padding: 30px;
+            cursor: pointer;
+        }
+
+        .feature-card .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .pricing-card {
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .pricing-card.popular {
+            border: 2px solid var(--brand);
+        }
+
+        .pricing-card .badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--brand);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .pricing-card h3 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--brand);
+        }
+
+        .pricing-card .price {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .pricing-card .period {
+            font-size: 16px;
+            opacity: 0.6;
+            margin-bottom: 30px;
+        }
+
+        .pricing-card .features {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .pricing-card .features div {
+            padding: 10px 0;
+            font-size: 15px;
+        }
+
+        .pricing-card .btn {
+            width: 100%;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--brand) 0%, #6d28d9 100%);
+            padding: 80px 40px;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            color: white;
+            opacity: 0.9;
+        }
+
+        .cta-section .btn {
+            background: white;
+            color: var(--brand);
+            font-size: 18px;
+            padding: 15px 50px;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px;
+            text-align: center;
+            opacity: 0.6;
+        }
+
+        footer .links {
+            margin-top: 15px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+
+        footer .links button {
+            background: none;
+            border: none;
+            color: var(--ink);
+            cursor: pointer;
+            padding: 0;
+            text-decoration: underline;
+        }
+
+        footer .links button:hover {
+            color: var(--brand);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            section h2 {
+                font-size: 32px;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            section {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <h1 class="gradient-text">WIW / AE+</h1>
+        </div>
+        <button class="btn" onclick="goToApp()">
+            Se connecter
+        </button>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>
+            La solution complète pour les<br/>
+            <span class="gradient-text">architectes et bureaux d'études</span>
+        </h1>
+        <p>
+            Gérez vos projets, calculez vos honoraires, suivez vos appels d'offres et pilotez votre activité avec une seule plateforme intuitive.
+        </p>
+        <div class="cta-buttons">
+            <button class="btn" onclick="goToApp()">
+                Commencer gratuitement
+            </button>
+            <button class="btn-secondary" onclick="scrollToSection('features')">
+                Voir les fonctionnalités
+            </button>
+        </div>
+    </div>
+
+    <!-- Screenshots Section -->
+    <section>
+        <h2>Une interface moderne et intuitive</h2>
+        <p>Découvrez notre plateforme en images</p>
+        
+        <!-- Large Featured Image -->
+        <div class="screenshots-large">
+            <div class="card">
+                <picture>
+                    <source srcset="image001.webp" type="image/webp">
+                    <img src="image001.png" alt="Dashboard principal WiW" loading="lazy" onerror="this.style.display='none'">
+                </picture>
+            </div>
+        </div>
+
+        <!-- Grid of 4 smaller images -->
+        <div class="screenshots-grid">
+            <div class="card">
+                <picture>
+                    <source srcset="image002.webp" type="image/webp">
+                    <img src="image002.png" alt="Capture d'écran WiW 2" loading="lazy" onerror="this.style.display='none'">
+                </picture>
+            </div>
+            <div class="card">
+                <picture>
+                    <source srcset="image003.webp" type="image/webp">
+                    <img src="image003.png" alt="Capture d'écran WiW 3" loading="lazy" onerror="this.style.display='none'">
+                </picture>
+            </div>
+            <div class="card">
+                <picture>
+                    <source srcset="image004.webp" type="image/webp">
+                    <img src="image004.png" alt="Capture d'écran WiW 4" loading="lazy" onerror="this.style.display='none'">
+                </picture>
+            </div>
+            <div class="card">
+                <picture>
+                    <source srcset="image005.webp" type="image/webp">
+                    <img src="image005.png" alt="Capture d'écran WiW 5" loading="lazy" onerror="this.style.display='none'">
+                </picture>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <h2>Tout ce dont vous avez besoin</h2>
+        <div class="features-grid">
+            <div class="card feature-card">
+                <div class="icon">💰</div>
+                <h3>Calcul d'Honoraires</h3>
+                <p>Calculez vos honoraires avec précision et rapidité. Simulation de projet, comparaison tarifaire, statistiques avancées.</p>
+            </div>
+            <div class="card feature-card">
+                <div class="icon">🎯</div>
+                <h3>Appels d'Offres</h3>
+                <p>Suivez et gérez tous vos appels d'offres en un seul endroit, ne ratez aucune opportunité.</p>
+            </div>
+            <div class="card feature-card">
+                <div class="icon">📊</div>
+                <h3>Analytics Avancés</h3>
+                <p>Visualisez vos performances avec des tableaux de bord et des statistiques détaillées.</p>
+            </div>
+            <div class="card feature-card">
+                <div class="icon">📅</div>
+                <h3>Calendrier Intégré</h3>
+                <p>Planifiez vos projets, réunions et deadlines dans un calendrier unifié.</p>
+            </div>
+            <div class="card feature-card">
+                <div class="icon">🏗️</div>
+                <h3>Gestion BET</h3>
+                <p>Gérez vos partenaires BET, leurs compétences et tarifs. Badges cliquables pour copie rapide.</p>
+            </div>
+            <div class="card feature-card">
+                <div class="icon">👥</div>
+                <h3>Gestion d'Équipe</h3>
+                <p>Collaborez efficacement avec votre équipe et gérez les rôles de chacun.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing">
+        <h2>Tarifs simples et transparents</h2>
+        <p>14 jours d'essai gratuit, sans carte bancaire. Annulez à tout moment.</p>
+        <div class="pricing-grid">
+            <div class="card pricing-card">
+                <h3>STARTER</h3>
+                <div class="price">29€</div>
+                <div class="period">/mois</div>
+                <div class="features">
+                    <div>✓ 5 projets actifs</div>
+                    <div>✓ Calcul d'honoraires</div>
+                    <div>✓ Suivi des AO</div>
+                    <div>✓ 1 utilisateur</div>
+                </div>
+                <button class="btn" onclick="goToApp()">Essayer gratuitement</button>
+            </div>
+
+            <div class="card pricing-card popular">
+                <div class="badge">POPULAIRE</div>
+                <h3>PREMIUM</h3>
+                <div class="price">79€</div>
+                <div class="period">/mois</div>
+                <div class="features">
+                    <div>✓ Projets illimités</div>
+                    <div>✓ Analytics avancés</div>
+                    <div>✓ Templates personnalisés</div>
+                    <div>✓ 5 utilisateurs</div>
+                </div>
+                <button class="btn" onclick="goToApp()">Essayer gratuitement</button>
+            </div>
+
+            <div class="card pricing-card">
+                <h3>ENTERPRISE</h3>
+                <div class="price">199€</div>
+                <div class="period">/mois</div>
+                <div class="features">
+                    <div>✓ Tout illimité</div>
+                    <div>✓ Support 24/7</div>
+                    <div>✓ API complète</div>
+                    <div>✓ Utilisateurs illimités</div>
+                </div>
+                <button class="btn" onclick="goToApp()">Essayer gratuitement</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <h2>Prêt à transformer votre pratique ?</h2>
+        <p>Rejoignez des centaines d'architectes qui font confiance à WiW</p>
+        <button class="btn" onclick="goToApp()">
+            Commencer maintenant
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 WiW / AE+. Tous droits réservés.</p>
+        <div class="links">
+            <button onclick="scrollToSection('features')">Fonctionnalités</button>
+            <button onclick="scrollToSection('pricing')">Tarifs</button>
+            <button onclick="goToApp()">Connexion</button>
+            <button onclick="openPrototype()">Démo Interactive</button>
+        </div>
+    </footer>
+
+    <script>
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function goToApp() {
+            // Rediriger vers l'application React en développement
+            window.location.href = 'http://localhost:5177';
+        }
+
+        function openPrototype() {
+            // Ouvrir le prototype dans le même dossier
+            window.open('prototype.html', '_blank');
+        }
+
+        // Smooth scroll pour tous les liens d'ancrage
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('WiW Landing Page chargée');
+        });
+    </script>
+</body>
+</html>

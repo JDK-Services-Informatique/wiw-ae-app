@@ -1,0 +1,242 @@
+/**
+ * Styles globaux pour les composants et sections
+ * Amélioration de la compartimentation et de la lisibilité
+ */
+
+/* ============================================
+   TYPOGRAPHIE ET PARAGRAPHES
+   ============================================ */
+
+/* Paragraphes avec espacement cohérent */
+.content-section {
+  @apply space-y-6;
+}
+
+.content-section p {
+  @apply text-slate-700 dark:text-slate-300 leading-relaxed;
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}
+
+.content-section p:last-child {
+  margin-bottom: 0;
+}
+
+/* Titres de section */
+.section-title {
+  @apply text-xl font-bold text-slate-900 dark:text-white mb-4;
+}
+
+.section-subtitle {
+  @apply text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3 mt-6;
+}
+
+/* Paragraphes avec compartimentation */
+.paragraph-block {
+  @apply p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-dark-panel mb-4;
+}
+
+.paragraph-block p {
+  @apply mb-3;
+}
+
+.paragraph-block p:last-child {
+  @apply mb-0;
+}
+
+/* ============================================
+   CARTES ET CONTENEURS
+   ============================================ */
+
+.card {
+  @apply bg-white dark:bg-dark-panel rounded-xl border border-slate-200 dark:border-dark-border shadow-sm;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-compact {
+  @apply bg-white dark:bg-dark-panel rounded-lg border border-slate-200 dark:border-dark-border;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-section {
+  @apply border-b border-slate-200 dark:border-slate-700 pb-4 mb-4;
+}
+
+.card-section:last-child {
+  @apply border-b-0 pb-0 mb-0;
+}
+
+/* ============================================
+   SECTIONS COMPARTIMENTÉES
+   ============================================ */
+
+.section-container {
+  @apply space-y-6 mb-8;
+}
+
+.section-box {
+  @apply bg-slate-50 dark:bg-slate-800/50 rounded-lg p-5 border border-slate-200 dark:border-slate-700;
+  margin-bottom: 1.5rem;
+}
+
+.section-box h3 {
+  @apply text-lg font-semibold text-slate-900 dark:text-white mb-3;
+}
+
+.section-box p {
+  @apply text-slate-700 dark:text-slate-300 leading-relaxed;
+  margin-bottom: 1rem;
+}
+
+.section-box p:last-child {
+  margin-bottom: 0;
+}
+
+/* Grille de sections */
+.sections-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.sections-grid-3 {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+/* ============================================
+   LISTES ET ÉLÉMENTS
+   ============================================ */
+
+.info-list {
+  @apply space-y-3;
+}
+
+.info-item {
+  @apply flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700;
+}
+
+.info-item-label {
+  @apply font-semibold text-slate-900 dark:text-white min-w-[140px];
+}
+
+.info-item-value {
+  @apply text-slate-700 dark:text-slate-300 flex-1;
+}
+
+/* ============================================
+   ESPACEMENTS STANDARDISÉS
+   ============================================ */
+
+.spacing-section {
+  @apply mb-8;
+}
+
+.spacing-subsection {
+  @apply mb-6;
+}
+
+.spacing-paragraph {
+  @apply mb-4;
+}
+
+.spacing-compact {
+  @apply mb-2;
+}
+
+/* ============================================
+   TEXTE ET CONTENU
+   ============================================ */
+
+.text-content {
+  @apply text-slate-700 dark:text-slate-300 leading-relaxed;
+  line-height: 1.75;
+}
+
+.text-content p {
+  @apply mb-4;
+}
+
+.text-content p:last-child {
+  @apply mb-0;
+}
+
+.text-content h3 {
+  @apply text-lg font-semibold text-slate-900 dark:text-white mt-6 mb-3;
+}
+
+.text-content h4 {
+  @apply text-base font-semibold text-slate-800 dark:text-slate-200 mt-4 mb-2;
+}
+
+.text-content ul,
+.text-content ol {
+  @apply mb-4 ml-6;
+}
+
+.text-content li {
+  @apply mb-2;
+}
+
+/* ============================================
+   DIVISEURS ET SÉPARATEURS
+   ============================================ */
+
+.divider {
+  @apply border-t border-slate-200 dark:border-slate-700 my-6;
+}
+
+.divider-compact {
+  @apply border-t border-slate-200 dark:border-slate-700 my-4;
+}
+
+/* ============================================
+   BADGES ET TAGS
+   ============================================ */
+
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-primary {
+  @apply bg-brand/10 text-brand border border-brand/20;
+}
+
+.badge-success {
+  @apply bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20;
+}
+
+.badge-warning {
+  @apply bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20;
+}
+
+.badge-error {
+  @apply bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20;
+}
+
+.badge-info {
+  @apply bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20;
+}
+
+/* ============================================
+   RESPONSIVE ET ADAPTATION
+   ============================================ */
+
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-box {
+    padding: 1rem;
+  }
+
+  .sections-grid {
+    @apply grid-cols-1;
+  }
+
+  .sections-grid-3 {
+    @apply grid-cols-1;
+  }
+}
+
