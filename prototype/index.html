@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WIW - Work in Web</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/icons.css">
     <link rel="icon" type="image/png" href="../frontend/public/favicon.png">
 </head>
 <body>
@@ -17,37 +18,37 @@
         
         <ul class="nav-menu" id="navMenu">
             <li><a href="#dashboard" class="nav-link active" data-page="dashboard">
-                <span class="icon">📊</span> Tableau de Bord
+                <span class="icon" data-icon="dashboard"></span> Tableau de Bord
             </a></li>
             <li><a href="#honoraires" class="nav-link" data-page="honoraires">
-                <span class="icon">💰</span> Honoraires
+                <span class="icon" data-icon="money"></span> Honoraires
             </a></li>
             <li><a href="#tenders" class="nav-link" data-page="tenders">
-                <span class="icon">📋</span> Appels d'Offres
+                <span class="icon" data-icon="clipboard"></span> Appels d'Offres
             </a></li>
             <li><a href="#team" class="nav-link" data-page="team">
-                <span class="icon">👥</span> Équipe
+                <span class="icon" data-icon="users"></span> Équipe
             </a></li>
             <li><a href="#company" class="nav-link" data-page="company">
-                <span class="icon">🏢</span> Clients
+                <span class="icon" data-icon="building"></span> Clients
             </a></li>
             <li><a href="#devis" class="nav-link" data-page="devis">
-                <span class="icon">📄</span> Devis
+                <span class="icon" data-icon="document"></span> Devis
             </a></li>
             <li><a href="#analytics" class="nav-link" data-page="analytics">
-                <span class="icon">📈</span> Analytics
+                <span class="icon" data-icon="chart"></span> Analytics
             </a></li>
             <li><a href="#references" class="nav-link" data-page="references">
-                <span class="icon">⭐</span> Références
+                <span class="icon" data-icon="star"></span> Références
             </a></li>
             <li><a href="#settings" class="nav-link" data-page="settings">
-                <span class="icon">⚙️</span> Paramètres
+                <span class="icon" data-icon="settings"></span> Paramètres
             </a></li>
         </ul>
         
         <div class="sidebar-footer">
             <button class="theme-toggle" id="themeToggle" title="Changer le thème">
-                <span class="icon">🌙</span> Mode sombre
+                <span class="icon" id="themeIcon"></span> <span id="themeLabel">Mode sombre</span>
             </button>
         </div>
     </nav>
@@ -68,8 +69,11 @@
     </main>
 
     <!-- Mobile Menu Toggle -->
-    <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <span class="icon-menu" data-icon="menu"></span>
+    </button>
 
+    <script src="js/icons.js"></script>
     <script src="js/data/seed.js"></script>
     <script src="js/app.js"></script>
     <script src="js/pages/dashboard.js"></script>
@@ -83,9 +87,21 @@
     <script src="js/pages/settings.js"></script>
     
     <script>
+        // Initialiser les icônes après chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            // Remplacer les icônes dans le menu
+            const iconElements = document.querySelectorAll('[data-icon]');
+            iconElements.forEach(el => {
+                const iconName = el.getAttribute('data-icon');
+                if (iconName && typeof getIcon === 'function') {
+                    el.innerHTML = getIcon(iconName);
+                }
+            });
+        });
+        
         // Initialiser les données de test si localStorage est vide
         if (!localStorage.getItem('wiw-projets')) {
-            console.log('💡 Pour initialiser les données de test, exécutez: seedData()');
+            console.log('Pour initialiser les données de test, exécutez: seedData()');
         }
     </script>
 </body>

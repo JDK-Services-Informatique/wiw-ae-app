@@ -33,10 +33,16 @@ function toggleTheme() {
 
 function updateThemeButton(theme) {
     const button = document.getElementById('themeToggle');
-    if (button) {
-        button.innerHTML = theme === 'dark' 
-            ? '<span class="icon">☀️</span> Mode clair'
-            : '<span class="icon">🌙</span> Mode sombre';
+    const iconEl = document.getElementById('themeIcon');
+    const labelEl = document.getElementById('themeLabel');
+    
+    if (button && iconEl && labelEl) {
+        iconEl.innerHTML = theme === 'dark' 
+            ? getIcon('sun')
+            : getIcon('moon');
+        labelEl.textContent = theme === 'dark' 
+            ? 'Mode clair'
+            : 'Mode sombre';
     }
 }
 
@@ -123,7 +129,17 @@ function loadPage(page) {
                 pageTitle.textContent = titles[page] || page;
             }
         } else {
-            pageContent.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📄</div><p>Page en cours de développement</p></div>';
+            pageContent.innerHTML = `<div class="empty-state">
+                <div class="empty-state-icon" data-icon="document"></div>
+                <p>Page en cours de développement</p>
+            </div>`;
+            // Initialiser l'icône après injection
+            setTimeout(() => {
+                const iconEl = pageContent.querySelector('[data-icon]');
+                if (iconEl && typeof getIcon === 'function') {
+                    iconEl.innerHTML = getIcon('document');
+                }
+            }, 0);
         }
     }, 100);
 }

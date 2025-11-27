@@ -9,7 +9,7 @@ window.pageHandlers.analytics = function() {
     const caTotal = projets.reduce((sum, p) => sum + (parseFloat(p.montantHT || 0)), 0);
     const caMoyen = projets.length > 0 ? caTotal / projets.length : 0;
     
-    return `
+    const html = `
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-value">${formatCurrency(caTotal)}</div>
@@ -34,11 +34,13 @@ window.pageHandlers.analytics = function() {
                 <h2 class="card-title">Graphiques</h2>
             </div>
             <div class="empty-state">
-                <div class="empty-state-icon">📊</div>
+                <div class="empty-state-icon" data-icon="chart"></div>
                 <p>Graphiques à implémenter (Chart.js ou similaire)</p>
             </div>
         </div>
     `;
+    
+    return html;
 };
 
 function formatCurrency(amount) {
