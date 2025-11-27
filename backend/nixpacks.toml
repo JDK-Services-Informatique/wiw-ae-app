@@ -1,0 +1,13 @@
+# Configuration Nixpacks pour forcer l'utilisation de Nixpacks
+[phases.setup]
+nixPkgs = ["nodejs_18", "npm"]
+
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["npx prisma generate", "npx prisma migrate deploy"]
+
+[start]
+cmd = "npm start"
+

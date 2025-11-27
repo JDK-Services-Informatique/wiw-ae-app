@@ -1,11 +1,5 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
-  "$service": {
-    "source": {
-      "repo": "JDK-Services-Informatique/wiw-ae-app",
-      "rootDir": "backend"
-    }
-  },
   "build": {
     "builder": "NIXPACKS"
   },
