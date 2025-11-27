@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ViewToggle from '../components/ViewToggle';
 import DetailView from '../components/DetailView';
@@ -12,6 +13,7 @@ import { formatMontant as formatMontantUtil } from '../utils/formatNumber';
 import { exportReferencesExcel, exportReferencesPDF } from '../utils/exportReferences';
 
 export default function References({ filter = null, onNavigate }) {
+  const navigate = useNavigate();
   const { listes, loading } = useListesDeroulantes();
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -37,26 +39,32 @@ export default function References({ filter = null, onNavigate }) {
 
   // Fonctions de navigation
   const handleCreerDevis = (projet) => {
+    localStorage.setItem('wiw-devis-prefill', JSON.stringify({
+      client: {
+        nom: projet.maitreOuvrage || '',
+        ville: projet.localisation || ''
+      },
+      notes: `Devis pour projet: ${projet.nom}`
+    }));
+    navigate('/devis');
+    
+    // Fallback pour onNavigate si fourni
     if (onNavigate) {
-      localStorage.setItem('wiw-devis-prefill', JSON.stringify({
-        client: {
-          nom: projet.maitreOuvrage || '',
-          ville: projet.localisation || ''
-        },
-        notes: `Devis pour projet: ${projet.nom}`
-      }));
       onNavigate('devis');
     }
   };
 
   const handleCalculerHonoraires = (projet) => {
+    localStorage.setItem('wiw-honoraires-prefill', JSON.stringify({
+      montantTravaux: projet.montantTravauxHT || 0,
+      surface: projet.surface || 0,
+      nomProjet: projet.nom
+    }));
+    navigate('/honoraires');
+    
+    // Fallback pour onNavigate si fourni
     if (onNavigate) {
-      localStorage.setItem('wiw-honoraires-prefill', JSON.stringify({
-        montantTravaux: projet.montantTravauxHT || 0,
-        surface: projet.surface || 0,
-        nomProjet: projet.nom
-      }));
-      onNavigate('fees');
+      onNavigate('honoraires');
     }
   };
 
