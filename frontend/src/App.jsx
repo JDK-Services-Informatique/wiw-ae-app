@@ -113,6 +113,11 @@ export default function App() {
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <ResetPassword />} 
           />
 
+          {/* Routes Publiques : Pages marketing */}
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/legal" element={<Legal />} />
+
           {/* Routes Privées : Application */}
           <Route element={isAuthenticated ? <DashboardLayout user={currentUser} onLogout={handleLogout} /> : <Navigate to="/" replace />}>
             <Route path="/dashboard" element={<Dashboard />} />
@@ -128,12 +133,9 @@ export default function App() {
             <Route path="/references" element={<References />} />
             <Route path="/medialibrary" element={<MediaLibrary />} />
             <Route path="/datamanagement" element={<DataManagement />} />
-            <Route path="/pricing" element={<Pricing />} />
             <Route path="/missions" element={<MissionsConseil />} />
-            <Route path="/contact" element={<Contact />} />
             <Route path="/alertes" element={<Alertes />} />
             <Route path="/catalogue" element={<CatalogueArticles />} />
-            <Route path="/legal" element={<Legal />} />
             <Route path="/plans" element={<Plans />} />
             <Route path="/pipeline" element={<Pipeline />} />
             <Route path="/templates" element={<Templates />} />

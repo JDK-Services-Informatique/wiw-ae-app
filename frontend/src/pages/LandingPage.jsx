@@ -196,8 +196,179 @@ export default function LandingPage() {
       {/* Section Sponsors */}
       <SponsorsSection sponsors={sponsors} />
 
-      <footer className="py-12 border-t border-slate-200 dark:border-slate-800 text-center text-slate-500 text-sm">
-        © 2025 WiW App. Optimisé pour l'architecture.
+      {/* Section Témoignages */}
+      <section className="py-24 bg-slate-50 dark:bg-dark-bg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ils nous font confiance</h2>
+            <p className="text-slate-500">Découvrez ce que nos clients disent de WiW</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                name: 'Marie Dubois',
+                role: 'Architecte DPLG',
+                company: 'Cabinet Dubois Architecture',
+                content: 'WiW a transformé notre façon de gérer les appels d\'offres. Plus besoin de tableurs, tout est centralisé et automatisé.',
+                rating: 5
+              },
+              {
+                name: 'Jean Martin',
+                role: 'Directeur Technique',
+                company: 'BET Structure Plus',
+                content: 'L\'intégration avec les architectes est fluide. Le suivi des projets et des honoraires est désormais un jeu d\'enfant.',
+                rating: 5
+              },
+              {
+                name: 'Sophie Laurent',
+                role: 'Gérante',
+                company: 'Atelier Laurent & Associés',
+                content: 'Les analytics nous permettent de mieux comprendre notre rentabilité. Un outil indispensable pour notre croissance.',
+                rating: 5
+              }
+            ].map((testimonial, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="p-6 bg-white dark:bg-dark-panel rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm"
+              >
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, j) => (
+                    <span key={j} className="text-yellow-400">★</span>
+                  ))}
+                </div>
+                <p className="text-slate-600 dark:text-slate-400 mb-6 italic">"{testimonial.content}"</p>
+                <div>
+                  <div className="font-bold">{testimonial.name}</div>
+                  <div className="text-sm text-slate-500">{testimonial.role} - {testimonial.company}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section FAQ */}
+      <section className="py-24 bg-white dark:bg-dark-panel border-t border-slate-100 dark:border-slate-800">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Questions fréquentes</h2>
+            <p className="text-slate-500">Tout ce que vous devez savoir sur WiW</p>
+          </div>
+          
+          <div className="space-y-4">
+            {[
+              {
+                q: 'Puis-je essayer WiW gratuitement ?',
+                a: 'Oui ! Tous nos plans incluent une période d\'essai gratuite de 14 jours, sans carte bancaire requise. Vous pourrez tester toutes les fonctionnalités avant de vous engager.'
+              },
+              {
+                q: 'Mes données sont-elles sécurisées ?',
+                a: 'Absolument. Nous utilisons un chiffrement SSL/TLS de niveau bancaire, des sauvegardes quotidiennes et nos serveurs sont hébergés en France (conformité RGPD).'
+              },
+              {
+                q: 'Puis-je changer de plan à tout moment ?',
+                a: 'Oui, vous pouvez upgrader ou downgrader votre plan à tout moment depuis votre espace. Les changements sont effectifs immédiatement.'
+              },
+              {
+                q: 'Y a-t-il une période d\'engagement ?',
+                a: 'Non, tous nos plans sont sans engagement. Vous pouvez annuler à tout moment sans frais.'
+              },
+              {
+                q: 'Quels moyens de paiement acceptez-vous ?',
+                a: 'Nous acceptons les cartes bancaires (Visa, Mastercard, Amex), les virements SEPA et PayPal pour les paiements mensuels et annuels.'
+              }
+            ].map((faq, i) => (
+              <details
+                key={i}
+                className="p-6 bg-slate-50 dark:bg-dark-bg rounded-xl border border-slate-200 dark:border-slate-800 cursor-pointer"
+              >
+                <summary className="font-semibold text-lg mb-2 list-none flex justify-between items-center">
+                  <span>{faq.q}</span>
+                  <span className="text-brand">+</span>
+                </summary>
+                <p className="mt-4 text-slate-600 dark:text-slate-400">{faq.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Final */}
+      <section className="py-24 bg-gradient-to-r from-brand to-brand-light text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Prêt à transformer votre pratique ?</h2>
+          <p className="text-xl mb-8 opacity-90">
+            Rejoignez des centaines d'architectes et de BET qui font confiance à WiW
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => navigate('/login')}
+              className="px-8 py-4 bg-white text-brand rounded-xl font-bold text-lg hover:bg-slate-100 transition-all shadow-lg"
+            >
+              Démarrer l'essai gratuit
+            </button>
+            <button
+              onClick={() => navigate('/contact')}
+              className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-all"
+            >
+              Contacter les ventes
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-dark-bg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl">W</div>
+                <span className="font-bold text-lg">WiW</span>
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                L'outil tout-en-un pour architectes et bureaux d'études techniques.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Produit</h3>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#features" className="text-slate-500 dark:text-slate-400 hover:text-brand transition-colors">Fonctionnalités</a></li>
+                <li><button onClick={() => navigate('/pricing')} className="text-slate-500 dark:text-slate-400 hover:text-brand transition-colors">Tarifs</button></li>
+                <li><button onClick={() => navigate('/contact')} className="text-slate-500 dark:text-slate-400 hover:text-brand transition-colors">Contact</button></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Légal</h3>
+              <ul className="space-y-2 text-sm">
+                <li><button onClick={() => navigate('/legal')} className="text-slate-500 dark:text-slate-400 hover:text-brand transition-colors">Mentions légales</button></li>
+                <li><button onClick={() => navigate('/legal')} className="text-slate-500 dark:text-slate-400 hover:text-brand transition-colors">CGV</button></li>
+                <li><button onClick={() => navigate('/legal')} className="text-slate-500 dark:text-slate-400 hover:text-brand transition-colors">CGU</button></li>
+                <li><button onClick={() => navigate('/legal')} className="text-slate-500 dark:text-slate-400 hover:text-brand transition-colors">RGPD</button></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Support</h3>
+              <ul className="space-y-2 text-sm">
+                <li><button onClick={() => navigate('/contact')} className="text-slate-500 dark:text-slate-400 hover:text-brand transition-colors">Aide & Support</button></li>
+                <li><a href="mailto:contact@wiw-app.com" className="text-slate-500 dark:text-slate-400 hover:text-brand transition-colors">contact@wiw-app.com</a></li>
+                <li className="text-slate-500 dark:text-slate-400">+33 1 23 45 67 89</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="pt-8 border-t border-slate-200 dark:border-slate-800 text-center text-sm text-slate-500 dark:text-slate-400">
+            <p>© 2025 WiW SAS. Tous droits réservés. | Optimisé pour l'architecture.</p>
+          </div>
+        </div>
       </footer>
     </div>
   );
