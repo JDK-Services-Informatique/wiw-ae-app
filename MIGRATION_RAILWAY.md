@@ -1,4 +1,4 @@
-# 🚂 Migration de Render vers Railway
+# 🚂 Configuration Railway
 
 ## ✅ Changements effectués
 
@@ -29,16 +29,18 @@
    - Ajout de `serve` pour servir le frontend en production
    - Nécessaire pour le routing SPA sur Railway
 
-## 🔄 Différences principales Render vs Railway
+## 🚂 Configuration Railway
 
-| Aspect | Render | Railway |
-|--------|--------|---------|
-| **Configuration** | `render.yaml` (YAML) | `railway.json` (JSON) |
-| **Base de données** | Service séparé | Service intégré |
-| **Variables d'env** | Définies dans YAML | Définies dans Dashboard |
-| **Monorepo** | Root Directory | Root Directory |
-| **Déploiement** | Blueprint ou manuel | Automatique via GitHub |
-| **Coûts** | $7+/mois (starter) | $5/mois (hobby) |
+L'application est configurée pour être déployée sur Railway :
+
+| Aspect | Configuration |
+|--------|---------------|
+| **Configuration** | `railway.json` (JSON) |
+| **Base de données** | Service intégré PostgreSQL |
+| **Variables d'env** | Définies dans Dashboard |
+| **Monorepo** | Root Directory par service |
+| **Déploiement** | Automatique via GitHub |
+| **Coûts** | $5/mois (hobby plan) |
 
 ## 🚀 Avantages Railway
 
@@ -64,11 +66,11 @@ Suivre le guide dans `DEPLOY_RAILWAY.md` ou `README_RAILWAY.md`
 
 ### 3. Migrer les données (si nécessaire)
 
-Si vous avez des données sur Render à migrer :
+Si vous avez des données à migrer depuis un autre service :
 
 ```bash
-# Exporter depuis Render
-pg_dump $RENDER_DATABASE_URL > backup.sql
+# Exporter depuis l'ancien service
+pg_dump $OLD_DATABASE_URL > backup.sql
 
 # Importer dans Railway
 psql $RAILWAY_DATABASE_URL < backup.sql

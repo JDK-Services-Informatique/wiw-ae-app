@@ -17,7 +17,7 @@ Application complète de gestion pour architectes et bureaux d'études technique
 wiw-ae-app/
 ├── backend/          # API Node.js + Prisma
 ├── frontend/         # Application React + Vite
-├── render.yaml       # Configuration Render Blueprint
+├── railway.json      # Configuration Railway
 └── scripts/         # Scripts utilitaires
 ```
 
@@ -39,32 +39,25 @@ npm install
 npm run dev
 ```
 
-## 🌐 Déploiement sur Render
+## 🌐 Déploiement sur Railway
 
-### Méthode 1 : Blueprint (Recommandé)
+### Déploiement rapide
 
-1. Connectez votre repository GitHub à Render
-2. Allez sur https://dashboard.render.com
-3. Cliquez "New" > "Blueprint"
-4. Sélectionnez ce repository
-5. Render détectera automatiquement `render.yaml`
-6. Cliquez "Apply"
+1. Connectez votre repository GitHub à Railway
+2. Allez sur https://railway.app
+3. Créez un nouveau projet
+4. Ajoutez PostgreSQL (Database)
+5. Déployez le backend (Root Directory: `backend`)
+6. Déployez le frontend (Root Directory: `frontend`)
 
-Le Blueprint créera automatiquement :
-- **wiw-ae-backend** : Service web Node.js
-- **wiw-ae-frontend** : Site statique React
-- **wiw-ae-db** : Base de données PostgreSQL
-
-### Méthode 2 : Configuration Manuelle
-
-Voir [DEPLOY_RENDER.md](./DEPLOY_RENDER.md) pour les instructions détaillées.
+Voir [DEPLOY_RAILWAY.md](./DEPLOY_RAILWAY.md) pour le guide complet ou [README_RAILWAY.md](./README_RAILWAY.md) pour le guide rapide.
 
 ## 📝 Technologies
 
 - **Frontend** : React, Vite, Tailwind CSS, Lucide React
 - **Backend** : Node.js, Express, Prisma
 - **Base de données** : PostgreSQL
-- **Déploiement** : Render.com
+- **Déploiement** : Railway.app
 
 ## 📄 Licence
 

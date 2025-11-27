@@ -11,7 +11,7 @@ Le workflow CI/CD a été optimisé pour réduire la consommation :
 **Changements :**
 - ✅ Tests E2E désactivés (très coûteux en minutes)
 - ✅ Tests backend désactivés (exécutables localement)
-- ✅ Build backend désactivé (Render gère le build)
+- ✅ Build backend désactivé (Railway gère le build)
 - ✅ Tests uniquement sur `main` et Pull Requests
 - ✅ Build uniquement sur `main`
 - ✅ Timeout de 10-15 minutes par job
@@ -23,11 +23,11 @@ Le workflow CI/CD a été optimisé pour réduire la consommation :
 ### 2. Alternatives Recommandées
 
 #### Option A : Désactiver complètement GitHub Actions
-Si Render gère déjà le déploiement via Blueprint, vous pouvez désactiver GitHub Actions :
+Si Railway gère déjà le déploiement automatique, vous pouvez désactiver GitHub Actions :
 
 1. Renommez `.github/workflows/ci-cd.yml` en `.github/workflows/ci-cd.yml.disabled`
 2. Ou supprimez le fichier
-3. Render continuera de déployer automatiquement via le Blueprint
+3. Railway continuera de déployer automatiquement via GitHub
 
 #### Option B : Workflow Minimal (Recommandé)
 Le workflow actuel est maintenant minimal :
@@ -83,8 +83,8 @@ npm test
    - Modifier le workflow pour ne tester que sur PR
    - Build uniquement sur merge vers `main`
 
-3. **Utiliser Render pour les builds**
-   - Render peut gérer les builds automatiquement
+3. **Utiliser Railway pour les builds**
+   - Railway peut gérer les builds automatiquement
    - Pas besoin de GitHub Actions pour le build
 
 4. **Tests manuels**
