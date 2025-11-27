@@ -33,7 +33,13 @@ export default function Login({ onLogin }) {
     try {
       const { user } = await authService.login(formData.email, formData.password);
       onLogin(user); // Passer les données utilisateur à App.jsx
-      navigate('/dashboard');
+      
+      // Si un plan était sélectionné, rediriger vers /plans pour finaliser
+      if (selectedPlan) {
+        navigate(`/plans?plan=${selectedPlan}`);
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       setError(error.message || 'Erreur de connexion');
       setIsLoading(false);
