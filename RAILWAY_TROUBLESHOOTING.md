@@ -26,6 +26,30 @@ nixPkgs = ["nodejs_18", "npm"]
 nixPkgs = ["nodejs_18"]  # npm est inclus automatiquement
 ```
 
+### ⚠️ Si l'erreur persiste après correction
+
+Le problème peut venir d'un **cache de build** dans Railway. Solutions :
+
+1. **Forcer un rebuild sans cache dans Railway Dashboard**
+   - Service > Settings > Build
+   - Cliquer sur "Clear Build Cache" ou "Rebuild"
+   - Redéployer
+
+2. **Vérifier que les fichiers sont bien synchronisés**
+   - S'assurer que `backend/nixpacks.toml` contient bien `nixPkgs = ["nodejs_18"]` (sans `npm`)
+   - Vérifier que `nixpacks.toml` à la racine est aussi corrigé
+
+3. **Alternative : Utiliser une syntaxe explicite**
+   Si le problème persiste, essayer sans spécifier `nixPkgs` et laisser Nixpacks détecter automatiquement :
+   ```toml
+   [phases.setup]
+   # Laisser Nixpacks détecter Node.js automatiquement
+   ```
+
+4. **Supprimer et recréer le service** (dernier recours)
+   - Parfois Railway cache l'ancienne configuration
+   - Créer un nouveau service backend avec la bonne configuration
+
 ## ❌ Erreur : "npm: command not found" dans Dockerfile
 
 ### Problème
