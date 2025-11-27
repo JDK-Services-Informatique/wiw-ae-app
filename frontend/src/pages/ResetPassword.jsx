@@ -6,7 +6,8 @@ import axios from 'axios';
 import { API_URL } from '../config';
 import logger from '../utils/logger';
 
-const API = API_URL || import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+// Utiliser API_URL depuis config.js qui gère déjà le fallback
+const API = API_URL;
 
 export default function ResetPassword() {
   const navigate = useNavigate();

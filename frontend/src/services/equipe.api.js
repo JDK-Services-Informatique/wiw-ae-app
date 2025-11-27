@@ -2,7 +2,8 @@ import axios from 'axios';
 import { API_URL } from '../config';
 import logger from '../utils/logger';
 
-const API_BASE_URL = API_URL || import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+// Utiliser API_URL depuis config.js qui gère déjà le fallback
+const API_BASE_URL = API_URL;
 
 class EquipeAPI {
   async getAll() {
