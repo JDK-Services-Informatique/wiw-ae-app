@@ -26,18 +26,12 @@ services:
         generateValue: true
       - key: JWT_EXPIRES_IN
         value: 7d
+      # Note: FRONTEND_URL et CORS_ORIGIN doivent être mis à jour manuellement
+      # après la création du frontend pour éviter les dépendances circulaires
       - key: FRONTEND_URL
-        fromService:
-          type: web
-          runtime: static
-          name: wiw-ae-frontend
-          property: host
+        value: ""
       - key: CORS_ORIGIN
-        fromService:
-          type: web
-          runtime: static
-          name: wiw-ae-frontend
-          property: host
+        value: ""
 
   # Frontend - Static Site (Vite/React)
   - type: web
