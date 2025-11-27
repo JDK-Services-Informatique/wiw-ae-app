@@ -1,4 +1,6 @@
 # Configuration Nixpacks pour forcer l'utilisation de Nixpacks
+# Railway détectera ce fichier et utilisera Nixpacks au lieu de Dockerfile
+
 [phases.setup]
 nixPkgs = ["nodejs_18", "npm"]
 

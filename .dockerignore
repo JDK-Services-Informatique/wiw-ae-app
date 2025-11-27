@@ -1,3 +1,9 @@
+# Ignorer les Dockerfiles pour forcer Nixpacks
+Dockerfile
+**/Dockerfile
+*.dockerfile
+
+# Fichiers standards
 node_modules
 npm-debug.log
 .env
@@ -13,4 +19,3 @@ build
 coverage
 .nyc_output
 *.log
-
