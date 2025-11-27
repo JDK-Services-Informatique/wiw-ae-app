@@ -117,6 +117,7 @@ export default function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/legal" element={<Legal />} />
+          <Route path="/landing" element={<LandingPage />} /> {/* Route forcée pour voir la landing même si authentifié */}
 
           {/* Routes Privées : Application */}
           <Route element={isAuthenticated ? <DashboardLayout user={currentUser} onLogout={handleLogout} /> : <Navigate to="/" replace />}>
