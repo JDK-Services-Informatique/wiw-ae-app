@@ -26,7 +26,10 @@
     "serve": "^14.2.0",
     "tailwind": "^4.0.0",
     "tailwind-merge": "^2.2.1",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "i18next": "^23.7.0",
+    "react-i18next": "^13.5.0",
+    "i18next-browser-languagedetector": "^7.2.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
