@@ -1,8 +1,13 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
+  "$service": {
+    "source": {
+      "repo": "JDK-Services-Informatique/wiw-ae-app",
+      "rootDir": "backend"
+    }
+  },
   "build": {
-    "builder": "NIXPACKS",
-    "buildCommand": "npm install && npx prisma generate && npx prisma migrate deploy"
+    "builder": "NIXPACKS"
   },
   "deploy": {
     "startCommand": "npm start",
