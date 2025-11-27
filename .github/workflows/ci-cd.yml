@@ -134,10 +134,9 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Deploy to Render via API
-        if: env.RENDER_API_KEY != '' && env.RENDER_SERVICE_ID != ''
         env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY || '' }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID || '' }}
         run: |
           if [ -z "$RENDER_API_KEY" ] || [ -z "$RENDER_SERVICE_ID" ]; then
             echo "⚠️ RENDER_API_KEY ou RENDER_SERVICE_ID non configurés"
@@ -165,10 +164,4 @@ jobs:
             echo "Le déploiement se fera automatiquement via Render Blueprint"
           fi
       
-      - name: Deploy Notification (Blueprint)
-        if: env.RENDER_API_KEY == '' || env.RENDER_SERVICE_ID == ''
-        run: |
-          echo "✅ Build terminé - Déploiement géré par Render Blueprint"
-          echo "Le déploiement sur Render se fait automatiquement via le Blueprint"
-          echo "ou via webhook GitHub si configuré"
 

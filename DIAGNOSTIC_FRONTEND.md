@@ -249,3 +249,4 @@ Si une fonctionnalité cause problème, commentez-la temporairement :
 
 **Dernière mise à jour** : Décembre 2024
 
+

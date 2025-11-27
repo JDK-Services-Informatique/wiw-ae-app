@@ -23,3 +23,4 @@ jobs:
           echo "Render gère le déploiement automatiquement"
           echo "Pour réactiver, voir .github/workflows/ci-cd.yml"
 
+
