@@ -50,6 +50,59 @@ Le problème peut venir d'un **cache de build** dans Railway. Solutions :
    - Parfois Railway cache l'ancienne configuration
    - Créer un nouveau service backend avec la bonne configuration
 
+## ❌ Erreur : Railway utilise Dockerfile au lieu de Nixpacks
+
+### Problème
+```
+/bin/bash: line 1: npm: command not found
+Dockerfile:15
+```
+
+Railway détecte et utilise un Dockerfile au lieu de Nixpacks, même si `nixpacks.toml` est présent.
+
+### Causes possibles
+
+1. **`buildCommand` dans `railway.json`**
+   - Si `railway.json` contient `buildCommand`, Railway peut générer un Dockerfile
+   - Solution : Retirer `buildCommand` et laisser Nixpacks gérer automatiquement
+
+2. **Root Directory mal configuré**
+   - Le Root Directory doit être `backend` dans Railway Dashboard
+   - Settings > Source > Root Directory : `backend`
+
+3. **Builder non configuré dans Railway Dashboard**
+   - Settings > Build > Builder : Doit être `Nixpacks` (pas Dockerfile)
+
+### Solution
+
+1. **Retirer `buildCommand` de `railway.json`**
+   ```json
+   {
+     "build": {
+       "builder": "NIXPACKS"
+       // PAS de buildCommand ici
+     }
+   }
+   ```
+
+2. **Laisser Nixpacks gérer le build via `nixpacks.toml`**
+   ```toml
+   [phases.install]
+   cmds = ["npm install"]
+   
+   [phases.build]
+   cmds = ["npx prisma generate", "npx prisma migrate deploy"]
+   ```
+
+3. **Vérifier Railway Dashboard**
+   - Settings > Build > Builder : `Nixpacks`
+   - Settings > Build > Build Command : Laisser vide
+   - Settings > Source > Root Directory : `backend`
+
+4. **Forcer rebuild sans cache**
+   - Settings > Build > Clear Build Cache
+   - Redéployer
+
 ## ❌ Erreur : "npm: command not found" dans Dockerfile
 
 ### Problème
