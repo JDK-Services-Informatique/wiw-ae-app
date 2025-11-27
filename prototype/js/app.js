@@ -68,13 +68,21 @@ function initMobileMenu() {
 
 // Navigation
 function initNavigation() {
-    const navLinks = document.querySelectorAll('.nav-link');
+    const navLinks = document.querySelectorAll('.nav-link, .nav-submenu-link');
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const page = link.getAttribute('data-page');
             if (page) {
                 navigateToPage(page);
+                // Marquer l'item parent comme actif
+                const navItem = link.closest('.nav-item');
+                if (navItem) {
+                    document.querySelectorAll('.nav-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    navItem.classList.add('active');
+                }
             }
         });
     });
@@ -89,10 +97,18 @@ function navigateToPage(page) {
     window.location.hash = page;
     
     // Mettre à jour le menu actif
-    document.querySelectorAll('.nav-link').forEach(link => {
+    document.querySelectorAll('.nav-link, .nav-submenu-link').forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('data-page') === page) {
             link.classList.add('active');
+            // Marquer l'item parent comme actif
+            const navItem = link.closest('.nav-item');
+            if (navItem) {
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                navItem.classList.add('active');
+            }
         }
     });
     
@@ -132,7 +148,12 @@ function loadPage(page) {
                 devis: 'Devis',
                 analytics: 'Analytics',
                 references: 'Références',
-                settings: 'Paramètres'
+                settings: 'Paramètres',
+                pipeline: 'Pipeline AO',
+                bet: 'BET & Architectes',
+                calendar: 'Calendrier Prospection',
+                alertes: 'Alertes',
+                templates: 'Templates'
             };
             if (pageTitle) {
                 pageTitle.textContent = titles[page] || page;

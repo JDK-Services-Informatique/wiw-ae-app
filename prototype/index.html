@@ -17,20 +17,50 @@
         </div>
         
         <ul class="nav-menu" id="navMenu">
-            <li><a href="#dashboard" class="nav-link active" data-page="dashboard">
-                <span class="icon" data-icon="dashboard"></span> Tableau de Bord
-            </a></li>
+            <li class="nav-item">
+                <a href="#dashboard" class="nav-link active" data-page="dashboard">
+                    <span class="icon" data-icon="dashboard"></span> Tableau de Bord
+                </a>
+                <ul class="nav-submenu">
+                    <li><a href="#dashboard" class="nav-submenu-link" data-page="dashboard">Vue globale</a></li>
+                    <li><a href="#pipeline" class="nav-submenu-link" data-page="pipeline">Pipe AO</a></li>
+                    <li><a href="#analytics" class="nav-submenu-link" data-page="analytics">CA prévisionnel</a></li>
+                    <li><a href="#alertes" class="nav-submenu-link" data-page="alertes">Alertes</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#bet" class="nav-link" data-page="bet">
+                    <span class="icon" data-icon="users"></span> BET & Architectes
+                </a>
+                <ul class="nav-submenu">
+                    <li><a href="#bet" class="nav-submenu-link" data-page="bet">Contacts</a></li>
+                    <li><a href="#team" class="nav-submenu-link" data-page="team">Équipe interne</a></li>
+                    <li><a href="#bet" class="nav-submenu-link" data-page="bet">Compétences</a></li>
+                    <li><a href="#bet" class="nav-submenu-link" data-page="bet">Historique collaborations</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#company" class="nav-link" data-page="company">
+                    <span class="icon" data-icon="building"></span> Clients / Maître d'Ouvrage
+                </a>
+                <ul class="nav-submenu">
+                    <li><a href="#company" class="nav-submenu-link" data-page="company">Fiches clients</a></li>
+                    <li><a href="#company" class="nav-submenu-link" data-page="company">Projets</a></li>
+                    <li><a href="#references" class="nav-submenu-link" data-page="references">Références</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#tenders" class="nav-link" data-page="tenders">
+                    <span class="icon" data-icon="clipboard"></span> Appels d'Offres
+                </a>
+                <ul class="nav-submenu">
+                    <li><a href="#tenders" class="nav-submenu-link" data-page="tenders">AO actifs</a></li>
+                    <li><a href="#tenders" class="nav-submenu-link" data-page="tenders">AO archivés</a></li>
+                    <li><a href="#calendar" class="nav-submenu-link" data-page="calendar">Calendrier prospection</a></li>
+                </ul>
+            </li>
             <li><a href="#honoraires" class="nav-link" data-page="honoraires">
                 <span class="icon" data-icon="money"></span> Honoraires
-            </a></li>
-            <li><a href="#tenders" class="nav-link" data-page="tenders">
-                <span class="icon" data-icon="clipboard"></span> Appels d'Offres
-            </a></li>
-            <li><a href="#team" class="nav-link" data-page="team">
-                <span class="icon" data-icon="users"></span> Équipe
-            </a></li>
-            <li><a href="#company" class="nav-link" data-page="company">
-                <span class="icon" data-icon="building"></span> Clients
             </a></li>
             <li><a href="#devis" class="nav-link" data-page="devis">
                 <span class="icon" data-icon="document"></span> Devis
@@ -38,8 +68,8 @@
             <li><a href="#analytics" class="nav-link" data-page="analytics">
                 <span class="icon" data-icon="chart"></span> Analytics
             </a></li>
-            <li><a href="#references" class="nav-link" data-page="references">
-                <span class="icon" data-icon="star"></span> Références
+            <li><a href="#templates" class="nav-link" data-page="templates">
+                <span class="icon" data-icon="document"></span> Templates
             </a></li>
             <li><a href="#settings" class="nav-link" data-page="settings">
                 <span class="icon" data-icon="settings"></span> Paramètres
@@ -85,6 +115,11 @@
     <script src="js/pages/analytics.js"></script>
     <script src="js/pages/references.js"></script>
     <script src="js/pages/settings.js"></script>
+    <script src="js/pages/pipeline.js"></script>
+    <script src="js/pages/bet.js"></script>
+    <script src="js/pages/calendar.js"></script>
+    <script src="js/pages/alertes.js"></script>
+    <script src="js/pages/templates.js"></script>
     
     <script>
         // Initialiser les icônes après chargement
