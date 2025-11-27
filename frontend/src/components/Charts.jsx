@@ -266,5 +266,3 @@ export default function Charts({
   );
 }
 
-export { BarChartComponent, LineChartComponent, PieChartComponent, AreaChartComponent, ComboChartComponent };
-
