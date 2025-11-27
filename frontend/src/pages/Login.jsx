@@ -1,14 +1,29 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Mail, Lock, AlertCircle } from 'lucide-react';
 import { authService } from '../services/auth.api.js';
 
 export default function Login({ onLogin }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const selectedPlan = searchParams.get('plan');
+
+  useEffect(() => {
+    // Si un plan est sélectionné, afficher un message
+    if (selectedPlan) {
+      const planNames = {
+        'STARTER': 'Starter',
+        'PREMIUM': 'Premium',
+        'ENTERPRISE': 'Enterprise'
+      };
+      // Optionnel : afficher un toast ou un message
+      console.log(`Plan sélectionné : ${planNames[selectedPlan] || selectedPlan}`);
+    }
+  }, [selectedPlan]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -129,7 +144,7 @@ export default function Login({ onLogin }) {
           </form>
 
           <div className="text-center text-sm text-slate-500">
-            Pas encore de compte ? <button onClick={() => { console.log('Créer une agence button clicked'); navigate('/plans'); }} className="text-brand font-semibold hover:underline">Créer une agence</button>
+            Pas encore de compte ? <button onClick={() => { console.log('Créer une agence button clicked'); navigate('/pricing'); }} className="text-brand font-semibold hover:underline">Créer une agence</button>
           </div>
         </motion.div>
       </div>

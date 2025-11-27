@@ -147,13 +147,29 @@ export const PlanProvider = ({ children }) => {
     return planFeatures[currentPlan] || planFeatures.STARTER;
   };
 
+  // Fonction pour gérer le choix d'un plan (redirige vers login si non authentifié)
+  const handleChoosePlan = (planId) => {
+    // Vérifier si l'utilisateur est authentifié
+    const isAuthenticated = !!localStorage.getItem('token');
+    
+    if (!isAuthenticated) {
+      // Rediriger vers login avec le plan sélectionné
+      window.location.href = `/login?plan=${planId}`;
+      return;
+    }
+    
+    // Si authentifié, changer le plan
+    changePlan(planId);
+  };
+
   const value = {
     currentPlan,
     changePlan,
     hasFeature,
     canAdd,
     getPlanInfo,
-    planFeatures
+    planFeatures,
+    handleChoosePlan
   };
 
   return <PlanContext.Provider value={value}>{children}</PlanContext.Provider>;
