@@ -2,5 +2,5 @@
 # Ce fichier empêche Railway d'utiliser un Dockerfile
 
 [phases.setup]
-nixPkgs = ["nodejs_18", "npm"]
+nixPkgs = ["nodejs_18"]
 

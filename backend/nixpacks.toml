@@ -2,7 +2,7 @@
 # Railway détectera ce fichier et utilisera Nixpacks au lieu de Dockerfile
 
 [phases.setup]
-nixPkgs = ["nodejs_18", "npm"]
+nixPkgs = ["nodejs_18"]
 
 [phases.install]
 cmds = ["npm install"]
