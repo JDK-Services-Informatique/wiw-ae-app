@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node --enable-source-maps src/server.js",
     "start": "node src/server.js",
-    "prestart": "prisma generate && prisma migrate deploy || echo 'Migration skipped'",
+    "prestart": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
