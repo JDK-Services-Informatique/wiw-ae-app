@@ -80,6 +80,10 @@ export default function Tenders({ onNavigate }) {
   const [isDetailedView, setIsDetailedView] = useState(false);
   const [showAssistantAO, setShowAssistantAO] = useState(false);
   const [showPhotothequeAO, setShowPhotothequeAO] = useState(null); // ID de l'AO pour afficher la photothèque
+  
+  // Récupérer les listes déroulantes pour les statuts AO
+  const { listes, loading: listesLoading } = useListesDeroulantes();
+  const statutsAO = listes?.statutsAO || [];
 
   // Données équipe et BET (normalement depuis Team.jsx et BET.jsx)
   const [equipeMembres] = useState([
@@ -892,16 +896,15 @@ export default function Tenders({ onNavigate }) {
                 <option value="En cours">En cours</option>
                 <option value="En négociation">En négociation</option>
                 <option value="Gagné">Gagné</option>
-                {statutsAO.length > 0 ? (
-                  statutsAO.map(statut => (
-                    <option key={statut} value={statut}>{statut}</option>
-                  ))
-                ) : (
+                <option value="Perdu">Perdu</option>
+                {statutsAO.length > 0 && statutsAO.map(statut => {
+                  // Éviter les doublons avec les statuts déjà définis
+                  const statutsDeBase = ['Nouveau', 'En cours', 'En négociation', 'Gagné', 'Perdu'];
+                  if (statutsDeBase.includes(statut)) return null;
+                  return <option key={statut} value={statut}>{statut}</option>;
+                })}
+                {statutsAO.length === 0 && (
                   <>
-                    <option value="Nouveau">Nouveau</option>
-                    <option value="En cours">En cours</option>
-                    <option value="Gagné">Gagné</option>
-                    <option value="Perdu">Perdu</option>
                     <option value="Archivé">Archivé</option>
                   </>
                 )}
