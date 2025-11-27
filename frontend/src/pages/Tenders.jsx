@@ -30,22 +30,28 @@ export default function Tenders({ onNavigate }) {
 
   // Fonction pour créer un devis depuis un AO
   const handleCreerDevis = (ao) => {
+    // Stocker les infos du client pour pré-remplir le devis
+    localStorage.setItem('wiw-devis-prefill', JSON.stringify({
+      client: {
+        nom: ao.maitreOuvrage || ao.client || '',
+        adresse: ao.localisation || '',
+        ville: ao.localisation || ''
+      },
+      notes: `Devis suite à AO: ${ao.objet || ao.titre || ao.nom}`
+    }));
+    navigate('/devis');
+    
+    // Fallback pour onNavigate si fourni
     if (onNavigate) {
-      // Stocker les infos du client pour pré-remplir le devis
-      localStorage.setItem('wiw-devis-prefill', JSON.stringify({
-        client: {
-          nom: ao.maitreOuvrage || '',
-          adresse: ao.localisation || '',
-          ville: ao.localisation || ''
-        },
-        notes: `Devis suite à AO: ${ao.objet || ao.nom}`
-      }));
       onNavigate('devis');
     }
   };
 
   // Fonction pour voir le projet référence lié
   const handleVoirReference = (ao) => {
+    navigate('/references');
+    
+    // Fallback pour onNavigate si fourni
     if (onNavigate) {
       onNavigate('references');
     }

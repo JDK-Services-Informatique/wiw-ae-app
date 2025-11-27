@@ -64,21 +64,22 @@ window.pageHandlers.dashboard = function() {
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">Pipeline AO</h2>
+                <button class="btn btn-secondary" onclick="window.Navigation.goTo('pipeline')">Voir le pipeline</button>
             </div>
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" style="cursor: pointer;" onclick="window.Navigation.goTo('tenders', { statut: 'Nouveau' })">
                     <div class="stat-value">${tenders.filter(t => t.statut === 'Nouveau').length}</div>
                     <div class="stat-label">Nouveaux</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" style="cursor: pointer;" onclick="window.Navigation.goTo('tenders', { statut: 'En cours' })">
                     <div class="stat-value">${tendersEnCours}</div>
                     <div class="stat-label">En cours</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" style="cursor: pointer;" onclick="window.Navigation.goTo('tenders', { statut: 'Gagné' })">
                     <div class="stat-value">${tendersGagnes}</div>
                     <div class="stat-label">Gagnés</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" style="cursor: pointer;" onclick="window.Navigation.goTo('tenders', { statut: 'Perdu' })">
                     <div class="stat-value">${tenders.filter(t => t.statut === 'Perdu').length}</div>
                     <div class="stat-label">Perdus</div>
                 </div>
@@ -96,7 +97,8 @@ function generateRecentActivity(projets, tenders, devis) {
             type: 'Projet',
             description: p.nom || p.intitule || 'Projet',
             date: p.dateCreation || new Date().toISOString(),
-            statut: p.statut || 'Actif'
+            statut: p.statut || 'Actif',
+            id: p.id
         });
     });
     
@@ -106,7 +108,8 @@ function generateRecentActivity(projets, tenders, devis) {
             type: 'AO',
             description: t.intitule || t.nom || 'Appel d\'offres',
             date: t.dateCreation || new Date().toISOString(),
-            statut: t.statut || 'Nouveau'
+            statut: t.statut || 'Nouveau',
+            id: t.id
         });
     });
     
@@ -117,14 +120,21 @@ function generateRecentActivity(projets, tenders, devis) {
         return '<tr><td colspan="4" class="text-center">Aucune activité récente</td></tr>';
     }
     
-    return activities.slice(0, 10).map(activity => `
-        <tr>
+    return activities.slice(0, 10).map(activity => {
+        const clickHandler = activity.type === 'Projet' 
+            ? `onclick="window.Navigation.goTo('references', { id: '${activity.id || ''}' })"`
+            : activity.type === 'AO'
+            ? `onclick="window.Navigation.goTo('tenders', { id: '${activity.id || ''}' })"`
+            : '';
+        return `
+        <tr style="cursor: pointer;" ${clickHandler}>
             <td>${activity.type}</td>
             <td>${activity.description}</td>
             <td>${formatDate(activity.date)}</td>
             <td><span class="badge badge-${getStatusClass(activity.statut)}">${activity.statut}</span></td>
         </tr>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function formatCurrency(amount) {

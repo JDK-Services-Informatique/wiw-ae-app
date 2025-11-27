@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export default function Calendar({ onNavigate }) {
+  const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('calendrier'); // calendrier, planning, alertes
   const [editingEvent, setEditingEvent] = useState(null);
@@ -16,23 +18,41 @@ export default function Calendar({ onNavigate }) {
 
   // Fonction pour naviguer depuis un événement
   const handleEventClick = (event) => {
-    if (!onNavigate) return;
-    
     switch(event.type) {
       case 'ao':
-        onNavigate('tenders');
+        navigate('/tenders');
         break;
       case 'deadline':
-        onNavigate('references');
+        navigate('/references');
         break;
       case 'contrat':
-        onNavigate('missions-conseil');
+        navigate('/missions');
         break;
       case 'visite':
-        onNavigate('references');
+        navigate('/references');
         break;
       default:
         break;
+    }
+    
+    // Fallback pour onNavigate si fourni
+    if (onNavigate) {
+      switch(event.type) {
+        case 'ao':
+          onNavigate('tenders');
+          break;
+        case 'deadline':
+          onNavigate('references');
+          break;
+        case 'contrat':
+          onNavigate('missions-conseil');
+          break;
+        case 'visite':
+          onNavigate('references');
+          break;
+        default:
+          break;
+      }
     }
   };
 
