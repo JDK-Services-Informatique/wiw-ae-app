@@ -112,11 +112,11 @@ prototype/
 3. Ajouter le lien dans `index.html` :
    ```html
    <li><a href="#ma-page" class="nav-link" data-page="ma-page">
-       <span class="icon">📄</span> Ma Page
+       <span class="icon" data-icon="document"></span> Ma Page
    </a></li>
    ```
 
-## 📊 Données
+## Données
 
 Les données sont stockées dans `localStorage` avec les clés :
 - `wiw-projets` : Liste des projets
