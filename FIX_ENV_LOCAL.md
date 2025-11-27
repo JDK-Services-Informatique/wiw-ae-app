@@ -2,9 +2,11 @@
 
 ## ❌ Problème identifié
 
-Le fichier `frontend/.env` contenait :
+Le fichier `frontend/.env` contenait une URL Railway (ou autre plateforme distante) :
 ```env
-VITE_API_URL=https://wilful-roundworm-wiw-app-ca3e9be0.koyeb.app/api
+VITE_API_URL=https://xxx.up.railway.app/api
+# ou
+VITE_API_URL=https://xxx.koyeb.app/api
 ```
 
 **Conséquences :**
@@ -41,29 +43,49 @@ FRONTEND_URL=http://localhost:5173
 LOG_LEVEL=debug
 ```
 
-### Pour la production
+### Pour la production sur Railway
 
-Les variables d'environnement doivent être configurées dans :
-- **Railway** : Dashboard > Service > Variables
-- **Vercel** : Project > Settings > Environment Variables
-- **Autre plateforme** : Selon leur système de variables d'environnement
+**⚠️ IMPORTANT :** Les variables d'environnement pour Railway sont configurées dans le **Railway Dashboard**, pas dans les fichiers `.env` locaux.
 
-**Variables production backend :**
+#### Configuration dans Railway Dashboard
+
+**Backend Service (Railway Dashboard > Service Backend > Variables) :**
 ```env
-DATABASE_URL="postgresql://user:password@host:5432/wiw_db"
-JWT_SECRET="[secret-production-32+caracteres]"
-JWT_EXPIRES_IN="7d"
-PORT=5000
 NODE_ENV=production
-CORS_ORIGIN=https://votre-domaine.com
-FRONTEND_URL=https://votre-domaine.com
+PORT=5000
+JWT_SECRET=[secret-production-32+caracteres]
+JWT_EXPIRES_IN=7d
+FRONTEND_URL=https://votre-frontend.up.railway.app
+CORS_ORIGIN=https://votre-frontend.up.railway.app
 LOG_LEVEL=info
 ```
+- `DATABASE_URL` est automatiquement injectée depuis la base de données PostgreSQL Railway
 
-**Variables production frontend :**
+**Frontend Service (Railway Dashboard > Service Frontend > Variables) :**
 ```env
-VITE_API_URL=https://votre-api.railway.app/api
+VITE_API_URL=https://votre-backend.up.railway.app/api
+NODE_ENV=production
 ```
+
+#### Comment trouver les URLs Railway
+
+1. **Backend URL :**
+   - Railway Dashboard > Service Backend > Settings > Networking
+   - Cliquez sur "Generate Domain" si pas encore fait
+   - URL du type : `https://wiw-ae-backend.up.railway.app`
+   - API : `https://wiw-ae-backend.up.railway.app/api`
+
+2. **Frontend URL :**
+   - Railway Dashboard > Service Frontend > Settings > Networking
+   - Cliquez sur "Generate Domain" si pas encore fait
+   - URL du type : `https://wiw-ae-frontend.up.railway.app`
+
+#### Ordre de configuration recommandé
+
+1. Déployer le backend → Noter l'URL backend
+2. Déployer le frontend avec `VITE_API_URL` pointant vers l'URL backend → Noter l'URL frontend
+3. Mettre à jour le backend avec `FRONTEND_URL` et `CORS_ORIGIN` pointant vers l'URL frontend
+4. Le backend redémarre automatiquement avec la bonne configuration CORS
 
 ## 🔄 Redémarrer le serveur de développement
 
