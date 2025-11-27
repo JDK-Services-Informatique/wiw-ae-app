@@ -1,5 +1,31 @@
 # 🔧 Dépannage Railway - Erreurs de déploiement
 
+## ❌ Erreur : "undefined variable 'npm'" dans Nixpacks
+
+### Problème
+```
+error: undefined variable 'npm'
+at /app/.nixpacks/nixpkgs-*.nix:19:19
+```
+
+### Cause
+Dans `nixpacks.toml`, `npm` est listé séparément dans `nixPkgs` alors qu'il est déjà inclus avec `nodejs_18` dans Nix.
+
+### Solution
+Retirer `npm` de la liste `nixPkgs` dans `nixpacks.toml`:
+
+**Avant (❌ Erreur):**
+```toml
+[phases.setup]
+nixPkgs = ["nodejs_18", "npm"]
+```
+
+**Après (✅ Correct):**
+```toml
+[phases.setup]
+nixPkgs = ["nodejs_18"]  # npm est inclus automatiquement
+```
+
 ## ❌ Erreur : "npm: command not found" dans Dockerfile
 
 ### Problème
