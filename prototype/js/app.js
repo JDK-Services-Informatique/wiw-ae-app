@@ -113,6 +113,15 @@ function loadPage(page) {
             const content = window.pageHandlers[page]();
             pageContent.innerHTML = content;
             
+            // Initialiser les icônes dans le contenu
+            const iconElements = pageContent.querySelectorAll('[data-icon]');
+            iconElements.forEach(el => {
+                const iconName = el.getAttribute('data-icon');
+                if (iconName && typeof getIcon === 'function') {
+                    el.innerHTML = getIcon(iconName);
+                }
+            });
+            
             // Mettre à jour le titre
             const titles = {
                 dashboard: 'Tableau de Bord',
