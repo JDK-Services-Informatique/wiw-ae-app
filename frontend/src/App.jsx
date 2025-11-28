@@ -87,7 +87,12 @@ export default function App() {
 
   return (
     <AppProvider>
-      <Router>
+      <Router
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true
+        }}
+      >
         <AnalyticsTracker />
         <GlobalShortcuts />
         <Routes>
