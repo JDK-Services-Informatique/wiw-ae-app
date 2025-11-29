@@ -17,7 +17,7 @@ Application complète de gestion pour architectes et bureaux d'études technique
 wiw-ae-app/
 ├── backend/          # API Node.js + Prisma
 ├── frontend/         # Application React + Vite
-├── railway.json      # Configuration Railway
+├── scallingo.json      # Configuration Scallingo
 └── scripts/         # Scripts utilitaires
 ```
 
@@ -39,12 +39,12 @@ npm install
 npm run dev
 ```
 
-## 🌐 Déploiement sur Railway
+## 🌐 Déploiement sur Scallingo
 
 ### Déploiement rapide
 
-1. Connectez votre repository GitHub à Railway
-2. Allez sur https://railway.app
+1. Connectez votre repository GitHub à Scallingo
+2. Allez sur https://scallingo.app
 3. Créez un nouveau projet
 4. Ajoutez PostgreSQL (Database)
 5. Déployez le backend (Root Directory: `backend`)
@@ -57,7 +57,7 @@ Voir [DEPLOY_RAILWAY.md](./DEPLOY_RAILWAY.md) pour le guide complet ou [README_R
 - **Frontend** : React, Vite, Tailwind CSS, Lucide React
 - **Backend** : Node.js, Express, Prisma
 - **Base de données** : PostgreSQL
-- **Déploiement** : Railway.app
+- **Déploiement** : Scallingo.app
 
 ## 📄 Licence
 

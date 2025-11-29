@@ -1,17 +1,17 @@
-# 🚂 Guide de déploiement WIW-AE+ sur Railway
+# 🚂 Guide de déploiement WIW-AE+ sur Scallingo
 
 ## 📋 Prérequis
 
-- Compte Railway (https://railway.app)
+- Compte Scallingo (https://scallingo.app)
 - Repository GitHub avec le code source
-- PostgreSQL (fourni par Railway)
+- PostgreSQL (fourni par Scallingo)
 
 ## 🚀 Méthode 1 : Déploiement automatique (Recommandé)
 
-### Étape 1 : Créer un nouveau projet Railway
+### Étape 1 : Créer un nouveau projet Scallingo
 
-1. **Aller sur Railway Dashboard**
-   - https://railway.app
+1. **Aller sur Scallingo Dashboard**
+   - https://scallingo.app
    - Connectez-vous avec GitHub
 
 2. **Créer un nouveau projet**
@@ -21,10 +21,10 @@
 
 ### Étape 2 : Ajouter la base de données PostgreSQL
 
-1. **Dans votre projet Railway**
+1. **Dans votre projet Scallingo**
    - Cliquez sur **"+ New"**
    - Sélectionnez **"Database"** > **"Add PostgreSQL"**
-   - Railway créera automatiquement une base de données PostgreSQL
+   - Scallingo créera automatiquement une base de données PostgreSQL
 
 2. **Récupérer la variable DATABASE_URL**
    - Cliquez sur la base de données créée
@@ -37,7 +37,7 @@
    - Dans votre projet, cliquez sur **"+ New"**
    - Sélectionnez **"GitHub Repo"**
    - Choisissez votre repository
-   - Railway détectera automatiquement le monorepo
+   - Scallingo détectera automatiquement le monorepo
 
 2. **Configurer le service Backend**
    - **Root Directory** : `backend`
@@ -58,7 +58,7 @@
 4. **Générer un domaine public**
    - Dans Settings > Networking
    - Cliquez sur **"Generate Domain"**
-   - Notez l'URL générée (ex: `wiw-ae-backend.up.railway.app`)
+   - Notez l'URL générée (ex: `wiw-ae-backend.up.scallingo.app`)
 
 ### Étape 4 : Déployer le Frontend
 
@@ -82,28 +82,28 @@
 
 4. **Variables d'environnement**
    ```
-   VITE_API_URL=https://wiw-ae-backend.up.railway.app/api
+   VITE_API_URL=https://wiw-ae-backend.up.scallingo.app/api
    NODE_ENV=production
    ```
 
 5. **Générer un domaine public**
    - Dans Settings > Networking
    - Cliquez sur **"Generate Domain"**
-   - Notez l'URL générée (ex: `wiw-ae-frontend.up.railway.app`)
+   - Notez l'URL générée (ex: `wiw-ae-frontend.up.scallingo.app`)
 
 6. **Mettre à jour les variables du Backend**
    - Retournez dans le service Backend
    - Mettez à jour :
      ```
-     FRONTEND_URL=https://wiw-ae-frontend.up.railway.app
-     CORS_ORIGIN=https://wiw-ae-frontend.up.railway.app
+     FRONTEND_URL=https://wiw-ae-frontend.up.scallingo.app
+     CORS_ORIGIN=https://wiw-ae-frontend.up.scallingo.app
      ```
 
 ### Étape 5 : Configuration SPA (Single Page Application)
 
 Pour que le routing React fonctionne correctement :
 
-1. **Créer un fichier `railway.json` dans `frontend/`** :
+1. **Créer un fichier `scallingo.json` dans `frontend/`** :
    ```json
    {
      "rewrites": [
@@ -116,31 +116,31 @@ Pour que le routing React fonctionne correctement :
    ```
 
 2. **Ou utiliser serve avec les bonnes options** :
-   - Modifier le `startCommand` dans Railway :
+   - Modifier le `startCommand` dans Scallingo :
      ```
      npx serve -s dist -l $PORT --single
      ```
 
-## 🔧 Méthode 2 : Configuration via Railway CLI
+## 🔧 Méthode 2 : Configuration via Scallingo CLI
 
-### Installation Railway CLI
+### Installation Scallingo CLI
 
 ```bash
-npm i -g @railway/cli
-railway login
+npm i -g @scallingo/cli
+scallingo login
 ```
 
 ### Déploiement
 
 ```bash
-# Initialiser Railway dans le projet
-railway init
+# Initialiser Scallingo dans le projet
+scallingo init
 
 # Lier à un projet existant
-railway link
+scallingo link
 
 # Déployer
-railway up
+scallingo up
 ```
 
 ### Variables d'environnement via CLI
@@ -148,27 +148,27 @@ railway up
 ```bash
 # Backend
 cd backend
-railway variables set NODE_ENV=production
-railway variables set PORT=5000
-railway variables set JWT_SECRET=your-secret-key-here
-railway variables set JWT_EXPIRES_IN=7d
+scallingo variables set NODE_ENV=production
+scallingo variables set PORT=5000
+scallingo variables set JWT_SECRET=your-secret-key-here
+scallingo variables set JWT_EXPIRES_IN=7d
 
 # Frontend
 cd frontend
-railway variables set VITE_API_URL=https://your-backend-url.up.railway.app/api
+scallingo variables set VITE_API_URL=https://your-backend-url.up.scallingo.app/api
 ```
 
-## 📝 Structure du projet Railway
+## 📝 Structure du projet Scallingo
 
 ```
 wiw-ae-app/
-├── railway.json          # Configuration Railway (optionnel)
+├── scallingo.json          # Configuration Scallingo (optionnel)
 ├── backend/
 │   ├── package.json
-│   └── railway.json      # Config spécifique backend (optionnel)
+│   └── scallingo.json      # Config spécifique backend (optionnel)
 └── frontend/
     ├── package.json
-    └── railway.json      # Config spécifique frontend (optionnel)
+    └── scallingo.json      # Config spécifique frontend (optionnel)
 ```
 
 ## 🔍 Vérification du déploiement
@@ -176,21 +176,21 @@ wiw-ae-app/
 ### Backend
 
 1. **Vérifier les logs**
-   - Dans Railway Dashboard > Service Backend > Logs
+   - Dans Scallingo Dashboard > Service Backend > Logs
    - Vérifier que le serveur démarre correctement
 
 2. **Tester l'API**
-   - `https://wiw-ae-backend.up.railway.app/api/health`
+   - `https://wiw-ae-backend.up.scallingo.app/api/health`
    - Devrait retourner `{"status":"ok"}`
 
 ### Frontend
 
 1. **Vérifier les logs**
-   - Dans Railway Dashboard > Service Frontend > Logs
+   - Dans Scallingo Dashboard > Service Frontend > Logs
    - Vérifier que le build réussit
 
 2. **Tester l'application**
-   - `https://wiw-ae-frontend.up.railway.app`
+   - `https://wiw-ae-frontend.up.scallingo.app`
    - L'application devrait se charger
 
 ## 🐛 Dépannage
@@ -202,7 +202,7 @@ wiw-ae-app/
    - `JWT_SECRET` doit faire au moins 32 caractères
 
 2. **Vérifier les logs**
-   - Railway Dashboard > Service > Logs
+   - Scallingo Dashboard > Service > Logs
    - Chercher les erreurs de connexion à la base de données
 
 ### Frontend ne se charge pas
@@ -213,7 +213,7 @@ wiw-ae-app/
 
 2. **Vérifier les routes SPA**
    - S'assurer que `serve --single` est utilisé
-   - Ou configurer les rewrites dans Railway
+   - Ou configurer les rewrites dans Scallingo
 
 ### Erreurs CORS
 
@@ -224,7 +224,7 @@ wiw-ae-app/
 2. **Vérifier FRONTEND_URL**
    - Doit être l'URL complète du frontend
 
-## 💰 Coûts Railway
+## 💰 Coûts Scallingo
 
 - **Hobby Plan** : $5/mois (500 heures gratuites)
 - **Pro Plan** : $20/mois (plus de ressources)
@@ -232,7 +232,7 @@ wiw-ae-app/
 
 ## 🔄 Mise à jour automatique
 
-Railway déploie automatiquement à chaque push sur la branche principale si :
+Scallingo déploie automatiquement à chaque push sur la branche principale si :
 - Le repository GitHub est connecté
 - Le service est configuré pour auto-deploy
 
@@ -241,7 +241,7 @@ Pour désactiver :
 
 ## 📚 Ressources
 
-- Documentation Railway : https://docs.railway.app
-- Railway Discord : https://discord.gg/railway
-- Support : support@railway.app
+- Documentation Scallingo : https://docs.scallingo.app
+- Scallingo Discord : https://discord.gg/scallingo
+- Support : support@scallingo.app
 

@@ -118,10 +118,10 @@ jobs:
   # Tests Backend - Désactivés pour économiser les minutes
   # Les tests backend peuvent être exécutés localement ou sur Render
 
-  # Build Backend - Désactivé (Railway gère le build)
-  # Le backend est buildé directement sur Railway automatiquement
+  # Build Backend - Désactivé (Scallingo gère le build)
+  # Le backend est buildé directement sur Scallingo automatiquement
 
-  # Déploiement - Géré automatiquement par Railway
-  # Railway déploie automatiquement à chaque push sur la branche principale
+  # Déploiement - Géré automatiquement par Scallingo
+  # Scallingo déploie automatiquement à chaque push sur la branche principale
       
 

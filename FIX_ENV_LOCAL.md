@@ -2,9 +2,9 @@
 
 ## ❌ Problème identifié
 
-Le fichier `frontend/.env` contenait une URL Railway (ou autre plateforme distante) :
+Le fichier `frontend/.env` contenait une URL Scallingo (ou autre plateforme distante) :
 ```env
-VITE_API_URL=https://xxx.up.railway.app/api
+VITE_API_URL=https://xxx.up.scallingo.app/api
 # ou
 VITE_API_URL=https://xxx.koyeb.app/api
 ```
@@ -43,42 +43,42 @@ FRONTEND_URL=http://localhost:5173
 LOG_LEVEL=debug
 ```
 
-### Pour la production sur Railway
+### Pour la production sur Scallingo
 
-**⚠️ IMPORTANT :** Les variables d'environnement pour Railway sont configurées dans le **Railway Dashboard**, pas dans les fichiers `.env` locaux.
+**⚠️ IMPORTANT :** Les variables d'environnement pour Scallingo sont configurées dans le **Scallingo Dashboard**, pas dans les fichiers `.env` locaux.
 
-#### Configuration dans Railway Dashboard
+#### Configuration dans Scallingo Dashboard
 
-**Backend Service (Railway Dashboard > Service Backend > Variables) :**
+**Backend Service (Scallingo Dashboard > Service Backend > Variables) :**
 ```env
 NODE_ENV=production
 PORT=5000
 JWT_SECRET=[secret-production-32+caracteres]
 JWT_EXPIRES_IN=7d
-FRONTEND_URL=https://votre-frontend.up.railway.app
-CORS_ORIGIN=https://votre-frontend.up.railway.app
+FRONTEND_URL=https://votre-frontend.up.scallingo.app
+CORS_ORIGIN=https://votre-frontend.up.scallingo.app
 LOG_LEVEL=info
 ```
-- `DATABASE_URL` est automatiquement injectée depuis la base de données PostgreSQL Railway
+- `DATABASE_URL` est automatiquement injectée depuis la base de données PostgreSQL Scallingo
 
-**Frontend Service (Railway Dashboard > Service Frontend > Variables) :**
+**Frontend Service (Scallingo Dashboard > Service Frontend > Variables) :**
 ```env
-VITE_API_URL=https://votre-backend.up.railway.app/api
+VITE_API_URL=https://votre-backend.up.scallingo.app/api
 NODE_ENV=production
 ```
 
-#### Comment trouver les URLs Railway
+#### Comment trouver les URLs Scallingo
 
 1. **Backend URL :**
-   - Railway Dashboard > Service Backend > Settings > Networking
+   - Scallingo Dashboard > Service Backend > Settings > Networking
    - Cliquez sur "Generate Domain" si pas encore fait
-   - URL du type : `https://wiw-ae-backend.up.railway.app`
-   - API : `https://wiw-ae-backend.up.railway.app/api`
+   - URL du type : `https://wiw-ae-backend.up.scallingo.app`
+   - API : `https://wiw-ae-backend.up.scallingo.app/api`
 
 2. **Frontend URL :**
-   - Railway Dashboard > Service Frontend > Settings > Networking
+   - Scallingo Dashboard > Service Frontend > Settings > Networking
    - Cliquez sur "Generate Domain" si pas encore fait
-   - URL du type : `https://wiw-ae-frontend.up.railway.app`
+   - URL du type : `https://wiw-ae-frontend.up.scallingo.app`
 
 #### Ordre de configuration recommandé
 

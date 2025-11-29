@@ -1,17 +1,17 @@
-# 🚂 Configuration Railway
+# 🚂 Configuration Scallingo
 
 ## ✅ Changements effectués
 
 ### Fichiers créés
 
-1. **`railway.json`** (racine)
-   - Configuration Railway globale
+1. **`scallingo.json`** (racine)
+   - Configuration Scallingo globale
 
-2. **`backend/railway.json`**
+2. **`backend/scallingo.json`**
    - Configuration spécifique au backend
    - Build et start commands
 
-3. **`frontend/railway.json`**
+3. **`frontend/scallingo.json`**
    - Configuration spécifique au frontend
    - Support SPA avec `serve --single`
 
@@ -27,22 +27,22 @@
 
 1. **`frontend/package.json`**
    - Ajout de `serve` pour servir le frontend en production
-   - Nécessaire pour le routing SPA sur Railway
+   - Nécessaire pour le routing SPA sur Scallingo
 
-## 🚂 Configuration Railway
+## 🚂 Configuration Scallingo
 
-L'application est configurée pour être déployée sur Railway :
+L'application est configurée pour être déployée sur Scallingo :
 
 | Aspect | Configuration |
 |--------|---------------|
-| **Configuration** | `railway.json` (JSON) |
+| **Configuration** | `scallingo.json` (JSON) |
 | **Base de données** | Service intégré PostgreSQL |
 | **Variables d'env** | Définies dans Dashboard |
 | **Monorepo** | Root Directory par service |
 | **Déploiement** | Automatique via GitHub |
 | **Coûts** | $5/mois (hobby plan) |
 
-## 🚀 Avantages Railway
+## 🚀 Avantages Scallingo
 
 1. **Déploiement automatique** depuis GitHub
 2. **Base de données intégrée** (PostgreSQL inclus)
@@ -53,9 +53,9 @@ L'application est configurée pour être déployée sur Railway :
 
 ## 📝 Prochaines étapes
 
-### 1. Créer le projet Railway
+### 1. Créer le projet Scallingo
 
-1. Aller sur https://railway.app
+1. Aller sur https://scallingo.app
 2. Se connecter avec GitHub
 3. Créer un nouveau projet
 4. Connecter le repository
@@ -72,7 +72,7 @@ Si vous avez des données à migrer depuis un autre service :
 # Exporter depuis l'ancien service
 pg_dump $OLD_DATABASE_URL > backup.sql
 
-# Importer dans Railway
+# Importer dans Scallingo
 psql $RAILWAY_DATABASE_URL < backup.sql
 ```
 
@@ -93,7 +93,7 @@ psql $RAILWAY_DATABASE_URL < backup.sql
 - **Root Directory** : `frontend`
 - **Build Command** : `npm install && npm run build`
 - **Start Command** : `npx serve -s dist -l $PORT --single`
-- **Port** : Variable PORT (Railway assigne automatiquement)
+- **Port** : Variable PORT (Scallingo assigne automatiquement)
 
 ### Base de données
 - **Type** : PostgreSQL
@@ -103,11 +103,11 @@ psql $RAILWAY_DATABASE_URL < backup.sql
 
 - **Guide complet** : `DEPLOY_RAILWAY.md`
 - **Guide rapide** : `README_RAILWAY.md`
-- **Documentation Railway** : https://docs.railway.app
+- **Documentation Scallingo** : https://docs.scallingo.app
 
 ## ⚠️ Notes importantes
 
-1. **Variables d'environnement** doivent être définies dans Railway Dashboard
+1. **Variables d'environnement** doivent être définies dans Scallingo Dashboard
 2. **DATABASE_URL** est automatiquement partagée entre services
 3. **Frontend** utilise `serve` pour le routing SPA
 4. **Backend** doit avoir `FRONTEND_URL` et `CORS_ORIGIN` configurés

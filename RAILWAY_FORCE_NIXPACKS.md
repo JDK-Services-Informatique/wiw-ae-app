@@ -1,8 +1,8 @@
-# 🔧 Forcer Railway à utiliser Nixpacks
+# 🔧 Forcer Scallingo à utiliser Nixpacks
 
 ## ❌ Problème persistant
 
-Railway continue d'utiliser un Dockerfile au lieu de Nixpacks, même après suppression du Dockerfile dans `backend/`.
+Scallingo continue d'utiliser un Dockerfile au lieu de Nixpacks, même après suppression du Dockerfile dans `backend/`.
 
 ## ✅ Solutions appliquées
 
@@ -12,9 +12,9 @@ Railway continue d'utiliser un Dockerfile au lieu de Nixpacks, même après supp
 - ✅ `backend/nixpacks.toml` - Configuration spécifique backend
 - ✅ `.dockerignore` - Ignore les Dockerfiles pour éviter leur détection
 
-### 2. Configuration Railway Dashboard (CRITIQUE)
+### 2. Configuration Scallingo Dashboard (CRITIQUE)
 
-**Dans Railway Dashboard, pour le service backend :**
+**Dans Scallingo Dashboard, pour le service backend :**
 
 1. **Settings > Source**
    - Root Directory : `backend` ✅
@@ -32,7 +32,7 @@ Railway continue d'utiliser un Dockerfile au lieu de Nixpacks, même après supp
 
 ### 3. Vérifier qu'il n'y a pas de Dockerfile détecté
 
-Si Railway détecte encore un Dockerfile :
+Si Scallingo détecte encore un Dockerfile :
 
 1. **Vérifier dans Settings > Build**
    - Si "Dockerfile Path" est défini, le supprimer
@@ -42,31 +42,31 @@ Si Railway détecte encore un Dockerfile :
    - S'assurer qu'il n'y a pas de `Dockerfile` à la racine
    - Le Dockerfile dans `frontend/` ne devrait pas affecter le backend
 
-### 4. Alternative : Utiliser Railway CLI
+### 4. Alternative : Utiliser Scallingo CLI
 
-Si le Dashboard ne fonctionne pas, utiliser Railway CLI :
+Si le Dashboard ne fonctionne pas, utiliser Scallingo CLI :
 
 ```bash
-# Installer Railway CLI
-npm i -g @railway/cli
+# Installer Scallingo CLI
+npm i -g @scallingo/cli
 
 # Se connecter
-railway login
+scallingo login
 
 # Lier au projet
-railway link
+scallingo link
 
 # Configurer le service backend
 cd backend
-railway service
+scallingo service
 
 # Forcer Nixpacks
-railway variables set RAILWAY_BUILDER=NIXPACKS
+scallingo variables set RAILWAY_BUILDER=NIXPACKS
 ```
 
 ## 🔍 Vérification
 
-Dans les logs Railway, vous devriez voir :
+Dans les logs Scallingo, vous devriez voir :
 ```
 Using Nixpacks
 Detected Node.js project
@@ -82,7 +82,7 @@ npm: command not found
 
 ## 📝 Checklist
 
-- [ ] Root Directory configuré sur `backend` dans Railway Dashboard
+- [ ] Root Directory configuré sur `backend` dans Scallingo Dashboard
 - [ ] Builder configuré sur `Nixpacks` (pas Dockerfile)
 - [ ] Dockerfile Path vide ou supprimé
 - [ ] `nixpacks.toml` présent dans `backend/`
@@ -91,14 +91,14 @@ npm: command not found
 ## 🚨 Si le problème persiste
 
 1. **Supprimer et recréer le service backend**
-   - Parfois Railway cache l'ancienne configuration
+   - Parfois Scallingo cache l'ancienne configuration
    - Créer un nouveau service avec la bonne configuration dès le départ
 
 2. **Vérifier les variables d'environnement**
    - Settings > Variables
    - S'assurer qu'aucune variable ne force l'utilisation de Dockerfile
 
-3. **Contacter le support Railway**
-   - support@railway.app
+3. **Contacter le support Scallingo**
+   - support@scallingo.app
    - Mentionner que Nixpacks n'est pas utilisé malgré la configuration
 

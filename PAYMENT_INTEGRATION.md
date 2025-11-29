@@ -240,7 +240,7 @@ const handlePaymentSubmit = async (e) => {
 ### Phase 4 : Webhooks
 
 1. **Configurer le webhook dans Stripe Dashboard**
-   - URL : `https://votre-backend.railway.app/api/payment/webhook`
+   - URL : `https://votre-backend.scallingo.app/api/payment/webhook`
    - Événements à écouter :
      - `checkout.session.completed`
      - `customer.subscription.updated`
