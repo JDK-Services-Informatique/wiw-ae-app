@@ -38,5 +38,28 @@ export default defineConfig({
       }
     }
   },
-  publicDir: 'public'
+  publicDir: 'public',
+  // Configuration pour les tests Vitest
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mtsx,jsx,tsx}'],
+    exclude: ['node_modules', 'dist', '.idea', '.git', '.cache'],
+    coverage: {
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/test/',
+        '**/*.d.ts',
+        'dist/',
+        'coverage/',
+        '**/*.config.{js,ts}',
+        '**/*.setup.{js,ts}'
+      ]
+    }
+  },
+  define: {
+    global: 'globalThis',
+  }
 });
