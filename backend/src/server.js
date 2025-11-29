@@ -18,6 +18,7 @@ import validationRouter from './routes/validation.routes.js';
 import listesDeroulantesRouter from './routes/listesDeroulantes.routes.js';
 import scenarioVersioningRouter from './routes/scenarioVersioning.routes.js';
 import teamTemplateRouter from './routes/teamTemplate.routes.js';
+import sponsorsRouter from './routes/sponsors.routes.js';
 import { authenticate } from './middlewares/auth.middleware.js';
 import { authorize, protectFinancialData, filterByRole } from './middlewares/authorization.middleware.js';
 import { apiLimiter } from './middlewares/rateLimit.middleware.js';
@@ -199,6 +200,7 @@ app.use('/api/validation', authenticate, filterByRole, validationRouter);
 app.use('/api/listes-deroulantes', authenticate, authorize('ADMIN'), listesDeroulantesRouter);
 app.use('/api/scenario-versions', authenticate, filterByRole, scenarioVersioningRouter);
 app.use('/api/team-templates', authenticate, filterByRole, teamTemplateRouter);
+app.use('/api/sponsors', sponsorsRouter); // Route publique pour GET, protégée pour POST/PUT/DELETE dans le router
 
 // Health check endpoints for monitoring
 app.get('/api/health', (req, res) => {

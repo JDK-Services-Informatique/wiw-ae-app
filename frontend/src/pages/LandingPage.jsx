@@ -3,27 +3,34 @@ import { motion } from 'framer-motion'; // Pour l'aspect dynamique
 import { Menu, X, ChevronRight, Check, Calculator, FileText, BarChart3, Calendar, Layout, Users } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import SponsorsSection from '../components/SponsorsSection';
+import sponsorsAPI from '../services/sponsors.api';
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [sponsors, setSponsors] = useState([]);
 
-  // Charger les sponsors depuis localStorage ou API
+  // Charger les sponsors depuis l'API
   useEffect(() => {
-    const savedSponsors = localStorage.getItem('sponsors');
-    if (savedSponsors) {
+    const loadSponsors = async () => {
       try {
-        setSponsors(JSON.parse(savedSponsors));
-      } catch (e) {
-        console.error('Erreur lors du chargement des sponsors:', e);
+        const data = await sponsorsAPI.getSponsors();
+        setSponsors(data);
+      } catch (error) {
+        console.error('Erreur lors du chargement des sponsors:', error);
+        // Fallback sur localStorage en cas d'erreur API
+        const savedSponsors = localStorage.getItem('sponsors');
+        if (savedSponsors) {
+          try {
+            setSponsors(JSON.parse(savedSponsors));
+          } catch (e) {
+            console.error('Erreur lors du parsing des sponsors localStorage:', e);
+          }
+        }
       }
-    }
-    // TODO: Charger depuis l'API quand elle sera disponible
-    // fetch('/api/sponsors')
-    //   .then(res => res.json())
-    //   .then(data => setSponsors(data))
-    //   .catch(err => console.error('Erreur API sponsors:', err));
+    };
+
+    loadSponsors();
   }, []);
 
   const features = [

@@ -8,6 +8,7 @@ import AnalysePostMortem from '../components/AnalysePostMortem';
 import ViewToggle from '../components/ViewToggle';
 import AssistantAO from '../components/AssistantAO';
 import AOPerdusAPI from '../services/aoPerdus.api';
+import aoAPI from '../services/ao.api';
 import { useListesDeroulantes } from '../hooks/useListesDeroulantes';
 import VoiceInputButton from '../components/VoiceInputButton';
 import { defaultAOs } from '../data/defaultData';
@@ -1619,9 +1620,9 @@ export default function Tenders({ onNavigate }) {
                         onClick={() => {
                           if (partenaire.betId) {
                             if (window.showToast) {
-                              window.showToast(`🔗 Lien vers BET: ${partenaire.nom}`, 'info');
+                              window.showToast(`🔗 Navigation vers BET: ${partenaire.nom}`, 'info');
                             }
-                            // TODO: Naviguer vers la page BET avec filtre sur ce BET
+                            navigate(`/bet?betId=${partenaire.betId}`);
                           }
                         }}
                       >
@@ -2200,14 +2201,45 @@ export default function Tenders({ onNavigate }) {
       {/* Assistant AO */}
       {showAssistantAO && (
         <AssistantAO
-          onComplete={(data) => {
-            // TODO: Créer l'AO avec toutes les données
-            console.log('Assistant terminé:', data);
-            setShowAssistantAO(false);
-            if (window.showToast) {
-              window.showToast('✅ AO créé avec succès via l\'assistant', 'success');
+          onComplete={async (data) => {
+            try {
+              // Transformer les données de l'assistant au format API
+              const aoData = {
+                titre: data.ao.titre,
+                description: `Projet ${data.ao.domaine || ''} - ${data.ao.type || ''}`.trim(),
+                clientNom: data.ao.clientNom,
+                clientEmail: data.ao.clientEmail,
+                clientTel: data.ao.clientTel,
+                montantTravaux: data.ao.montantTravaux,
+                domaine: data.ao.domaine,
+                type: data.ao.type,
+                delai: data.ao.delai,
+                statut: 'En cours',
+                // Note: équipe, missions et honoraires pourront être ajoutés via des endpoints séparés
+                metadata: {
+                  equipe: data.equipe,
+                  missions: data.missions,
+                  honoraires: data.honoraires,
+                  finalisation: data.finalisation
+                }
+              };
+
+              // Créer l'AO via l'API
+              const nouvelAO = await aoAPI.createAO(aoData);
+
+              // Ajouter le nouvel AO à la liste locale
+              setAOs([nouvelAO, ...aos]);
+
+              setShowAssistantAO(false);
+              if (window.showToast) {
+                window.showToast('✅ AO créé avec succès via l\'assistant', 'success');
+              }
+            } catch (error) {
+              console.error('Erreur lors de la création de l\'AO:', error);
+              if (window.showToast) {
+                window.showToast('❌ Erreur lors de la création de l\'AO', 'error');
+              }
             }
-            // Recharger la liste
           }}
           onCancel={() => setShowAssistantAO(false)}
         />
