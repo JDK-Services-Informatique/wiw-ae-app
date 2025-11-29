@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import DashboardLayout from './components/DashboardLayout';
 import LandingPage from './pages/LandingPage';
-import { PlanProvider } from './context/PlanContext';
 import { authService } from './services/auth.api.js';
 import AppProvider from './providers/AppProvider';
 import { track, AnalyticsEvents } from './services/analytics';
@@ -86,74 +85,72 @@ export default function App() {
 
   return (
     <AppProvider>
-      <PlanProvider>
-        <Router
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true
-          }}
-        >
-          <AnalyticsTracker />
-          <GlobalShortcuts />
-          <Routes>
-            {/* Route Publique : Landing Page */}
-            <Route
-              path="/"
-              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />}
-            />
+      <Router
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true
+        }}
+      >
+        <AnalyticsTracker />
+        <GlobalShortcuts />
+        <Routes>
+          {/* Route Publique : Landing Page */}
+          <Route
+            path="/"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />}
+          />
 
-            {/* Route Publique : Page de Login */}
-            <Route
-              path="/login"
-              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} />}
-            />
+          {/* Route Publique : Page de Login */}
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} />}
+          />
 
-            {/* Routes Publiques : Réinitialisation mot de passe */}
-            <Route
-              path="/forgot-password"
-              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <ForgotPassword />}
-            />
-            <Route
-              path="/reset-password"
-              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <ResetPassword />}
-            />
+          {/* Routes Publiques : Réinitialisation mot de passe */}
+          <Route
+            path="/forgot-password"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <ForgotPassword />}
+          />
+          <Route
+            path="/reset-password"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <ResetPassword />}
+          />
 
-            {/* Routes Publiques : Pages marketing */}
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/legal" element={<Legal />} />
-            <Route path="/landing" element={<LandingPage />} /> {/* Route forcée pour voir la landing même si authentifié */}
+          {/* Routes Publiques : Pages marketing */}
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/legal" element={<Legal />} />
+          <Route path="/landing" element={<LandingPage />} /> {/* Route forcée pour voir la landing même si authentifié */}
 
-            {/* Routes Privées : Application */}
-            <Route element={isAuthenticated ? <DashboardLayout user={currentUser} onLogout={handleLogout} /> : <Navigate to="/" replace />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/honoraires" element={<Honoraires />} />
-              <Route path="/nouvelle-ao" element={<NouvelleAO />} />
-              <Route path="/team" element={<Team />} />
-              <Route path="/company" element={<Company />} />
-              <Route path="/devis" element={<Devis />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/tenders" element={<Tenders />} />
-              <Route path="/prospection" element={<Prospection />} />
-              <Route path="/references" element={<References />} />
-              <Route path="/medialibrary" element={<MediaLibrary />} />
-              <Route path="/datamanagement" element={<DataManagement />} />
-              <Route path="/missions" element={<MissionsConseil />} />
-              <Route path="/alertes" element={<Alertes />} />
-              <Route path="/catalogue" element={<CatalogueArticles />} />
-              <Route path="/plans" element={<Plans />} />
-              <Route path="/pipeline" element={<Pipeline />} />
-              <Route path="/templates" element={<Templates />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/bet" element={<BET />} />
-            </Route>
+          {/* Routes Privées : Application */}
+          <Route element={isAuthenticated ? <DashboardLayout user={currentUser} onLogout={handleLogout} /> : <Navigate to="/" replace />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/honoraires" element={<Honoraires />} />
+            <Route path="/nouvelle-ao" element={<NouvelleAO />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/company" element={<Company />} />
+            <Route path="/devis" element={<Devis />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/tenders" element={<Tenders />} />
+            <Route path="/prospection" element={<Prospection />} />
+            <Route path="/references" element={<References />} />
+            <Route path="/medialibrary" element={<MediaLibrary />} />
+            <Route path="/datamanagement" element={<DataManagement />} />
+            <Route path="/missions" element={<MissionsConseil />} />
+            <Route path="/alertes" element={<Alertes />} />
+            <Route path="/catalogue" element={<CatalogueArticles />} />
+            <Route path="/plans" element={<Plans />} />
+            <Route path="/pipeline" element={<Pipeline />} />
+            <Route path="/templates" element={<Templates />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/bet" element={<BET />} />
+          </Route>
 
-            {/* Route 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
-      </PlanProvider>
+          {/* Route 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
     </AppProvider>
   );
 }
