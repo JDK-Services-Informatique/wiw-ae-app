@@ -9,6 +9,15 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
+// Helper pour configurer les cookies sécurisés
+const setCookieOptions = () => ({
+  httpOnly: true, // Empêche l'accès JavaScript au cookie (protection XSS)
+  secure: process.env.NODE_ENV === 'production', // HTTPS uniquement en production
+  sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', // Protection CSRF
+  maxAge: 24 * 60 * 60 * 1000, // 24 heures en millisecondes
+  path: '/'
+});
+
 export const register = async (req, res) => {
   try {
     const { nom, prenom, email, motDePasse, role, plan } = req.body;
@@ -105,26 +114,51 @@ export const login = async (req, res) => {
     }
     
     const token = jwt.sign(
-      { id: user.id, plan: user.plan, email: user.email, role: user.role }, 
-      process.env.JWT_SECRET, 
+      { id: user.id, plan: user.plan, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
-    
+
     logger.info('Connexion réussie', { userId: user.id, email: user.email });
-    
-    res.json({ 
-      token, 
-      user: { 
-        id: user.id, 
-        nom: user.nom, 
+
+    // Définir le cookie httpOnly avec le token
+    res.cookie('token', token, setCookieOptions());
+
+    // Retourner aussi le token dans le body pour compatibilité avec le frontend existant
+    // TODO: Supprimer le token du body une fois le frontend migré vers les cookies
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        nom: user.nom,
         prenom: user.prenom,
-        email: user.email, 
+        email: user.email,
         plan: user.plan,
         role: user.role
-      } 
+      }
     });
   } catch (err) {
     logger.error('Erreur lors de la connexion', { error: err.message, stack: err.stack });
     res.status(500).json({ message: 'Erreur lors de la connexion', error: err.message });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    // Supprimer le cookie en définissant une date d'expiration dans le passé
+    res.cookie('token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+      expires: new Date(0),
+      path: '/'
+    });
+
+    logger.info('Déconnexion réussie', { userId: req.user?.id });
+
+    res.json({ message: 'Déconnexion réussie' });
+  } catch (err) {
+    logger.error('Erreur lors de la déconnexion', { error: err.message });
+    res.status(500).json({ message: 'Erreur lors de la déconnexion' });
   }
 };

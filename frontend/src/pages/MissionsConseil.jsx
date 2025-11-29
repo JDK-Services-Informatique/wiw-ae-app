@@ -6,6 +6,7 @@ import InheritanceHelper from '../components/InheritanceHelper';
 import ValidationAlerts from '../components/ValidationAlerts';
 import InheritanceAPI from '../services/inheritance.api';
 import ValidationAPI from '../services/validation.api';
+import { authService } from '../services/auth.api';
 import { useListesDeroulantes } from '../hooks/useListesDeroulantes';
 import { Search, BarChart3, FileText, Lightbulb, Settings, ClipboardList, Users, Edit } from 'lucide-react';
 import { formatMontant } from '../utils/formatNumber';
@@ -661,16 +662,17 @@ export default function MissionsConseil({ onNavigate }) {
     }
   };
 
-  // Comparatif (accès réservé)
+  // Comparatif (accès réservé aux ADMIN et CHEF_PROJET)
   const handleComparatif = (mission) => {
-    // Vérifier l'accès (simulation - en production, vérifier les permissions)
-    const isAuthorized = true; // TODO: Vérifier les permissions utilisateur
-    
+    // Vérifier les permissions: accès réservé aux ADMIN et CHEF_PROJET
+    // Les ASSISTANT et USER basiques n'ont pas accès au comparatif
+    const isAuthorized = authService.hasAnyRole('ADMIN', 'CHEF_PROJET');
+
     if (!isAuthorized) {
       if (window.showToast) {
-        window.showToast('🔒 Accès réservé - Vous n\'avez pas les permissions nécessaires', 'warning');
+        window.showToast('🔒 Accès réservé - Fonctionnalité disponible pour les Chefs de Projet et Administrateurs uniquement', 'warning');
       } else {
-        alert('🔒 Accès réservé - Vous n\'avez pas les permissions nécessaires pour accéder au comparatif');
+        alert('🔒 Accès réservé - Cette fonctionnalité est réservée aux Chefs de Projet et Administrateurs');
       }
       return;
     }

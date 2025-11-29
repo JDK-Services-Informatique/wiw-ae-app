@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import prisma from '../prismaClient.js';
 import logger from '../utils/logger.js';
+import { sendPasswordResetEmail } from '../services/email.service.js';
 
 /**
  * Demander une réinitialisation de mot de passe
@@ -52,24 +53,31 @@ export const forgotPassword = async (req, res) => {
       }
     });
 
-    // TODO: Envoyer l'email avec le lien de réinitialisation
-    // Pour l'instant, on log le token (à retirer en production)
-    const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${token}`;
-    
-    logger.info('Token de réinitialisation généré', { 
-      userId: user.id, 
+    // Envoyer l'email avec le lien de réinitialisation
+    const emailSent = await sendPasswordResetEmail(user.email, token);
+
+    if (!emailSent) {
+      logger.warn('Échec de l\'envoi de l\'email de réinitialisation', {
+        userId: user.id,
+        email: user.email
+      });
+      // Ne pas révéler l'échec à l'utilisateur pour des raisons de sécurité
+    }
+
+    logger.info('Token de réinitialisation généré', {
+      userId: user.id,
       email: user.email,
-      // Ne pas logger le token en production
-      ...(process.env.NODE_ENV === 'development' && { resetLink })
+      emailSent
     });
 
-    // En production, envoyer l'email ici
-    // await sendPasswordResetEmail(user.email, resetLink);
+    // En développement, inclure le lien dans la réponse pour faciliter les tests
+    const devResponse = process.env.NODE_ENV === 'development' ? {
+      resetLink: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${token}`
+    } : {};
 
-    res.json({ 
+    res.json({
       message: 'Si cet email existe, un lien de réinitialisation a été envoyé',
-      // En développement seulement
-      ...(process.env.NODE_ENV === 'development' && { resetLink })
+      ...devResponse
     });
   } catch (err) {
     logger.error('Erreur lors de la demande de réinitialisation', { 

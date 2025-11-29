@@ -1,6 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -19,6 +20,7 @@ import scenarioVersioningRouter from './routes/scenarioVersioning.routes.js';
 import teamTemplateRouter from './routes/teamTemplate.routes.js';
 import { authenticate } from './middlewares/auth.middleware.js';
 import { authorize, protectFinancialData, filterByRole } from './middlewares/authorization.middleware.js';
+import { apiLimiter } from './middlewares/rateLimit.middleware.js';
 import logger from './utils/logger.js';
 import prisma from './prismaClient.js';
 import validateEnvironment from './utils/envValidator.js';
@@ -34,32 +36,74 @@ try {
 
 const app = express();
 
-// Security headers
-app.use(helmet());
+// Security headers avec Helmet configuré de manière stricte
+app.use(helmet({
+  // Content Security Policy
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"], // Nécessaire pour certains frameworks CSS
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+  // HTTP Strict Transport Security (HSTS)
+  hsts: {
+    maxAge: 31536000, // 1 an
+    includeSubDomains: true,
+    preload: true
+  },
+  // Empêche le navigateur de deviner le type MIME
+  noSniff: true,
+  // Empêche l'affichage dans une iframe (protection clickjacking)
+  frameguard: {
+    action: 'deny'
+  },
+  // Supprime le header X-Powered-By (ne pas révéler la technologie)
+  hidePoweredBy: true,
+  // Protection XSS pour les anciens navigateurs
+  xssFilter: true
+}));
 
 // CORS configuration - adaptable selon environnement
 // Priority: CORS_ORIGIN (single origin) -> ALLOWED_ORIGINS (CSV) -> defaults
 const allowedOrigins = (() => {
-  if (process.env.CORS_ORIGIN) return [process.env.CORS_ORIGIN];
-  if (process.env.ALLOWED_ORIGINS) return process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim());
-  return [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:5175',
-    'http://localhost:5176',
-    'http://localhost:5184',
-    'http://localhost:5185',
-    'https://wiw-app.vercel.app',
-    'https://wiw-app-git-main-suffix6805.vercel.app',
-    'https://wiw-app-*.vercel.app',
-    'https://wiw-app.vercel-preview.app',
-    'https://wiw-frontend.vercel.app',
-    'https://wiw-frontend-*.vercel.app',
-    'https://wiw-app-*.vercel-preview.app',
-    'https://*.vercel.app',  // Large wildcard for Vercel deployments
-    'https://wiw-app.onrender.com',  // If testing from Render preview
-    'https://wiw-backend.onrender.com'  // Backend itself (for testing)
-  ];
+  // Si CORS_ORIGIN est défini, utiliser uniquement cette origine
+  if (process.env.CORS_ORIGIN) {
+    return [process.env.CORS_ORIGIN];
+  }
+
+  // Si ALLOWED_ORIGINS est défini, utiliser cette liste
+  if (process.env.ALLOWED_ORIGINS) {
+    return process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim());
+  }
+
+  // Configuration par défaut selon l'environnement
+  const isDevelopment = process.env.NODE_ENV !== 'production';
+
+  // En développement, autoriser localhost et quelques patterns de test
+  if (isDevelopment) {
+    return [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:5175',
+      'http://localhost:5176',
+      'http://localhost:5184',
+      'http://localhost:5185',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:5174'
+    ];
+  }
+
+  // En production, liste blanche stricte - pas de wildcards par défaut
+  // Les origins de production DOIVENT être configurées via ALLOWED_ORIGINS
+  logger.warn('⚠️  CORS: Aucune origin configurée pour la production. Définissez ALLOWED_ORIGINS dans .env');
+  return [];
 })();
 
 logger.info('CORS allowed origins', { origins: allowedOrigins });
@@ -134,7 +178,13 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));app.use(express.json({ limit: '10mb' }));
+}));
+
+app.use(express.json({ limit: '10mb' }));
+app.use(cookieParser());
+
+// Rate limiting global pour toute l'API (sauf health checks)
+app.use('/api', apiLimiter);
 
 app.use('/api/auth', authRouter);
 app.use('/api/projets', authenticate, filterByRole, projetsRouter);
