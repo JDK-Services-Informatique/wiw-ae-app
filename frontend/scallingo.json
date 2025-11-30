@@ -1,5 +1,5 @@
 {
-  "$schema": "https://scallingo.app/scallingo.schema.json",
+  "$schema": "https://scalingo.com/scalingo.schema.json",
   "build": {
     "builder": "NIXPACKS",
     "buildCommand": "npm install && npm run build"
@@ -10,4 +10,3 @@
     "restartPolicyMaxRetries": 10
   }
 }
-
