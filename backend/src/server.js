@@ -289,30 +289,36 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 4000;
 const HOST = process.env.HOST || '0.0.0.0'; // Écoute sur toutes les interfaces
 
-app.listen(PORT, HOST, () => {
-  const databaseType = process.env.DATABASE_URL?.includes('postgresql') 
-    ? 'PostgreSQL' 
-    : process.env.DATABASE_URL?.includes('sqlite') 
-    ? 'SQLite' 
-    : 'Unknown';
-  
-  logger.info('🚀 WiW API démarrée', { 
-    port: PORT,
-    host: HOST,
-    env: process.env.NODE_ENV || 'development',
-    database: databaseType
+// Démarrer le serveur seulement si exécuté directement (pas importé par Vercel)
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, HOST, () => {
+    const databaseType = process.env.DATABASE_URL?.includes('postgresql')
+      ? 'PostgreSQL'
+      : process.env.DATABASE_URL?.includes('sqlite')
+      ? 'SQLite'
+      : 'Unknown';
+
+    logger.info('🚀 WiW API démarrée', {
+      port: PORT,
+      host: HOST,
+      env: process.env.NODE_ENV || 'development',
+      database: databaseType
+    });
+
+    // Afficher les informations de démarrage en mode développement
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`\n✅ Serveur accessible à:`);
+      console.log(`   - Local:   http://localhost:${PORT}`);
+      console.log(`   - Réseau:  http://${HOST}:${PORT}`);
+      console.log(`\n📋 Endpoints disponibles:`);
+      console.log(`   - Health:  http://localhost:${PORT}/api/health`);
+      console.log(`   - Ready:   http://localhost:${PORT}/api/ready`);
+      console.log(`\n🔐 Routes protégées:`);
+      console.log(`   - /api/devis, /api/references, /api/equipe`);
+      console.log(`   - /api/honoraires, /api/projets, /api/appels\n`);
+    }
   });
-  
-  // Afficher les informations de démarrage en mode développement
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`\n✅ Serveur accessible à:`);
-    console.log(`   - Local:   http://localhost:${PORT}`);
-    console.log(`   - Réseau:  http://${HOST}:${PORT}`);
-    console.log(`\n📋 Endpoints disponibles:`);
-    console.log(`   - Health:  http://localhost:${PORT}/api/health`);
-    console.log(`   - Ready:   http://localhost:${PORT}/api/ready`);
-    console.log(`\n🔐 Routes protégées:`);
-    console.log(`   - /api/devis, /api/references, /api/equipe`);
-    console.log(`   - /api/honoraires, /api/projets, /api/appels\n`);
-  }
-});
+}
+
+// Export pour Vercel serverless functions
+export default app;
