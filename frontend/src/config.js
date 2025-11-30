@@ -10,7 +10,7 @@ let apiUrl = import.meta.env.VITE_API_URL || defaultApiUrl;
 
 if (isDevelopment) {
   // En développement, toujours utiliser localhost sauf si explicitement défini à localhost
-  if (apiUrl.includes('koyeb.app') || apiUrl.includes('railway.app') || apiUrl.includes('render.com') || apiUrl.includes('onrender.com')) {
+  if (apiUrl.includes('koyeb.app') || apiUrl.includes('scallingo.app') || apiUrl.includes('render.com') || apiUrl.includes('onrender.com')) {
     console.warn('⚠️ URL API distante détectée en développement, utilisation de localhost par défaut');
     apiUrl = defaultApiUrl;
   }

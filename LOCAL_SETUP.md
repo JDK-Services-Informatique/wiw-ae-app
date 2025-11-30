@@ -203,5 +203,5 @@ Une fois que tout fonctionne en local :
 1. Vérifier les logs pour les erreurs
 2. Tester les fonctionnalités principales
 3. Vérifier que les builds fonctionnent (`npm run build`)
-4. Déployer sur Railway
+4. Déployer sur Scallingo
 

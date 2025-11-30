@@ -187,7 +187,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 **Valeur par défaut :** `"http://localhost:4000/api"` (dans `config.js`)
 
 **Logique spéciale :**
-- En développement, détection automatique des URLs distantes (koyeb, railway, render)
+- En développement, détection automatique des URLs distantes (koyeb, scallingo, render)
 - Forçage vers localhost si URL distante détectée en dev
 
 **✅ Statut :** Bien implémenté avec fallback intelligent

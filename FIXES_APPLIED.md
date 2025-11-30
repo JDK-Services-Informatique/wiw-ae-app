@@ -34,9 +34,9 @@ cmds = ["npx prisma generate"]  // Avant: ["npx prisma generate", "npx prisma mi
 - ✅ `backend/src/server.js` - Serveur Express
 - ✅ `backend/nixpacks.toml` - Configuration Nixpacks
 
-### Configuration Railway
-- ✅ `railway.json` - Builder = NIXPACKS (sans buildCommand)
-- ✅ `backend/railway.json` - Builder = NIXPACKS
+### Configuration Scallingo
+- ✅ `scallingo.json` - Builder = NIXPACKS (sans buildCommand)
+- ✅ `backend/scallingo.json` - Builder = NIXPACKS
 - ✅ `backend/nixpacks.toml` - Configuration correcte
 
 ## 🚀 Prochaines étapes
@@ -75,7 +75,7 @@ FRONTEND_URL=http://localhost:5173
 VITE_API_URL=http://localhost:4000/api
 ```
 
-### Pour déployer sur Railway
+### Pour déployer sur Scallingo
 
 1. **Backend Service**
    - Root Directory: `backend`
@@ -97,5 +97,5 @@ VITE_API_URL=http://localhost:4000/api
 
 - Les migrations Prisma doivent être exécutées manuellement après le premier déploiement
 - Le script `prestart` ne fait plus de migration automatique pour éviter les erreurs
-- Utiliser `npm run db:migrate` en local ou exécuter les migrations manuellement sur Railway
+- Utiliser `npm run db:migrate` en local ou exécuter les migrations manuellement sur Scallingo
 

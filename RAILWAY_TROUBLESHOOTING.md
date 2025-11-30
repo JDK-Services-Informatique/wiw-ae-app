@@ -1,4 +1,4 @@
-# 🔧 Dépannage Railway - Erreurs de déploiement
+# 🔧 Dépannage Scallingo - Erreurs de déploiement
 
 ## ❌ Erreur : "undefined variable 'npm'" dans Nixpacks
 
@@ -28,9 +28,9 @@ nixPkgs = ["nodejs_18"]  # npm est inclus automatiquement
 
 ### ⚠️ Si l'erreur persiste après correction
 
-Le problème peut venir d'un **cache de build** dans Railway. Solutions :
+Le problème peut venir d'un **cache de build** dans Scallingo. Solutions :
 
-1. **Forcer un rebuild sans cache dans Railway Dashboard**
+1. **Forcer un rebuild sans cache dans Scallingo Dashboard**
    - Service > Settings > Build
    - Cliquer sur "Clear Build Cache" ou "Rebuild"
    - Redéployer
@@ -47,10 +47,10 @@ Le problème peut venir d'un **cache de build** dans Railway. Solutions :
    ```
 
 4. **Supprimer et recréer le service** (dernier recours)
-   - Parfois Railway cache l'ancienne configuration
+   - Parfois Scallingo cache l'ancienne configuration
    - Créer un nouveau service backend avec la bonne configuration
 
-## ❌ Erreur : Railway utilise Dockerfile au lieu de Nixpacks
+## ❌ Erreur : Scallingo utilise Dockerfile au lieu de Nixpacks
 
 ### Problème
 ```
@@ -58,24 +58,24 @@ Le problème peut venir d'un **cache de build** dans Railway. Solutions :
 Dockerfile:15
 ```
 
-Railway détecte et utilise un Dockerfile au lieu de Nixpacks, même si `nixpacks.toml` est présent.
+Scallingo détecte et utilise un Dockerfile au lieu de Nixpacks, même si `nixpacks.toml` est présent.
 
 ### Causes possibles
 
-1. **`buildCommand` dans `railway.json`**
-   - Si `railway.json` contient `buildCommand`, Railway peut générer un Dockerfile
+1. **`buildCommand` dans `scallingo.json`**
+   - Si `scallingo.json` contient `buildCommand`, Scallingo peut générer un Dockerfile
    - Solution : Retirer `buildCommand` et laisser Nixpacks gérer automatiquement
 
 2. **Root Directory mal configuré**
-   - Le Root Directory doit être `backend` dans Railway Dashboard
+   - Le Root Directory doit être `backend` dans Scallingo Dashboard
    - Settings > Source > Root Directory : `backend`
 
-3. **Builder non configuré dans Railway Dashboard**
+3. **Builder non configuré dans Scallingo Dashboard**
    - Settings > Build > Builder : Doit être `Nixpacks` (pas Dockerfile)
 
 ### Solution
 
-1. **Retirer `buildCommand` de `railway.json`**
+1. **Retirer `buildCommand` de `scallingo.json`**
    ```json
    {
      "build": {
@@ -94,7 +94,7 @@ Railway détecte et utilise un Dockerfile au lieu de Nixpacks, même si `nixpack
    cmds = ["npx prisma generate", "npx prisma migrate deploy"]
    ```
 
-3. **Vérifier Railway Dashboard**
+3. **Vérifier Scallingo Dashboard**
    - Settings > Build > Builder : `Nixpacks`
    - Settings > Build > Build Command : Laisser vide
    - Settings > Source > Root Directory : `backend`
@@ -106,11 +106,11 @@ Railway détecte et utilise un Dockerfile au lieu de Nixpacks, même si `nixpack
 ## ❌ Erreur : "npm: command not found" dans Dockerfile
 
 ### Problème
-Railway essaie d'utiliser un Dockerfile au lieu de Nixpacks, et le Dockerfile n'a pas Node.js installé.
+Scallingo essaie d'utiliser un Dockerfile au lieu de Nixpacks, et le Dockerfile n'a pas Node.js installé.
 
-### Solution 1 : Configurer le Root Directory dans Railway Dashboard
+### Solution 1 : Configurer le Root Directory dans Scallingo Dashboard
 
-1. **Aller dans Railway Dashboard**
+1. **Aller dans Scallingo Dashboard**
    - Sélectionnez le service `wiw-ae-backend`
    - Allez dans **Settings** > **Source**
 
@@ -119,11 +119,11 @@ Railway essaie d'utiliser un Dockerfile au lieu de Nixpacks, et le Dockerfile n'
    - Sauvegarder
 
 3. **Redéployer**
-   - Railway devrait maintenant utiliser Nixpacks correctement
+   - Scallingo devrait maintenant utiliser Nixpacks correctement
 
 ### Solution 2 : Vérifier qu'il n'y a pas de Dockerfile à la racine
 
-Si un Dockerfile existe à la racine du projet, Railway peut le détecter et l'utiliser au lieu de Nixpacks.
+Si un Dockerfile existe à la racine du projet, Scallingo peut le détecter et l'utiliser au lieu de Nixpacks.
 
 **Vérification** :
 ```bash
@@ -140,9 +140,9 @@ ls -la | grep Dockerfile
 
 Un Dockerfile a été créé dans `backend/Dockerfile` comme fallback.
 
-**Si Railway utilise toujours le Dockerfile** :
+**Si Scallingo utilise toujours le Dockerfile** :
 1. Vérifier que le Root Directory est bien `backend`
-2. Railway devrait utiliser le Dockerfile dans `backend/`
+2. Scallingo devrait utiliser le Dockerfile dans `backend/`
 3. Le Dockerfile est maintenant correctement configuré avec Node.js
 
 ## ❌ Erreur : Frontend ne se charge pas
@@ -211,7 +211,7 @@ Le backend ne peut pas se connecter à la base de données.
 
 ## 🔍 Vérifications
 
-1. **Logs Railway**
+1. **Logs Scallingo**
    - Dashboard > Service > Logs
    - Vérifier les erreurs de build ou de démarrage
 
@@ -230,7 +230,7 @@ Le backend ne peut pas se connecter à la base de données.
 
 ## 📚 Ressources
 
-- Documentation Railway : https://docs.railway.app
+- Documentation Scallingo : https://docs.scallingo.app
 - Nixpacks : https://nixpacks.com
-- Support Railway : support@railway.app
+- Support Scallingo : support@scallingo.app
 

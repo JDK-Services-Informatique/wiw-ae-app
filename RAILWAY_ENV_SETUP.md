@@ -1,8 +1,8 @@
-# 🚂 Configuration des variables d'environnement Railway
+# 🚂 Configuration des variables d'environnement Scallingo
 
 ## 📋 Vue d'ensemble
 
-Railway utilise des **variables d'environnement** configurées dans le Dashboard, **pas** dans les fichiers `.env` locaux.
+Scallingo utilise des **variables d'environnement** configurées dans le Dashboard, **pas** dans les fichiers `.env` locaux.
 
 Les fichiers `.env` locaux sont uniquement pour le **développement local**.
 
@@ -27,46 +27,46 @@ FRONTEND_URL=http://localhost:5173
 LOG_LEVEL=debug
 ```
 
-**⚠️ Ces fichiers ne sont PAS utilisés par Railway !**
+**⚠️ Ces fichiers ne sont PAS utilisés par Scallingo !**
 
 ---
 
 ## 🚀 PRODUCTION RAILWAY
 
-### Configuration dans Railway Dashboard
+### Configuration dans Scallingo Dashboard
 
 #### 1. Service Backend
 
-**Railway Dashboard > Service Backend > Settings > Variables**
+**Scallingo Dashboard > Service Backend > Settings > Variables**
 
 ```env
 NODE_ENV=production
 PORT=5000
 JWT_SECRET=[générer avec: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"]
 JWT_EXPIRES_IN=7d
-FRONTEND_URL=https://votre-frontend.up.railway.app
-CORS_ORIGIN=https://votre-frontend.up.railway.app
+FRONTEND_URL=https://votre-frontend.up.scallingo.app
+CORS_ORIGIN=https://votre-frontend.up.scallingo.app
 LOG_LEVEL=info
 ```
 
 **Variables automatiques :**
-- ✅ `DATABASE_URL` - Injectée automatiquement depuis la base PostgreSQL Railway
-- ✅ `PORT` - Railway définit automatiquement `$PORT` (mais on peut override)
+- ✅ `DATABASE_URL` - Injectée automatiquement depuis la base PostgreSQL Scallingo
+- ✅ `PORT` - Scallingo définit automatiquement `$PORT` (mais on peut override)
 
 #### 2. Service Frontend
 
-**Railway Dashboard > Service Frontend > Settings > Variables**
+**Scallingo Dashboard > Service Frontend > Settings > Variables**
 
 ```env
-VITE_API_URL=https://votre-backend.up.railway.app/api
+VITE_API_URL=https://votre-backend.up.scallingo.app/api
 NODE_ENV=production
 ```
 
-**⚠️ Important :** `VITE_API_URL` doit être l'URL complète du backend Railway avec `/api` à la fin.
+**⚠️ Important :** `VITE_API_URL` doit être l'URL complète du backend Scallingo avec `/api` à la fin.
 
 #### 3. Base de données PostgreSQL
 
-**Railway Dashboard > Database > Variables**
+**Scallingo Dashboard > Database > Variables**
 
 - ✅ `DATABASE_URL` - Automatiquement partagée avec tous les services du projet
 - Pas besoin de la configurer manuellement dans les services
@@ -77,7 +77,7 @@ NODE_ENV=production
 
 ### Étape 1 : Déployer le Backend
 
-1. Créer le service Backend dans Railway
+1. Créer le service Backend dans Scallingo
 2. Configurer **Root Directory** : `backend`
 3. Ajouter les variables (sans `FRONTEND_URL` et `CORS_ORIGIN` pour l'instant) :
    ```env
@@ -88,29 +88,29 @@ NODE_ENV=production
    LOG_LEVEL=info
    ```
 4. Générer un domaine public : **Settings > Networking > Generate Domain**
-5. Noter l'URL backend : `https://wiw-ae-backend.up.railway.app`
+5. Noter l'URL backend : `https://wiw-ae-backend.up.scallingo.app`
 
 ### Étape 2 : Déployer le Frontend
 
-1. Créer le service Frontend dans Railway
+1. Créer le service Frontend dans Scallingo
 2. Configurer **Root Directory** : `frontend`
 3. Ajouter les variables :
    ```env
-   VITE_API_URL=https://wiw-ae-backend.up.railway.app/api
+   VITE_API_URL=https://wiw-ae-backend.up.scallingo.app/api
    NODE_ENV=production
    ```
 4. Générer un domaine public : **Settings > Networking > Generate Domain**
-5. Noter l'URL frontend : `https://wiw-ae-frontend.up.railway.app`
+5. Noter l'URL frontend : `https://wiw-ae-frontend.up.scallingo.app`
 
 ### Étape 3 : Finaliser la configuration Backend
 
 1. Retourner dans le service Backend
 2. Mettre à jour les variables :
    ```env
-   FRONTEND_URL=https://wiw-ae-frontend.up.railway.app
-   CORS_ORIGIN=https://wiw-ae-frontend.up.railway.app
+   FRONTEND_URL=https://wiw-ae-frontend.up.scallingo.app
+   CORS_ORIGIN=https://wiw-ae-frontend.up.scallingo.app
    ```
-3. Railway redémarre automatiquement le service avec la nouvelle configuration CORS
+3. Scallingo redémarre automatiquement le service avec la nouvelle configuration CORS
 
 ---
 
@@ -118,15 +118,15 @@ NODE_ENV=production
 
 ### Backend
 ```bash
-curl https://wiw-ae-backend.up.railway.app/api/health
+curl https://wiw-ae-backend.up.scallingo.app/api/health
 # Devrait retourner: {"status":"ok"}
 ```
 
 ### Frontend
-- Ouvrir `https://wiw-ae-frontend.up.railway.app`
+- Ouvrir `https://wiw-ae-frontend.up.scallingo.app`
 - Vérifier dans la console du navigateur (F12) que les requêtes pointent vers :
   ```
-  https://wiw-ae-backend.up.railway.app/api/...
+  https://wiw-ae-backend.up.scallingo.app/api/...
   ```
 
 ---
@@ -138,7 +138,7 @@ curl https://wiw-ae-backend.up.railway.app/api/health
 **Cause :** `FRONTEND_URL` ou `CORS_ORIGIN` ne correspond pas à l'URL réelle du frontend.
 
 **Solution :**
-- Vérifier l'URL exacte du frontend dans Railway Dashboard
+- Vérifier l'URL exacte du frontend dans Scallingo Dashboard
 - Mettre à jour `FRONTEND_URL` et `CORS_ORIGIN` dans le service Backend
 - Le service redémarre automatiquement
 
@@ -148,16 +148,16 @@ curl https://wiw-ae-backend.up.railway.app/api/health
 
 **Solution :**
 - Vérifier que `VITE_API_URL` pointe vers l'URL backend avec `/api`
-- Vérifier les logs du backend dans Railway Dashboard
+- Vérifier les logs du backend dans Scallingo Dashboard
 - Tester l'endpoint `/api/health` directement
 
 ### 3. Variables non prises en compte
 
-**Cause :** Variables définies dans `.env` local au lieu de Railway Dashboard.
+**Cause :** Variables définies dans `.env` local au lieu de Scallingo Dashboard.
 
 **Solution :**
-- Les variables doivent être définies dans **Railway Dashboard > Service > Variables**
-- Les fichiers `.env` locaux ne sont PAS utilisés par Railway
+- Les variables doivent être définies dans **Scallingo Dashboard > Service > Variables**
+- Les fichiers `.env` locaux ne sont PAS utilisés par Scallingo
 
 ---
 
@@ -190,7 +190,7 @@ fi
 
 ## 📚 Ressources
 
-- [Documentation Railway - Variables d'environnement](https://docs.railway.app/develop/variables)
+- [Documentation Scallingo - Variables d'environnement](https://docs.scallingo.app/develop/variables)
 - [Guide de déploiement complet](./DEPLOY_RAILWAY.md)
-- [Dépannage Railway](./RAILWAY_TROUBLESHOOTING.md)
+- [Dépannage Scallingo](./RAILWAY_TROUBLESHOOTING.md)
 

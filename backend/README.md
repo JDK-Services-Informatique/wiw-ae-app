@@ -9,5 +9,5 @@ API:
 - POST /api/honoraires  -> requires body: { partenaires: [{ nom, coutHoraire }] }
 
 Notes:
-- This backend is a minimal realistic skeleton for demonstration and deployment to Railway.
+- This backend is a minimal realistic skeleton for demonstration and deployment to Scallingo.
 - Authentication and full Prisma client setup are left as next steps.
