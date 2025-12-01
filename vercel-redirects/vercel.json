@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "name": "wiw-ae-redirects",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://wiw-ae-plus.com/:path*",
+      "permanent": true
+    }
+  ]
+}
