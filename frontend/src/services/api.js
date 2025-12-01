@@ -5,7 +5,8 @@ const api = axios.create({
   baseURL: API_URL,
   timeout: 30000, // Augmenté à 30 secondes pour les tests
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest' // Protection CSRF
   }
 });
 

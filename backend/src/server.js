@@ -22,6 +22,7 @@ import sponsorsRouter from './routes/sponsors.routes.js';
 import { authenticate } from './middlewares/auth.middleware.js';
 import { authorize, protectFinancialData, filterByRole } from './middlewares/authorization.middleware.js';
 import { apiLimiter } from './middlewares/rateLimit.middleware.js';
+import csrfProtection from './middlewares/csrf.middleware.js';
 import logger from './utils/logger.js';
 import prisma from './prismaClient.js';
 import validateEnvironment from './utils/envValidator.js';
@@ -178,7 +179,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-CSRF-Token']
 }));
 
 app.use(express.json({ limit: '10mb' }));
@@ -186,6 +187,10 @@ app.use(cookieParser());
 
 // Rate limiting global pour toute l'API (sauf health checks)
 app.use('/api', apiLimiter);
+
+// Protection CSRF pour les routes API sensibles
+// Vérifie les headers personnalisés et l'origine des requêtes
+app.use('/api', csrfProtection);
 
 app.use('/api/auth', authRouter);
 app.use('/api/projets', authenticate, filterByRole, projetsRouter);

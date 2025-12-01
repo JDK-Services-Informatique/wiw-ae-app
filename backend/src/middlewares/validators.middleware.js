@@ -1,4 +1,5 @@
 import { body, param, query, validationResult } from 'express-validator';
+import sanitizeHtml from 'sanitize-html';
 import logger from '../utils/logger.js';
 
 /**
@@ -219,25 +220,38 @@ export const validatePagination = [
 ];
 
 /**
- * Sanitizer personnalisé pour les champs HTML (si nécessaire)
- * Utilise une whitelist de tags HTML autorisés
+ * Sanitizer sécurisé pour les champs HTML
+ * Utilise sanitize-html pour une protection complète contre XSS
+ * @param {Array} allowedTags - Liste des tags HTML autorisés (ex: ['b', 'i', 'em', 'strong'])
+ * @param {Array} allowedAttributes - Attributs autorisés par tag (ex: {a: ['href']})
  */
-export const sanitizeHTML = (allowedTags = []) => {
+export const sanitizeHTML = (allowedTags = [], allowedAttributes = {}) => {
   return body('*')
     .customSanitizer((value) => {
       if (typeof value !== 'string') return value;
 
-      // Supprimer tous les scripts
-      value = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+      // Configuration sécurisée de sanitize-html
+      const config = {
+        allowedTags: allowedTags.length > 0 ? allowedTags : [],
+        allowedAttributes: allowedAttributes,
+        allowedSchemes: ['http', 'https', 'mailto'],
+        allowedSchemesByTag: {
+          a: ['http', 'https', 'mailto']
+        },
+        // Supprimer tous les tags non autorisés et leur contenu
+        disallowedTagsMode: 'discard',
+        // Supprimer les attributs non autorisés
+        allowProtocolRelative: false,
+        // Nettoyer les styles inline
+        allowedStyles: {}
+      };
 
-      // Supprimer les event handlers (onclick, onload, etc.)
-      value = value.replace(/on\w+\s*=\s*["'][^"']*["']/gi, '');
-
-      // Si aucun tag autorisé, supprimer tout le HTML
+      // Si aucun tag autorisé, strip tout le HTML
       if (allowedTags.length === 0) {
-        value = value.replace(/<[^>]*>/g, '');
+        config.allowedTags = [];
+        config.disallowedTagsMode = 'discard';
       }
 
-      return value;
+      return sanitizeHtml(value, config);
     });
 };
