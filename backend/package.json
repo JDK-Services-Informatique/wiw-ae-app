@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "node --enable-source-maps src/server.js",
+    "build": "prisma generate",
     "start": "node src/server.js",
     "prestart": "prisma generate",
     "db:generate": "prisma generate",
