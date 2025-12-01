@@ -119,7 +119,7 @@ export default function LandingPage() {
             transition={{ delay: 0.2 }}
             className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
           >
-            <button onClick={() => navigate('/login')} className="px-8 py-4 bg-brand hover:bg-brand-hover text-white rounded-xl font-bold text-lg shadow-xl shadow-brand/25 transition-all hover:scale-105 flex items-center justify-center gap-2">
+            <button onClick={() => navigate('/register')} className="px-8 py-4 bg-brand hover:bg-brand-hover text-white rounded-xl font-bold text-lg shadow-xl shadow-brand/25 transition-all hover:scale-105 flex items-center justify-center gap-2">
               Essayer Gratuitement <ChevronRight size={20} />
             </button>
             <button className="px-8 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">

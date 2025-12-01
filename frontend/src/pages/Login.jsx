@@ -150,7 +150,7 @@ export default function Login({ onLogin }) {
           </form>
 
           <div className="text-center text-sm text-slate-500">
-            Pas encore de compte ? <button onClick={() => { console.log('Créer une agence button clicked'); navigate('/pricing'); }} className="text-brand font-semibold hover:underline">Créer une agence</button>
+            Pas encore de compte ? <button onClick={() => { console.log('Créer un compte button clicked'); navigate('/register'); }} className="text-brand font-semibold hover:underline">Créer un compte</button>
           </div>
         </motion.div>
       </div>

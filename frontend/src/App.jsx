@@ -32,6 +32,7 @@ import Templates from './pages/Templates';
 import Settings from './pages/Settings';
 import BET from './pages/BET';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import NouvelleAO from './pages/NouvelleAO';
 import Pipeline from './pages/Pipeline';
 import ForgotPassword from './pages/ForgotPassword';
@@ -104,6 +105,12 @@ export default function App() {
           <Route
             path="/login"
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} />}
+          />
+
+          {/* Route Publique : Page d'Inscription */}
+          <Route
+            path="/register"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register onLogin={handleLogin} />}
           />
 
           {/* Routes Publiques : Réinitialisation mot de passe */}
