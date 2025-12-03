@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { defaultBETs } from '../data/defaultData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { usePlan } from '../context/PlanContext';
@@ -9,7 +10,8 @@ import { formatMontant } from '../utils/formatNumber';
 export default function BET() {
   const { canAdd, getPlanInfo } = usePlan();
   const planInfo = getPlanInfo();
-  
+  const [searchParams] = useSearchParams();
+
   const [viewMode, setViewMode] = useState('liste'); // 'liste', 'etudes', 'competences'
   const [selectedBET, setSelectedBET] = useState(null);
   const [editingBET, setEditingBET] = useState(null);
@@ -175,6 +177,23 @@ export default function BET() {
       'Accessibilité PMR'
     ]
   });
+
+  // Gérer le filtre initial depuis l'URL (navigation depuis Tenders)
+  useEffect(() => {
+    const betId = searchParams.get('betId');
+    if (betId) {
+      // Trouver le BET correspondant
+      const bet = bets.find(b => b.id === parseInt(betId));
+      if (bet) {
+        // Sélectionner automatiquement le BET et appliquer le filtre sur son type
+        setSelectedBET(bet);
+        setFilterMetier(bet.type);
+        if (window.showToast) {
+          window.showToast(`✅ Filtrage appliqué sur: ${bet.nom}`, 'success');
+        }
+      }
+    }
+  }, [searchParams, bets]);
 
   const handleEditBET = (bet) => {
     setEditingBET({...bet});

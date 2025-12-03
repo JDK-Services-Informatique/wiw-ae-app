@@ -1,6 +1,0 @@
-# Configuration Nixpacks globale pour forcer l'utilisation de Nixpacks
-# Ce fichier empêche Railway d'utiliser un Dockerfile
-
-# Laisser Nixpacks détecter Node.js automatiquement
-# npm est inclus avec nodejs_18, ne pas le spécifier séparément
-

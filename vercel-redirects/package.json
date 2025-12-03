@@ -1,0 +1,9 @@
+{
+  "name": "wiw-ae-redirects",
+  "version": "1.0.0",
+  "description": "Redirections wiw-ae-plus.fr et .net vers wiw-ae-plus.com",
+  "private": true,
+  "scripts": {
+    "build": "echo 'No build needed for redirects'"
+  }
+}

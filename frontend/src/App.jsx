@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import DashboardLayout from './components/DashboardLayout';
 import LandingPage from './pages/LandingPage';
-import { PlanProvider } from './context/PlanContext';
 import { authService } from './services/auth.api.js';
 import AppProvider from './providers/AppProvider';
-import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { track, AnalyticsEvents } from './services/analytics';
 
 // Pages principales
@@ -34,6 +32,7 @@ import Templates from './pages/Templates';
 import Settings from './pages/Settings';
 import BET from './pages/BET';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import NouvelleAO from './pages/NouvelleAO';
 import Pipeline from './pages/Pipeline';
 import ForgotPassword from './pages/ForgotPassword';
@@ -97,25 +96,31 @@ export default function App() {
         <GlobalShortcuts />
         <Routes>
           {/* Route Publique : Landing Page */}
-          <Route 
-            path="/" 
-            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />} 
+          <Route
+            path="/"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />}
           />
 
           {/* Route Publique : Page de Login */}
-          <Route 
-            path="/login" 
-            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} />} 
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} />}
+          />
+
+          {/* Route Publique : Page d'Inscription */}
+          <Route
+            path="/register"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register onLogin={handleLogin} />}
           />
 
           {/* Routes Publiques : Réinitialisation mot de passe */}
-          <Route 
-            path="/forgot-password" 
-            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <ForgotPassword />} 
+          <Route
+            path="/forgot-password"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <ForgotPassword />}
           />
-          <Route 
-            path="/reset-password" 
-            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <ResetPassword />} 
+          <Route
+            path="/reset-password"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <ResetPassword />}
           />
 
           {/* Routes Publiques : Pages marketing */}

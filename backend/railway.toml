@@ -1,0 +1,16 @@
+# Railway.app Configuration for WIW-AE+ Backend
+# Documentation: https://docs.railway.app/deploy/config-as-code
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "npm ci && npx prisma generate"
+
+[deploy]
+startCommand = "npm start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+healthcheckPath = "/api/health"
+healthcheckTimeout = 30
+
+[service]
+name = "wiw-backend"
