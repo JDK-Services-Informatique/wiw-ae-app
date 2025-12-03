@@ -57,7 +57,7 @@ export default function LandingPage() {
             <div className="hidden md:flex items-center gap-8">
               <a href="#features" className="text-sm font-medium hover:text-brand transition-colors">Fonctionnalités</a>
               <a href="#pricing" className="text-sm font-medium hover:text-brand transition-colors">Tarifs</a>
-              <button onClick={() => { console.log('Connexion button clicked'); navigate('/login'); }} className="px-4 py-2 rounded-full bg-brand hover:bg-brand-hover text-white text-sm font-semibold transition-all shadow-lg shadow-brand/20">
+              <button onClick={() => navigate('/login')} className="px-4 py-2 rounded-full bg-brand hover:bg-brand-hover text-white text-sm font-semibold transition-all shadow-lg shadow-brand/20">
                 Connexion
               </button>
             </div>
@@ -115,7 +115,7 @@ export default function LandingPage() {
             <button onClick={() => navigate('/login')} className="px-8 py-4 bg-brand hover:bg-brand-hover text-white rounded-xl font-bold text-lg shadow-xl shadow-brand/25 transition-all hover:scale-105 flex items-center justify-center gap-2">
               Essayer Gratuitement <ChevronRight size={20} />
             </button>
-            <button className="px-8 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+            <button onClick={() => navigate('/login')} className="px-8 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
               Voir la démo
             </button>
           </motion.div>

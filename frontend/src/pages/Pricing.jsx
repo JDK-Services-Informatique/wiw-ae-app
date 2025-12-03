@@ -473,13 +473,13 @@ export default function Pricing() {
           >
             🚀 Essayer Premium gratuitement
           </button>
-          <button
+          <a
+            href="mailto:contact@wiw-app.com"
             className="btn-secondary"
-            onClick={() => window.location.href = 'mailto:contact@wiw-app.com'}
-            style={{ padding: '14px 30px', fontSize: '16px', fontWeight: '600' }}
+            style={{ padding: '14px 30px', fontSize: '16px', fontWeight: '600', textDecoration: 'none', display: 'inline-block' }}
           >
             💬 Contacter les ventes
-          </button>
+          </a>
         </div>
       </div>
 

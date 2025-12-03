@@ -66,8 +66,6 @@ export default function Plans() {
     }
 
     // Simulation paiement (en production, appeler Stripe/PayPal API)
-    console.log('Paiement pour plan:', selectedPlanForPayment);
-    console.log('Données paiement:', paymentForm);
 
     // Simuler un délai de traitement
     if (window.showToast) {
@@ -114,7 +112,6 @@ export default function Plans() {
     }
 
     // Simulation envoi (en production, appeler une API)
-    console.log('Demande de devis ENTERPRISE:', devisForm);
     
     if (window.showToast) {
       window.showToast('✅ Demande de devis envoyée ! Notre équipe vous contactera sous 24h.', 'success');

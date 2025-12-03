@@ -13,16 +13,8 @@ export default function Login({ onLogin }) {
   const selectedPlan = searchParams.get('plan');
 
   useEffect(() => {
-    // Si un plan est sélectionné, afficher un message
-    if (selectedPlan) {
-      const planNames = {
-        'STARTER': 'Starter',
-        'PREMIUM': 'Premium',
-        'ENTERPRISE': 'Enterprise'
-      };
-      // Optionnel : afficher un toast ou un message
-      console.log(`Plan sélectionné : ${planNames[selectedPlan] || selectedPlan}`);
-    }
+    // Si un plan est sélectionné, l'information sera utilisée après connexion
+    // pour rediriger vers la page de plans avec le plan présélectionné
   }, [selectedPlan]);
 
   const handleSubmit = async (e) => {
@@ -150,7 +142,7 @@ export default function Login({ onLogin }) {
           </form>
 
           <div className="text-center text-sm text-slate-500">
-            Pas encore de compte ? <button onClick={() => { console.log('Créer une agence button clicked'); navigate('/pricing'); }} className="text-brand font-semibold hover:underline">Créer une agence</button>
+            Pas encore de compte ? <button onClick={() => navigate('/pricing')} className="text-brand font-semibold hover:underline">Créer une agence</button>
           </div>
         </motion.div>
       </div>
