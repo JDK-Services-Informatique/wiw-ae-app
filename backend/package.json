@@ -8,6 +8,7 @@
     "start": "node src/server.js",
     "build": "prisma generate",
     "vercel-build": "prisma generate",
+    "postinstall": "prisma generate",
     "prestart": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
