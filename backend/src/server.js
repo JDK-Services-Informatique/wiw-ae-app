@@ -34,8 +34,11 @@ try {
 
 const app = express();
 
-// Security headers
-app.use(helmet());
+// Security headers - configured for Vercel
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" }
+}));
 
 // CORS configuration - adaptable selon environnement
 // Priority: CORS_ORIGIN (single origin) -> ALLOWED_ORIGINS (CSV) -> defaults
@@ -57,10 +60,39 @@ const allowedOrigins = (() => {
     'https://wiw-frontend-*.vercel.app',
     'https://wiw-app-*.vercel-preview.app',
     'https://*.vercel.app',  // Large wildcard for Vercel deployments
+    'https://*-suffix6805s-projects.vercel.app',  // Vercel preview deployments
+    'https://wiw-ae-*.vercel.app',  // WiW AE specific previews
     'https://wiw-app.onrender.com',  // If testing from Render preview
     'https://wiw-backend.onrender.com'  // Backend itself (for testing)
   ];
 })();
+
+// Middleware pour ajouter les en-têtes CORS à toutes les réponses
+// Ce middleware s'exécute avant tout autre et s'assure que les en-têtes CORS
+// sont envoyés même en cas d'erreur
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  // En production sur Vercel, accepter toutes les origines Vercel
+  const isVercelOrigin = origin && (
+    origin.includes('.vercel.app') ||
+    origin.includes('localhost')
+  );
+
+  if (origin && isVercelOrigin) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  }
+
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(204).send();
+  }
+
+  next();
+});
 
 logger.info('CORS allowed origins', { origins: allowedOrigins });
 
