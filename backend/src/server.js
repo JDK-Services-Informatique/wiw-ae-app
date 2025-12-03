@@ -24,12 +24,18 @@ import prisma from './prismaClient.js';
 import validateEnvironment from './utils/envValidator.js';
 import { prismaErrorMiddleware } from './utils/prismaErrorHandler.js';
 
-// Valider les variables d'environnement au démarrage
+// Détecter si on est sur Vercel Serverless
+const isVercel = process.env.VERCEL === '1' || process.env.VERCEL_ENV;
+
+// Valider les variables d'environnement au démarrage (sauf sur Vercel où on log juste)
 try {
   validateEnvironment();
 } catch (error) {
   console.error('❌ Échec de la validation des variables d\'environnement');
-  process.exit(1);
+  if (!isVercel) {
+    process.exit(1);
+  }
+  // Sur Vercel, on continue quand même pour voir l'erreur dans les logs
 }
 
 const app = express();
@@ -266,33 +272,39 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 4000;
-const HOST = process.env.HOST || '0.0.0.0'; // Écoute sur toutes les interfaces
+// Exporter l'app pour Vercel Serverless
+export default app;
 
-app.listen(PORT, HOST, () => {
-  const databaseType = process.env.DATABASE_URL?.includes('postgresql') 
-    ? 'PostgreSQL' 
-    : process.env.DATABASE_URL?.includes('sqlite') 
-    ? 'SQLite' 
-    : 'Unknown';
-  
-  logger.info('🚀 WiW API démarrée', { 
-    port: PORT,
-    host: HOST,
-    env: process.env.NODE_ENV || 'development',
-    database: databaseType
+// Ne démarrer le serveur que si on n'est pas sur Vercel (environnement traditionnel)
+if (!isVercel) {
+  const PORT = process.env.PORT || 4000;
+  const HOST = process.env.HOST || '0.0.0.0'; // Écoute sur toutes les interfaces
+
+  app.listen(PORT, HOST, () => {
+    const databaseType = process.env.DATABASE_URL?.includes('postgresql')
+      ? 'PostgreSQL'
+      : process.env.DATABASE_URL?.includes('sqlite')
+      ? 'SQLite'
+      : 'Unknown';
+
+    logger.info('🚀 WiW API démarrée', {
+      port: PORT,
+      host: HOST,
+      env: process.env.NODE_ENV || 'development',
+      database: databaseType
+    });
+
+    // Afficher les informations de démarrage en mode développement
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`\n✅ Serveur accessible à:`);
+      console.log(`   - Local:   http://localhost:${PORT}`);
+      console.log(`   - Réseau:  http://${HOST}:${PORT}`);
+      console.log(`\n📋 Endpoints disponibles:`);
+      console.log(`   - Health:  http://localhost:${PORT}/api/health`);
+      console.log(`   - Ready:   http://localhost:${PORT}/api/ready`);
+      console.log(`\n🔐 Routes protégées:`);
+      console.log(`   - /api/devis, /api/references, /api/equipe`);
+      console.log(`   - /api/honoraires, /api/projets, /api/appels\n`);
+    }
   });
-  
-  // Afficher les informations de démarrage en mode développement
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`\n✅ Serveur accessible à:`);
-    console.log(`   - Local:   http://localhost:${PORT}`);
-    console.log(`   - Réseau:  http://${HOST}:${PORT}`);
-    console.log(`\n📋 Endpoints disponibles:`);
-    console.log(`   - Health:  http://localhost:${PORT}/api/health`);
-    console.log(`   - Ready:   http://localhost:${PORT}/api/ready`);
-    console.log(`\n🔐 Routes protégées:`);
-    console.log(`   - /api/devis, /api/references, /api/equipe`);
-    console.log(`   - /api/honoraires, /api/projets, /api/appels\n`);
-  }
-});
+}

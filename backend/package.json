@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "node --enable-source-maps src/server.js",
     "start": "node src/server.js",
+    "build": "prisma generate",
+    "vercel-build": "prisma generate",
     "prestart": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
