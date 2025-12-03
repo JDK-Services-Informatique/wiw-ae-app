@@ -40,12 +40,6 @@ try {
 
 const app = express();
 
-// Security headers - configured for Vercel
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" },
-  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" }
-}));
-
 // CORS configuration - adaptable selon environnement
 // Priority: CORS_ORIGIN (single origin) -> ALLOWED_ORIGINS (CSV) -> defaults
 const allowedOrigins = (() => {
@@ -73,9 +67,8 @@ const allowedOrigins = (() => {
   ];
 })();
 
-// Middleware pour ajouter les en-têtes CORS à toutes les réponses
-// Ce middleware s'exécute avant tout autre et s'assure que les en-têtes CORS
-// sont envoyés même en cas d'erreur
+// IMPORTANT: Middleware CORS AVANT Helmet pour s'assurer que les en-têtes CORS
+// sont toujours envoyés, même en cas d'erreur
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
@@ -92,13 +85,19 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   }
 
-  // Handle preflight
+  // Handle preflight OPTIONS requests immediately
   if (req.method === 'OPTIONS') {
     return res.status(204).send();
   }
 
   next();
 });
+
+// Security headers - configured for Vercel (APRÈS le middleware CORS)
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" }
+}));
 
 logger.info('CORS allowed origins', { origins: allowedOrigins });
 
