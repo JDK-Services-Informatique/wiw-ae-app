@@ -118,14 +118,13 @@ app.use(cors({
       return callback(null, true);
     }
 
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    // Controlled by CORS_ALLOW_BROWSERLESS:
-    // - in development (NODE_ENV !== 'production') browserless requests are allowed by default
-    // - in production, set CORS_ALLOW_BROWSERLESS=true to allow them, or false to block them
-    const allowBrowserless = (process.env.CORS_ALLOW_BROWSERLESS === 'true') || process.env.NODE_ENV !== 'production';
+    // Allow requests with no origin (mobile apps, Postman, health checks, favicon, etc.)
+    // On Vercel, we need to allow browserless requests for health checks and static files
+    const allowBrowserless = (process.env.CORS_ALLOW_BROWSERLESS === 'true') ||
+                             process.env.NODE_ENV !== 'production' ||
+                             isVercel; // Toujours permettre sur Vercel
     if (!origin) {
       if (allowBrowserless) {
-        logger.info('CORS: Allowing browserless request');
         return callback(null, true);
       }
       const msgNoOrigin = 'Requests without an Origin header are not allowed in this environment';
