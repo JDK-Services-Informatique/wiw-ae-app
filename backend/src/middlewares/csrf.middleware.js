@@ -23,10 +23,11 @@ export const csrfProtection = (req, res, next) => {
   }
 
   // Exempter les routes publiques (auth)
-  if (req.path.startsWith('/api/auth/login') ||
-      req.path.startsWith('/api/auth/register') ||
-      req.path.startsWith('/api/auth/forgot-password') ||
-      req.path.startsWith('/api/auth/reset-password')) {
+  // Note: req.path ne contient PAS le préfixe /api car le middleware est monté sur /api
+  if (req.path.startsWith('/auth/login') ||
+      req.path.startsWith('/auth/register') ||
+      req.path.startsWith('/auth/forgot-password') ||
+      req.path.startsWith('/auth/reset-password')) {
     return next();
   }
 
