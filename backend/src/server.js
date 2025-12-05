@@ -34,6 +34,9 @@ try {
 
 const app = express();
 
+// Hide Express signature to reduce fingerprinting surface
+app.disable('x-powered-by');
+
 // Security headers
 app.use(helmet());
 
@@ -134,7 +137,10 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));app.use(express.json({ limit: '10mb' }));
+}));
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use('/api/auth', authRouter);
 app.use('/api/projets', authenticate, filterByRole, projetsRouter);
@@ -237,11 +243,11 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 4000;
 const HOST = process.env.HOST || '0.0.0.0'; // Écoute sur toutes les interfaces
 
-app.listen(PORT, HOST, () => {
-  const databaseType = process.env.DATABASE_URL?.includes('postgresql') 
-    ? 'PostgreSQL' 
-    : process.env.DATABASE_URL?.includes('sqlite') 
-    ? 'SQLite' 
+const server = app.listen(PORT, HOST, () => {
+  const databaseType = process.env.DATABASE_URL?.includes('postgresql')
+    ? 'PostgreSQL'
+    : process.env.DATABASE_URL?.includes('sqlite')
+    ? 'SQLite'
     : 'Unknown';
   
   logger.info('🚀 WiW API démarrée', { 
@@ -263,4 +269,35 @@ app.listen(PORT, HOST, () => {
     console.log(`   - /api/devis, /api/references, /api/equipe`);
     console.log(`   - /api/honoraires, /api/projets, /api/appels\n`);
   }
+});
+
+const gracefulShutdown = async (signal, error) => {
+  logger.warn('Shutting down server', { signal, error: error?.message });
+
+  // Stop accepting new connections but let active requests finish
+  server.close(async closeError => {
+    if (closeError) {
+      logger.error('Error while closing server', { error: closeError.message });
+    }
+
+    try {
+      await prisma.$disconnect();
+      logger.info('Prisma client disconnected');
+    } catch (disconnectError) {
+      logger.error('Failed to disconnect Prisma client', { error: disconnectError.message });
+    } finally {
+      process.exit(error || closeError ? 1 : 0);
+    }
+  });
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('unhandledRejection', reason => {
+  logger.error('Unhandled promise rejection', { reason });
+  gracefulShutdown('unhandledRejection', reason instanceof Error ? reason : new Error(String(reason)));
+});
+process.on('uncaughtException', error => {
+  logger.error('Uncaught exception', { error: error.message, stack: error.stack });
+  gracefulShutdown('uncaughtException', error);
 });
