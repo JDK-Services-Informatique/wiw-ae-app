@@ -271,8 +271,27 @@ const server = app.listen(PORT, HOST, () => {
   }
 });
 
+const disconnectPrisma = async () => {
+  try {
+    await prisma.$disconnect();
+    logger.info('Prisma client disconnected');
+  } catch (disconnectError) {
+    logger.error('Failed to disconnect Prisma client', { error: disconnectError.message });
+  }
+};
+
 const gracefulShutdown = async (signal, error) => {
   logger.warn('Shutting down server', { signal, error: error?.message });
+
+  const exitProcess = async (closeError) => {
+    await disconnectPrisma();
+    process.exit(error || closeError ? 1 : 0);
+  };
+
+  // If the server never started listening, skip the close step.
+  if (!server || !server.listening) {
+    return exitProcess();
+  }
 
   // Stop accepting new connections but let active requests finish
   server.close(async closeError => {
@@ -280,14 +299,7 @@ const gracefulShutdown = async (signal, error) => {
       logger.error('Error while closing server', { error: closeError.message });
     }
 
-    try {
-      await prisma.$disconnect();
-      logger.info('Prisma client disconnected');
-    } catch (disconnectError) {
-      logger.error('Failed to disconnect Prisma client', { error: disconnectError.message });
-    } finally {
-      process.exit(error || closeError ? 1 : 0);
-    }
+    await exitProcess(closeError);
   });
 };
 

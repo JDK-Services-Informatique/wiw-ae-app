@@ -8,7 +8,10 @@
 cmds = ["npm install"]
 
 [phases.build]
-cmds = ["npx prisma generate"]
+# Provide a safe fallback for Prisma during build so generation doesn't fail
+# when DATABASE_URL isn't defined in the build environment. Runtime environments
+# should override DATABASE_URL with the real connection string.
+cmds = ["DATABASE_URL=${DATABASE_URL:-file:./dev.db} npx prisma generate"]
 
 [start]
 cmd = "npm start"
