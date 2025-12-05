@@ -9,7 +9,7 @@ import { Download, Save, FileText, TrendingUp, Users } from 'lucide-react';
 import { formatMontant } from '../utils/formatNumber';
 import InheritanceAPI from '../services/inheritance.api';
 import ValidationAPI from '../services/validation.api';
-import { exportHonorairesExcel, exportHonorairesPDF } from '../utils/exportHonoraires';
+import { exportHonorairesExcel, exportHonorairesPDF } from '../utils/export';
 
 export default function Honoraires() {
   // État pour le montant des travaux (unique, pré-rempli)

@@ -10,7 +10,7 @@ import { defaultProjets } from '../data/defaultData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { BarChart3, FileText, Ruler, Euro, FolderOpen, Download } from 'lucide-react';
 import { formatMontant as formatMontantUtil } from '../utils/formatNumber';
-import { exportReferencesExcel, exportReferencesPDF } from '../utils/exportReferences';
+import { exportReferencesExcel, exportReferencesPDF } from '../utils/export';
 
 export default function References({ filter = null, onNavigate }) {
   const navigate = useNavigate();

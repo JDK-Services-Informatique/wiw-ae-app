@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Save, Download, Plus, Trash2, Copy, CheckCircle } from 'lucide-react';
 import HonorairesEvolutionTable from './HonorairesEvolutionTable';
-import { exportHonorairesExcel, exportHonorairesPDF } from '../utils/exportHonoraires';
+import { exportHonorairesExcel, exportHonorairesPDF } from '../utils/export';
 
 /**
  * Composant ScenariosHonoraires

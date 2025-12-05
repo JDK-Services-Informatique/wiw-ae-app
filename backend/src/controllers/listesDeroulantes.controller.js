@@ -1,3 +1,7 @@
+/**
+ * Contrôleur des Listes Déroulantes
+ */
+
 import {
   getAllListes,
   getListeByNom,
@@ -6,117 +10,93 @@ import {
   deleteListe,
   initializeDefaultListes
 } from '../services/listesDeroulantes.service.js';
-import logger from '../utils/logger.js';
+import {
+  asyncHandler,
+  sendSuccess,
+  sendCreated,
+  sendNoContent,
+  sendNotFound,
+  sendError,
+  HTTP_STATUS
+} from '../utils/controllerUtils.js';
 
 /**
- * GET /api/listes-deroulantes
+ * Middleware pour vérifier les droits admin
+ */
+function requireAdmin(req, res) {
+  if (req.user.role !== 'ADMIN') {
+    sendError(res, 'Accès réservé aux administrateurs', HTTP_STATUS.FORBIDDEN);
+    return false;
+  }
+  return true;
+}
+
+/**
  * Récupérer toutes les listes déroulantes
+ * GET /api/listes-deroulantes
  */
-export const getAll = async (req, res) => {
-  try {
-    const listes = await getAllListes();
-    res.json(listes);
-  } catch (error) {
-    logger.error('Erreur lors de la récupération des listes', { error: error.message });
-    res.status(500).json({ message: error.message });
-  }
-};
+export const getAll = asyncHandler(async (req, res) => {
+  const listes = await getAllListes();
+  sendSuccess(res, listes);
+}, 'récupération listes déroulantes');
 
 /**
- * GET /api/listes-deroulantes/:nom
  * Récupérer une liste par nom
+ * GET /api/listes-deroulantes/:nom
  */
-export const getByNom = async (req, res) => {
-  try {
-    const { nom } = req.params;
-    const liste = await getListeByNom(nom);
-    
-    if (!liste) {
-      return res.status(404).json({ message: 'Liste non trouvée' });
-    }
-    
-    res.json(liste);
-  } catch (error) {
-    logger.error('Erreur lors de la récupération de la liste', { error: error.message });
-    res.status(500).json({ message: error.message });
+export const getByNom = asyncHandler(async (req, res) => {
+  const { nom } = req.params;
+  const liste = await getListeByNom(nom);
+
+  if (!liste) {
+    return sendNotFound(res, 'Liste');
   }
-};
+
+  sendSuccess(res, liste);
+}, 'récupération liste déroulante');
 
 /**
- * POST /api/listes-deroulantes
  * Créer une nouvelle liste (admin uniquement)
+ * POST /api/listes-deroulantes
  */
-export const create = async (req, res) => {
-  try {
-    // Vérifier les droits admin
-    if (req.user.role !== 'ADMIN') {
-      return res.status(403).json({ message: 'Accès réservé aux administrateurs' });
-    }
+export const create = asyncHandler(async (req, res) => {
+  if (!requireAdmin(req, res)) return;
 
-    const liste = await createListe(req.body, req.user.id);
-    res.status(201).json(liste);
-  } catch (error) {
-    logger.error('Erreur lors de la création de la liste', { error: error.message });
-    res.status(400).json({ message: error.message });
-  }
-};
+  const liste = await createListe(req.body, req.user.id);
+  sendCreated(res, liste);
+}, 'création liste déroulante');
 
 /**
- * PUT /api/listes-deroulantes/:id
  * Modifier une liste (admin uniquement)
+ * PUT /api/listes-deroulantes/:id
  */
-export const update = async (req, res) => {
-  try {
-    // Vérifier les droits admin
-    if (req.user.role !== 'ADMIN') {
-      return res.status(403).json({ message: 'Accès réservé aux administrateurs' });
-    }
+export const update = asyncHandler(async (req, res) => {
+  if (!requireAdmin(req, res)) return;
 
-    const { id } = req.params;
-    const liste = await updateListe(parseInt(id), req.body);
-    res.json(liste);
-  } catch (error) {
-    logger.error('Erreur lors de la modification de la liste', { error: error.message });
-    res.status(400).json({ message: error.message });
-  }
-};
+  const { id } = req.params;
+  const liste = await updateListe(parseInt(id), req.body);
+  sendSuccess(res, liste);
+}, 'modification liste déroulante');
 
 /**
- * DELETE /api/listes-deroulantes/:id
  * Supprimer une liste (admin uniquement)
+ * DELETE /api/listes-deroulantes/:id
  */
-export const remove = async (req, res) => {
-  try {
-    // Vérifier les droits admin
-    if (req.user.role !== 'ADMIN') {
-      return res.status(403).json({ message: 'Accès réservé aux administrateurs' });
-    }
+export const remove = asyncHandler(async (req, res) => {
+  if (!requireAdmin(req, res)) return;
 
-    const { id } = req.params;
-    await deleteListe(parseInt(id));
-    res.status(204).send();
-  } catch (error) {
-    logger.error('Erreur lors de la suppression de la liste', { error: error.message });
-    res.status(400).json({ message: error.message });
-  }
-};
+  const { id } = req.params;
+  await deleteListe(parseInt(id));
+  sendNoContent(res);
+}, 'suppression liste déroulante');
 
 /**
- * POST /api/listes-deroulantes/initialize
  * Initialiser les listes par défaut (admin uniquement)
+ * POST /api/listes-deroulantes/initialize
  */
-export const initialize = async (req, res) => {
-  try {
-    // Vérifier les droits admin
-    if (req.user.role !== 'ADMIN') {
-      return res.status(403).json({ message: 'Accès réservé aux administrateurs' });
-    }
+export const initialize = asyncHandler(async (req, res) => {
+  if (!requireAdmin(req, res)) return;
 
-    const listes = await initializeDefaultListes(req.user.id);
-    res.json({ message: 'Listes initialisées', listes });
-  } catch (error) {
-    logger.error('Erreur lors de l\'initialisation des listes', { error: error.message });
-    res.status(500).json({ message: error.message });
-  }
-};
-
+  const listes = await initializeDefaultListes(req.user.id);
+  sendSuccess(res, { message: 'Listes initialisées', listes });
+}, 'initialisation listes déroulantes');

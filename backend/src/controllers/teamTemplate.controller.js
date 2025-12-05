@@ -1,4 +1,7 @@
-import { Router } from 'express';
+/**
+ * Contrôleur des Templates d'Équipe
+ */
+
 import {
   createTeamTemplate,
   getTeamTemplates,
@@ -7,131 +10,54 @@ import {
   deleteTeamTemplate,
   applyTeamTemplate
 } from '../services/teamTemplate.service.js';
-import { authenticate } from '../middlewares/auth.middleware.js';
+import {
+  asyncHandler,
+  sendSuccess,
+  sendCreated,
+  sendNotFound,
+  sendBadRequest
+} from '../utils/controllerUtils.js';
 
-const router = Router();
+export const getAll = asyncHandler(async (req, res) => {
+  const templates = await getTeamTemplates(req.user.id);
+  sendSuccess(res, templates);
+}, 'récupération templates équipe');
 
-// Appliquer l'authentification à toutes les routes
-router.use(authenticate);
+export const getById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const template = await getTeamTemplate(parseInt(id));
+  sendSuccess(res, template);
+}, 'récupération template équipe');
 
-/**
- * POST /api/team-templates
- * Créer un nouveau template d'équipe
- */
-router.post('/', async (req, res) => {
-  try {
-    const utilisateurId = req.user.id;
-    const template = await createTeamTemplate(req.body, utilisateurId);
+export const create = asyncHandler(async (req, res) => {
+  const template = await createTeamTemplate(req.body, req.user.id);
+  sendCreated(res, template);
+}, 'création template équipe');
 
-    res.status(201).json(template);
-  } catch (error) {
-    console.error('Erreur création template équipe:', error);
-    res.status(500).json({
-      error: 'Erreur lors de la création du template d\'équipe'
-    });
+export const update = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const template = await updateTeamTemplate(parseInt(id), req.body);
+  sendSuccess(res, template);
+}, 'mise à jour template équipe');
+
+export const remove = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  await deleteTeamTemplate(parseInt(id));
+  sendSuccess(res, { message: 'Template supprimé avec succès' });
+}, 'suppression template équipe');
+
+export const apply = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { projetId } = req.body;
+
+  if (!projetId) {
+    return sendBadRequest(res, 'projetId est requis');
   }
-});
 
-/**
- * GET /api/team-templates
- * Récupérer tous les templates d'équipe
- */
-router.get('/', async (req, res) => {
-  try {
-    const utilisateurId = req.user.id;
-    const templates = await getTeamTemplates(utilisateurId);
-
-    res.json(templates);
-  } catch (error) {
-    console.error('Erreur récupération templates équipe:', error);
-    res.status(500).json({
-      error: 'Erreur lors de la récupération des templates d\'équipe'
-    });
-  }
-});
-
-/**
- * GET /api/team-templates/:id
- * Récupérer un template spécifique
- */
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const template = await getTeamTemplate(parseInt(id));
-
-    res.json(template);
-  } catch (error) {
-    console.error('Erreur récupération template équipe:', error);
-    if (error.message === 'Template non trouvé') {
-      return res.status(404).json({ error: error.message });
-    }
-    res.status(500).json({
-      error: 'Erreur lors de la récupération du template d\'équipe'
-    });
-  }
-});
-
-/**
- * PUT /api/team-templates/:id
- * Mettre à jour un template d'équipe
- */
-router.put('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const template = await updateTeamTemplate(parseInt(id), req.body);
-
-    res.json(template);
-  } catch (error) {
-    console.error('Erreur mise à jour template équipe:', error);
-    res.status(500).json({
-      error: 'Erreur lors de la mise à jour du template d\'équipe'
-    });
-  }
-});
-
-/**
- * DELETE /api/team-templates/:id
- * Supprimer un template d'équipe
- */
-router.delete('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    await deleteTeamTemplate(parseInt(id));
-
-    res.json({ message: 'Template supprimé avec succès' });
-  } catch (error) {
-    console.error('Erreur suppression template équipe:', error);
-    res.status(500).json({
-      error: 'Erreur lors de la suppression du template d\'équipe'
-    });
-  }
-});
-
-/**
- * POST /api/team-templates/:id/apply
- * Appliquer un template à un projet
- */
-router.post('/:id/apply', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { projetId } = req.body;
-    const utilisateurId = req.user.id;
-
-    if (!projetId) {
-      return res.status(400).json({
-        error: 'projetId est requis'
-      });
-    }
-
-    const equipe = await applyTeamTemplate(parseInt(id), parseInt(projetId), utilisateurId);
-
-    res.json(equipe);
-  } catch (error) {
-    console.error('Erreur application template équipe:', error);
-    res.status(500).json({
-      error: 'Erreur lors de l\'application du template d\'équipe'
-    });
-  }
-});
-
-export default router;
+  const equipe = await applyTeamTemplate(
+    parseInt(id),
+    parseInt(projetId),
+    req.user.id
+  );
+  sendSuccess(res, equipe);
+}, 'application template équipe');
