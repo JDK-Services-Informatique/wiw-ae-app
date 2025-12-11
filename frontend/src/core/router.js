@@ -95,6 +95,12 @@ class Router {
     const route = this.matchRoute(path);
 
     if (!route) {
+      // Chercher la route wildcard '*' pour 404
+      const wildcardRoute = this.routes.get('*');
+      if (wildcardRoute) {
+        await wildcardRoute.handler({});
+        return;
+      }
       this.render404();
       return;
     }
@@ -114,21 +120,17 @@ class Router {
     }
 
     try {
-      // Afficher un loader pendant le chargement
-      this.showLoader();
-
-      // Exécuter le handler
+      // Exécuter le handler (le handler gère lui-même le rendu)
       const content = await route.handler(route.params);
 
-      // Rendre le contenu
-      if (typeof content === 'string') {
-        this.rootElement.innerHTML = content;
-      } else if (content instanceof HTMLElement) {
-        this.rootElement.innerHTML = '';
-        this.rootElement.appendChild(content);
-      } else if (content && typeof content.render === 'function') {
-        this.rootElement.innerHTML = '';
-        this.rootElement.appendChild(content.render());
+      // Si le handler retourne du contenu, le rendre (optionnel)
+      if (content && this.rootElement) {
+        if (typeof content === 'string') {
+          this.rootElement.innerHTML = content;
+        } else if (content instanceof HTMLElement) {
+          this.rootElement.innerHTML = '';
+          this.rootElement.appendChild(content);
+        }
       }
 
       // Callback après navigation
@@ -142,6 +144,14 @@ class Router {
       console.error('Erreur de routing:', error);
       this.renderError(error);
     }
+  }
+
+  /**
+   * Démarre le router sans élément racine (mode manuel)
+   */
+  start() {
+    this.handleRoute();
+    return this;
   }
 
   /**
@@ -200,13 +210,16 @@ class Router {
    * Affiche une page 404
    */
   render404() {
-    this.rootElement.innerHTML = `
-      <div class="error-page">
-        <h1>404</h1>
-        <p>Page non trouvée</p>
-        <a href="/" class="btn btn-primary">Retour à l'accueil</a>
-      </div>
-    `;
+    const target = this.rootElement || document.getElementById('root');
+    if (target) {
+      target.innerHTML = `
+        <div class="error-page">
+          <h1>404</h1>
+          <p>Page non trouvée</p>
+          <a href="/" class="btn">Retour à l'accueil</a>
+        </div>
+      `;
+    }
   }
 
   /**
@@ -214,13 +227,16 @@ class Router {
    * @param {Error} error - L'erreur
    */
   renderError(error) {
-    this.rootElement.innerHTML = `
-      <div class="error-page">
-        <h1>Erreur</h1>
-        <p>${error.message}</p>
-        <a href="/" class="btn btn-primary">Retour à l'accueil</a>
-      </div>
-    `;
+    const target = this.rootElement || document.getElementById('root');
+    if (target) {
+      target.innerHTML = `
+        <div class="error-page">
+          <h1>Erreur</h1>
+          <p>${error.message}</p>
+          <a href="/" class="btn">Retour à l'accueil</a>
+        </div>
+      `;
+    }
   }
 
   /**
