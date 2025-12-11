@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite';
-import { copyFileSync } from 'fs';
-import { join } from 'path';
+import { copyFileSync, existsSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [
@@ -8,13 +11,18 @@ export default defineConfig({
       name: 'copy-service-worker',
       closeBundle() {
         // Copier le service worker dans le dossier dist après le build
-        try {
-          copyFileSync(
-            join(__dirname, 'public/sw.js'),
-            join(__dirname, 'dist/sw.js')
-          );
-        } catch (error) {
-          console.warn('Service Worker non copié:', error);
+        const srcPath = resolve(__dirname, 'public/sw.js');
+        const destPath = resolve(__dirname, 'dist/sw.js');
+
+        if (existsSync(srcPath)) {
+          try {
+            copyFileSync(srcPath, destPath);
+            console.log('Service Worker copié avec succès');
+          } catch (error) {
+            console.warn('Service Worker non copié:', error.message);
+          }
+        } else {
+          console.log('Service Worker non trouvé, ignoré');
         }
       }
     }
