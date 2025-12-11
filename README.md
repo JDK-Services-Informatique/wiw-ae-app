@@ -16,9 +16,9 @@ Application complète de gestion pour architectes et bureaux d'études technique
 ```
 wiw-ae-app/
 ├── backend/          # API Node.js + Prisma
-├── frontend/         # Application React + Vite
+├── frontend/         # Application Vanilla JS + Vite
 ├── railway.json      # Configuration Railway
-└── scripts/         # Scripts utilitaires
+└── scripts/          # Scripts utilitaires
 ```
 
 ## 🛠️ Installation Locale
@@ -54,7 +54,7 @@ Voir [DEPLOY_RAILWAY.md](./DEPLOY_RAILWAY.md) pour le guide complet ou [README_R
 
 ## 📝 Technologies
 
-- **Frontend** : React, Vite, Tailwind CSS, Lucide React
+- **Frontend** : Vanilla JavaScript, Vite, Tailwind CSS
 - **Backend** : Node.js, Express, Prisma
 - **Base de données** : PostgreSQL
 - **Déploiement** : Railway.app

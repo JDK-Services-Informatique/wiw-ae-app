@@ -1,36 +1,42 @@
+/**
+ * Service API centralisé avec factory CRUD
+ * Gère toutes les communications HTTP avec le backend
+ */
+
 import axios from 'axios';
 import { API_URL } from '../config';
+import storage, { STORAGE_KEYS } from '../utils/storage';
+
+// ============================================================================
+// CONFIGURATION AXIOS
+// ============================================================================
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 30000, // Augmenté à 30 secondes pour les tests
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
-// Intercepteur pour ajouter le token JWT automatiquement
+// Intercepteur de requête - Ajout du token JWT
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = storage.get(STORAGE_KEYS.TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Intercepteur pour gérer les erreurs globales
+// Intercepteur de réponse - Gestion des erreurs globales
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expiré ou invalide
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      storage.clearSession();
       window.location.href = '/login';
     }
     return Promise.reject(error);
@@ -39,159 +45,161 @@ api.interceptors.response.use(
 
 export { api };
 
-// ===== DEVIS =====
-export const devisApi = {
-  getAll: async () => {
-    const response = await api.get('/devis');
-    return response.data;
-  },
-  
-  getById: async (id) => {
-    const response = await api.get(`/devis/${id}`);
-    return response.data;
-  },
-  
-  create: async (devisData) => {
-    const response = await api.post('/devis', devisData);
-    return response.data;
-  },
-  
-  update: async (id, devisData) => {
-    const response = await api.put(`/devis/${id}`, devisData);
-    return response.data;
-  },
-  
-  delete: async (id) => {
-    await api.delete(`/devis/${id}`);
-  }
-};
+// ============================================================================
+// FACTORY CRUD
+// ============================================================================
 
-// ===== REFERENCES =====
-export const referencesApi = {
-  getAll: async () => {
-    const response = await api.get('/references');
-    return response.data;
-  },
-  
-  create: async (referenceData) => {
-    const response = await api.post('/references', referenceData);
-    return response.data;
-  },
-  
-  update: async (id, referenceData) => {
-    const response = await api.put(`/references/${id}`, referenceData);
-    return response.data;
-  },
-  
-  delete: async (id) => {
-    await api.delete(`/references/${id}`);
-  }
-};
+/**
+ * Crée un ensemble d'opérations CRUD pour une ressource
+ * @param {string} endpoint - Chemin de l'API (ex: 'devis', 'references')
+ * @returns {Object} Objet avec méthodes CRUD
+ */
+function createCRUDApi(endpoint) {
+  return {
+    getAll: async () => {
+      const { data } = await api.get(`/${endpoint}`);
+      return data;
+    },
 
-// ===== EQUIPE =====
-export const equipeApi = {
-  getAll: async () => {
-    const response = await api.get('/equipe');
-    return response.data;
-  },
-  
-  create: async (membreData) => {
-    const response = await api.post('/equipe', membreData);
-    return response.data;
-  },
-  
-  update: async (id, membreData) => {
-    const response = await api.put(`/equipe/${id}`, membreData);
-    return response.data;
-  },
-  
-  delete: async (id) => {
-    await api.delete(`/equipe/${id}`);
-  }
-};
+    getById: async (id) => {
+      const { data } = await api.get(`/${endpoint}/${id}`);
+      return data;
+    },
 
-// ===== PROJETS =====
-export const projetsApi = {
-  getAll: async () => {
-    const response = await api.get('/projets');
-    return response.data;
-  },
-  
-  getById: async (id) => {
-    const response = await api.get(`/projets/${id}`);
-    return response.data;
-  },
-  
-  create: async (projetData) => {
-    const response = await api.post('/projets', projetData);
-    return response.data;
-  },
-  
-  update: async (id, projetData) => {
-    const response = await api.put(`/projets/${id}`, projetData);
-    return response.data;
-  },
-  
-  delete: async (id) => {
-    await api.delete(`/projets/${id}`);
-  }
-};
+    create: async (payload) => {
+      const { data } = await api.post(`/${endpoint}`, payload);
+      return data;
+    },
 
-// ===== APPELS D'OFFRES =====
-export const appelsApi = {
-  getAll: async () => {
-    const response = await api.get('/appels');
-    return response.data;
-  },
-  
-  getById: async (id) => {
-    const response = await api.get(`/appels/${id}`);
-    return response.data;
-  },
-  
-  create: async (appelData) => {
-    const response = await api.post('/appels', appelData);
-    return response.data;
-  },
-  
-  update: async (id, appelData) => {
-    const response = await api.put(`/appels/${id}`, appelData);
-    return response.data;
-  },
-  
-  delete: async (id) => {
-    await api.delete(`/appels/${id}`);
-  }
-};
+    update: async (id, payload) => {
+      const { data } = await api.put(`/${endpoint}/${id}`, payload);
+      return data;
+    },
 
-// ===== HONORAIRES =====
+    delete: async (id) => {
+      await api.delete(`/${endpoint}/${id}`);
+    }
+  };
+}
+
+// ============================================================================
+// APIs MÉTIER
+// ============================================================================
+
+// Devis
+export const devisApi = createCRUDApi('devis');
+
+// Références
+export const referencesApi = createCRUDApi('references');
+
+// Équipe
+export const equipeApi = createCRUDApi('equipe');
+
+// Projets
+export const projetsApi = createCRUDApi('projets');
+
+// Appels d'offres
+export const appelsApi = createCRUDApi('appels');
+
+// ============================================================================
+// APIs SPÉCIALISÉES
+// ============================================================================
+
+// Honoraires (calculs spécifiques)
 export const honorairesApi = {
   getAll: async () => {
-    const response = await api.get('/honoraires');
-    return response.data;
+    const { data } = await api.get('/honoraires');
+    return data;
   },
-  
+
   calculate: async (partenaires) => {
-    const response = await api.post('/honoraires', partenaires);
-    return response.data;
+    const { data } = await api.post('/honoraires', partenaires);
+    return data;
   }
 };
 
-// ===== AUTH =====
+// Authentification
 export const authApi = {
   login: async (email, motDePasse) => {
-    const response = await api.post('/auth/login', { email, motDePasse });
-    return response.data;
+    const { data } = await api.post('/auth/login', { email, motDePasse });
+    return data;
   },
-  
+
   register: async (userData) => {
-    const response = await api.post('/auth/register', userData);
-    return response.data;
+    const { data } = await api.post('/auth/register', userData);
+    return data;
   },
-  
+
   me: async () => {
-    const response = await api.get('/auth/me');
-    return response.data;
+    const { data } = await api.get('/auth/me');
+    return data;
+  },
+
+  resetPassword: async (email) => {
+    const { data } = await api.post('/auth/reset-password', { email });
+    return data;
+  },
+
+  updatePassword: async (token, newPassword) => {
+    const { data } = await api.post('/auth/update-password', { token, newPassword });
+    return data;
+  }
+};
+
+// Listes déroulantes
+export const listesDeroulantesApi = {
+  getAll: async () => {
+    const { data } = await api.get('/listes-deroulantes');
+    return data;
+  },
+
+  update: async (listeName, items) => {
+    const { data } = await api.put(`/listes-deroulantes/${listeName}`, { items });
+    return data;
+  }
+};
+
+// Templates d'équipe
+export const teamTemplatesApi = createCRUDApi('team-templates');
+
+// AO Perdus (post-mortem)
+export const aoPerdusApi = {
+  ...createCRUDApi('ao-perdus'),
+
+  getByAOId: async (aoId) => {
+    const { data } = await api.get(`/ao-perdus/ao/${aoId}`);
+    return data;
+  }
+};
+
+// Validation de données
+export const validationApi = {
+  validateReference: async (referenceData) => {
+    const { data } = await api.post('/validation/reference', referenceData);
+    return data;
+  },
+
+  validateDevis: async (devisData) => {
+    const { data } = await api.post('/validation/devis', devisData);
+    return data;
+  }
+};
+
+// Upload de fichiers
+export const uploadApi = {
+  uploadFile: async (file, type = 'document') => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', type);
+
+    const { data } = await api.post('/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return data;
+  },
+
+  uploadImage: async (file) => {
+    return uploadApi.uploadFile(file, 'image');
   }
 };
 
