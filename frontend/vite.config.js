@@ -1,11 +1,9 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import { copyFileSync } from 'fs';
 import { join } from 'path';
 
 export default defineConfig({
   plugins: [
-    react(),
     {
       name: 'copy-service-worker',
       closeBundle() {
@@ -23,8 +21,7 @@ export default defineConfig({
   ],
   server: {
     port: 5173,
-    open: true,
-    historyApiFallback: true
+    open: true
   },
   build: {
     outDir: 'dist',
@@ -32,8 +29,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          utils: ['axios', 'jspdf', 'jspdf-autotable']
+          utils: ['jspdf', 'jspdf-autotable']
         }
       }
     }
