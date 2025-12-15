@@ -1,0 +1,22 @@
+{
+    "name": "wiw-ae-frontend-vanilla",
+    "version": "1.0.0",
+    "description": "WiW AE+ - Frontend HTML/CSS/JS vanilla",
+    "type": "module",
+    "scripts": {
+        "start": "npx serve -s . -l 3000",
+        "dev": "npx serve -s . -l 3000",
+        "preview": "npx serve -s . -l 5000"
+    },
+    "keywords": [
+        "wiw",
+        "architecture",
+        "economiste",
+        "gestion"
+    ],
+    "author": "WiW",
+    "license": "MIT",
+    "devDependencies": {
+        "serve": "^14.2.0"
+    }
+}
