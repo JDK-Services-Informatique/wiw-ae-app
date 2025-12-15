@@ -21,6 +21,13 @@ import { renderLogin, LoginPage } from './pages/login.js';
 import { renderDashboard, DashboardPage } from './pages/dashboard.js';
 import { renderTenders, TendersPage } from './pages/tenders.js';
 import { renderNotFound } from './pages/not-found.js';
+import { TeamPage } from './pages/team.js';
+import { HonorairesPage } from './pages/honoraires.js';
+import { DevisPage } from './pages/devis.js';
+import { ReferencesPage } from './pages/references.js';
+import { SettingsPage } from './pages/settings.js';
+import { CompanyPage } from './pages/company.js';
+import { NouvelleAOPage } from './pages/nouvelle-ao.js';
 
 /**
  * Configuration de l'application
@@ -151,15 +158,16 @@ function setupRouter() {
     const privateRoutes = [
         { path: '/dashboard', component: DashboardPage },
         { path: '/tenders', component: TendersPage },
-        { path: '/nouvelle-ao', render: renderNewTenderPage },
-        { path: '/honoraires', render: renderFeesPage },
-        { path: '/team', render: renderTeamPage },
-        { path: '/company', render: renderCompanyPage },
-        { path: '/devis', render: renderQuotesPage },
+        { path: '/nouvelle-ao', component: NouvelleAOPage },
+        { path: '/honoraires', component: HonorairesPage },
+        { path: '/team', component: TeamPage },
+        { path: '/company', component: CompanyPage },
+        { path: '/devis', component: DevisPage },
+        { path: '/references', component: ReferencesPage },
+        { path: '/settings', component: SettingsPage },
         { path: '/analytics', render: renderAnalyticsPage },
         { path: '/calendar', render: renderCalendarPage },
         { path: '/prospection', render: renderProspectionPage },
-        { path: '/references', render: renderReferencesPage },
         { path: '/medialibrary', render: renderMediaLibraryPage },
         { path: '/datamanagement', render: renderDataManagementPage },
         { path: '/missions', render: renderMissionsPage },
@@ -168,7 +176,6 @@ function setupRouter() {
         { path: '/plans', render: renderPlansPage },
         { path: '/pipeline', render: renderPipelinePage },
         { path: '/templates', render: renderTemplatesPage },
-        { path: '/settings', render: renderSettingsPage },
         { path: '/bet', render: renderBETPage },
     ];
 
@@ -287,26 +294,6 @@ function renderResetPasswordPage() {
     return `<div class="login-page"><div class="login-container"><h1>Réinitialiser le mot de passe</h1><p>Page en construction...</p></div></div>`;
 }
 
-function renderNewTenderPage() {
-    return `<h1 class="page-title">Nouvel appel d'offres</h1><p>Page en construction...</p>`;
-}
-
-function renderFeesPage() {
-    return `<h1 class="page-title">Calcul des honoraires</h1><p>Page en construction...</p>`;
-}
-
-function renderTeamPage() {
-    return `<h1 class="page-title">Équipe</h1><p>Page en construction...</p>`;
-}
-
-function renderCompanyPage() {
-    return `<h1 class="page-title">Entreprise</h1><p>Page en construction...</p>`;
-}
-
-function renderQuotesPage() {
-    return `<h1 class="page-title">Devis</h1><p>Page en construction...</p>`;
-}
-
 function renderAnalyticsPage() {
     return `<h1 class="page-title">Analytique</h1><p>Page en construction...</p>`;
 }
@@ -317,10 +304,6 @@ function renderCalendarPage() {
 
 function renderProspectionPage() {
     return `<h1 class="page-title">Prospection</h1><p>Page en construction...</p>`;
-}
-
-function renderReferencesPage() {
-    return `<h1 class="page-title">Références</h1><p>Page en construction...</p>`;
 }
 
 function renderMediaLibraryPage() {
@@ -353,10 +336,6 @@ function renderPipelinePage() {
 
 function renderTemplatesPage() {
     return `<h1 class="page-title">Modèles</h1><p>Page en construction...</p>`;
-}
-
-function renderSettingsPage() {
-    return `<h1 class="page-title">Paramètres</h1><p>Page en construction...</p>`;
 }
 
 function renderBETPage() {
