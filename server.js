@@ -29,6 +29,7 @@ const MIME_TYPES = {
 
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 const RATE_LIMIT_MAX_ATTEMPTS = 20;
+const MAX_MESSAGES = 500;
 const rateLimitStore = new Map();
 
 function sanitizeText(value, maxLength) {
@@ -81,8 +82,25 @@ function readMessages() {
     return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
     console.error('Impossible de lire les messages', error.message);
+    const backupPath = path.join(DATA_DIR, `messages-corrupted-${Date.now()}.json`);
+    try {
+      fs.copyFileSync(MESSAGE_FILE, backupPath);
+    } catch (copyError) {
+      console.error('Impossible de sauvegarder le fichier corrompu', copyError.message);
+    }
+    try {
+      fs.writeFileSync(MESSAGE_FILE, '[]', 'utf8');
+    } catch (resetError) {
+      console.error('Impossible de réinitialiser le fichier messages', resetError.message);
+    }
     return [];
   }
+}
+
+function writeMessages(entries) {
+  const normalized = Array.isArray(entries) ? entries.slice(-MAX_MESSAGES) : [];
+  fs.writeFileSync(MESSAGE_FILE, JSON.stringify(normalized, null, 2));
+  return normalized;
 }
 
 function readBody(req) {
@@ -191,6 +209,11 @@ function handleContact(req, res) {
     return res.end('Method Not Allowed');
   }
 
+  const contentType = req.headers['content-type'] || '';
+  if (!contentType.includes('application/json')) {
+    return sendJson(res, 415, { error: 'Content-Type attendu: application/json' });
+  }
+
   if (isRateLimited(req)) {
     res.setHeader('Retry-After', Math.ceil(RATE_LIMIT_WINDOW_MS / 1000));
     return sendJson(res, 429, { error: 'Trop de requêtes, merci de réessayer dans quelques minutes.' });
@@ -232,7 +255,7 @@ function handleContact(req, res) {
       };
 
       entries.push(record);
-      fs.writeFileSync(MESSAGE_FILE, JSON.stringify(entries, null, 2));
+      writeMessages(entries);
       return sendJson(res, 201, { message: 'Message reçu', item: record });
     })
     .catch((error) => {
