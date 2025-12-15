@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WIW - Contact</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="banner">
+    <div class="logo">WIW</div>
+    <nav class="nav">
+      <a href="index.html">Accueil</a>
+      <a href="pricing.html">Tarifs</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__content">
+        <p class="eyebrow">Parlons de vos événements</p>
+        <h1>Une équipe qui répond en front-only.</h1>
+        <p class="lead">Expliquez-nous votre cas d'usage : migration, création de pages statiques ou refonte complète.</p>
+        <div class="hero__cta">
+          <a class="btn primary" href="#contact">Envoyer un message</a>
+          <a class="btn ghost" href="index.html">Voir la démo</a>
+        </div>
+      </div>
+      <div class="hero__illustration">
+        <div class="card">Disponibilité 9h - 18h</div>
+        <div class="card muted">Support multilingue</div>
+        <div class="card outline">Livraison rapide</div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="section__header">
+        <h2>Écrivez-nous</h2>
+        <p class="text-muted">Nous revenons vers vous en moins de 24h ouvrées.</p>
+      </div>
+      <form class="contact" data-form="contact" novalidate>
+        <label>
+          Email
+          <input type="email" name="email" required placeholder="vous@entreprise.com" />
+        </label>
+        <label>
+          Objet
+          <input type="text" name="subject" required placeholder="Migration vers une stack statique" />
+        </label>
+        <label>
+          Détails
+          <textarea name="message" rows="5" required placeholder="Décrivez votre projet"></textarea>
+        </label>
+        <button type="submit" class="btn primary">Envoyer</button>
+        <p class="form__feedback" role="status"></p>
+      </form>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section__header">
+        <h2>Coordonnées directes</h2>
+        <p class="text-muted">Choisissez le canal de contact qui vous convient.</p>
+      </div>
+      <div class="grid">
+        <article class="tile">
+          <h3>Email support</h3>
+          <p>support@wiw.app</p>
+        </article>
+        <article class="tile">
+          <h3>Téléphone</h3>
+          <p>+33 1 86 95 00 00</p>
+        </article>
+        <article class="tile">
+          <h3>Adresse</h3>
+          <p>Siège WIW, 42 rue du Web, 75000 Paris</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>WIW - Joignez-nous pour passer au front-only.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
