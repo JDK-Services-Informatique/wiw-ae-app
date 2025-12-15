@@ -1,66 +1,23 @@
-# WIW-AE+ Application
+# WIW - version HTML5/CSS/JS
 
-Application complète de gestion pour architectes et bureaux d'études techniques.
+Cette version du projet WIW est entièrement servie en HTML5, CSS et JavaScript vanilla. Un petit serveur Node.js (sans dépendances externes) diffuse les pages statiques et expose un point d'entrée pour stocker les messages de contact dans un fichier JSON.
 
-## 🚀 Fonctionnalités
+## 📦 Structure
+- `static/` : pages autonomes (`index.html`, `pricing.html`, `contact.html`) avec leurs styles (`styles.css`) et interactions (`app.js`).
+- `server.js` : serveur HTTP Node.js qui sert le répertoire `static/` et gère `/api/contact`.
+- `data/messages.json` : stockage plat des soumissions de formulaire.
+- `package.json` : scripts NPM minimalistes pour lancer le serveur.
 
-- **Gestion des Appels d'Offres** : Suivi complet des candidatures et missions
-- **Calcul d'Honoraires** : Formule OPC 1993 intégrée
-- **Gestion d'Équipe** : Collaboration et compétences
-- **Références** : Portfolio de projets et BET
-- **Analytics** : Tableaux de bord de rentabilité
-- **Templates** : Bibliothèque de documents prête à l'emploi
+## 🚀 Démarrage
+1. Installez Node.js (>= 18).
+2. Depuis la racine du projet, lancez :
+   ```bash
+   npm start
+   ```
+3. Ouvrez http://localhost:3000 pour naviguer sur les pages HTML5/CSS/JS.
 
-## 📦 Structure du Projet
+## 🔌 API de contact
+- **POST `/api/contact`** : envoie un JSON `{ email, subject, message }` et enregistre la demande dans `data/messages.json`.
+- **GET `/api/contact`** : retourne les messages reçus (pratique pour vérifier localement).
 
-```
-wiw-ae-app/
-├── backend/          # API Node.js + Prisma
-├── frontend/         # Application React + Vite
-├── railway.json      # Configuration Railway
-└── scripts/         # Scripts utilitaires
-```
-
-## 🛠️ Installation Locale
-
-### Backend
-```bash
-cd backend
-npm install
-npx prisma generate
-npx prisma migrate dev
-npm start
-```
-
-### Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## 🌐 Déploiement sur Railway
-
-### Déploiement rapide
-
-1. Connectez votre repository GitHub à Railway
-2. Allez sur https://railway.app
-3. Créez un nouveau projet
-4. Ajoutez PostgreSQL (Database)
-5. Déployez le backend (Root Directory: `backend`)
-6. Déployez le frontend (Root Directory: `frontend`)
-
-Voir [DEPLOY_RAILWAY.md](./DEPLOY_RAILWAY.md) pour le guide complet ou [README_RAILWAY.md](./README_RAILWAY.md) pour le guide rapide.
-
-## 📝 Technologies
-
-- **Frontend** : React, Vite, Tailwind CSS, Lucide React
-- **Backend** : Node.js, Express, Prisma
-- **Base de données** : PostgreSQL
-- **Déploiement** : Railway.app
-
-## 📄 Licence
-
-Propriétaire - Tous droits réservés
-
-
+Cette base peut être étendue ou déployée telle quelle pour une stack 100% HTML5/CSS/JS.

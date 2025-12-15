@@ -29,7 +29,7 @@ if (slides.length) {
 contactForms.forEach((form) => {
   const localFeedback = form.querySelector('.form__feedback');
 
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const data = new FormData(form);
     const email = (data.get('email') || '').toString().trim();
@@ -61,11 +61,33 @@ contactForms.forEach((form) => {
     }
 
     if (localFeedback) {
-      localFeedback.textContent = "C'est envoyé ! Cette version HTML/JS fonctionne sans backend.";
-      localFeedback.style.color = '#10b981';
+      localFeedback.textContent = 'Envoi en cours…';
+      localFeedback.style.color = '#60a5fa';
     }
 
-    form.reset();
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, subject, message }),
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Impossible d'enregistrer le message.");
+      }
+
+      if (localFeedback) {
+        localFeedback.textContent = result.message || 'Message enregistré côté backend Node.';
+        localFeedback.style.color = '#10b981';
+      }
+      form.reset();
+    } catch (error) {
+      if (localFeedback) {
+        localFeedback.textContent = "Mode déconnecté : formulaire validé côté navigateur.";
+        localFeedback.style.color = '#fcd34d';
+      }
+    }
   });
 });
 
