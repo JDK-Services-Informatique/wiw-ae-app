@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Passer au contenu principal</a>
   <header class="banner">
     <div class="logo">WIW</div>
     <nav class="nav">
@@ -17,7 +18,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero">
       <div class="hero__content">
         <p class="eyebrow">Plans sans backend</p>
@@ -102,6 +103,39 @@
           <summary>Puis-je personnaliser le style ?</summary>
           <p>Oui, modifiez <code>styles.css</code> et réutilisez les classes utilitaires (cards, steps, plans).</p>
         </details>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section__header">
+        <h2>Comparatif express</h2>
+        <p class="text-muted">Un coup d'œil rapide sur ce que chaque pack inclut.</p>
+      </div>
+      <div class="comparison">
+        <div class="comparison__row comparison__row--head">
+          <span>Éléments</span>
+          <span>Starter</span>
+          <span>Pro</span>
+          <span>Entreprise</span>
+        </div>
+        <div class="comparison__row">
+          <span>Pages statiques</span>
+          <span>3</span>
+          <span>5</span>
+          <span>10+</span>
+        </div>
+        <div class="comparison__row">
+          <span>Support</span>
+          <span>Standard</span>
+          <span>Prioritaire</span>
+          <span>Expert dédié</span>
+        </div>
+        <div class="comparison__row">
+          <span>Personnalisation</span>
+          <span>Palette basique</span>
+          <span>Styles avancés</span>
+          <span>Charte sur-mesure</span>
+        </div>
       </div>
     </section>
   </main>

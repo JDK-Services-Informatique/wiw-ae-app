@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Passer au contenu principal</a>
   <header class="banner">
     <div class="logo">WIW</div>
     <nav class="nav">
@@ -18,7 +19,12 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main">
+    <section class="notice">
+      <p class="notice__label">Stack statique</p>
+      <p class="notice__text">Code 100% HTML5, CSS et JavaScript vanilla, prêt pour GitHub Pages, Netlify ou un simple CDN.</p>
+    </section>
+
     <section class="hero">
       <div class="hero__content">
         <p class="eyebrow">Solution web 100% HTML, CSS et JavaScript</p>
@@ -36,6 +42,29 @@
         <div class="card">Tableau de bord évènement</div>
         <div class="card muted">Gestion des invités</div>
         <div class="card outline">Suivi temps réel</div>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section__header">
+        <h2>Pourquoi du front-only&nbsp;?</h2>
+        <p class="text-muted">Moins de dépendances, plus de vitesse de déploiement et une maintenance réduite.</p>
+      </div>
+      <div class="pill-list">
+        <span class="pill">Zéro build step</span>
+        <span class="pill">Déploiement CDN</span>
+        <span class="pill">Accessibilité soignée</span>
+        <span class="pill">SEO optimisé</span>
+      </div>
+      <div class="grid grid--two">
+        <article class="tile tile--border">
+          <h3>Livraison immédiate</h3>
+          <p>Un dossier <code>static/</code> autonome : copiez-collez sur votre hébergeur et c'est en ligne.</p>
+        </article>
+        <article class="tile tile--border">
+          <h3>Interopérable</h3>
+          <p>Compatible avec vos outils (analytics, formulaires tiers, CDN) via simples balises script.</p>
+        </article>
       </div>
     </section>
 
@@ -115,12 +144,40 @@
       </div>
     </section>
 
+    <section class="section">
+      <div class="section__header">
+        <h2>Ressources prêtes à l'emploi</h2>
+        <p class="text-muted">Servez-vous des assets inclus pour présenter WIW à votre équipe.</p>
+      </div>
+      <div class="grid grid--three">
+        <article class="tile tile--border">
+          <h3>Kit marketing</h3>
+          <p>Hero, témoignages, métriques et call-to-actions prêts à intégrer.</p>
+          <a class="btn ghost" href="pricing.html">Voir les packs</a>
+        </article>
+        <article class="tile tile--border">
+          <h3>Modèle contact</h3>
+          <p>Formulaire validé côté client avec feedback immédiat.</p>
+          <a class="btn ghost" href="contact.html">Essayer</a>
+        </article>
+        <article class="tile tile--border">
+          <h3>Structure multi-pages</h3>
+          <p>Navigation, sections et styles communs pour rester cohérent.</p>
+          <a class="btn ghost" href="#features">Parcourir</a>
+        </article>
+      </div>
+    </section>
+
     <section id="contact" class="section">
       <h2>Prêt à passer en statique ?</h2>
       <form class="contact" data-form="contact" novalidate>
         <label>
           Email
           <input type="email" name="email" required placeholder="contact@exemple.com" />
+        </label>
+        <label>
+          Objet
+          <input type="text" name="subject" placeholder="Lancement d'un site statique" />
         </label>
         <label>
           Message

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Passer au contenu principal</a>
   <header class="banner">
     <div class="logo">WIW</div>
     <nav class="nav">
@@ -17,7 +18,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero">
       <div class="hero__content">
         <p class="eyebrow">Parlons de vos événements</p>
@@ -76,6 +77,27 @@
           <h3>Adresse</h3>
           <p>Siège WIW, 42 rue du Web, 75000 Paris</p>
         </article>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section__header">
+        <h2>Questions rapides</h2>
+        <p class="text-muted">Quelques réponses avant d'échanger en direct.</p>
+      </div>
+      <div class="faq faq--inline">
+        <details data-accordion>
+          <summary>Quel délai de réponse ?</summary>
+          <p>Nous revenons vers vous en moins de 24h ouvrées, directement par e-mail.</p>
+        </details>
+        <details data-accordion>
+          <summary>Pouvez-vous auditer mon site ?</summary>
+          <p>Oui, nous analysons votre front et proposons un plan de bascule statique.</p>
+        </details>
+        <details data-accordion>
+          <summary>Y a-t-il un support en français ?</summary>
+          <p>Bien sûr, l'équipe répond en français et peut fournir des guides dédiés.</p>
+        </details>
       </div>
     </section>
   </main>
