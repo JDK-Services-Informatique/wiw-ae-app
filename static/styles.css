@@ -151,6 +151,12 @@ main { display: flex; flex-direction: column; gap: 3rem; padding-top: 1rem; }
 .contact input, .contact textarea { width: 100%; padding: 0.85rem; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--text); }
 .contact input:focus, .contact textarea:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
 .form__feedback { min-height: 1.2em; font-size: 0.95rem; }
+.status { display: inline-flex; gap: 0.4rem; align-items: center; padding: 0.5rem 0.75rem; border-radius: 999px; border: 1px dashed var(--border); color: var(--text-muted); margin-bottom: 0.5rem; }
+.status::before { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--text-muted); box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05); }
+.status--online { color: #bbf7d0; border-color: rgba(52, 211, 153, 0.4); }
+.status--online::before { background: #34d399; }
+.status--offline { color: #fcd34d; border-color: rgba(252, 211, 77, 0.4); }
+.status--offline::before { background: #fcd34d; }
 
 .btn { border: 1px solid transparent; border-radius: 12px; padding: 0.85rem 1.1rem; font-weight: 700; cursor: pointer; transition: all 150ms ease; }
 .btn.primary { background: linear-gradient(120deg, var(--accent), var(--accent-strong)); color: #03221a; box-shadow: var(--shadow); }

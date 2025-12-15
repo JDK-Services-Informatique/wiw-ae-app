@@ -16,6 +16,10 @@ Cette version du projet WIW est entièrement servie en HTML5, CSS et JavaScript 
    ```
 3. Ouvrez http://localhost:3000 pour naviguer sur les pages HTML5/CSS/JS (un service worker met en cache les pages principales pour le mode hors ligne).
 
+### Mode hors ligne
+- Les pages clés sont pré-cachées (`index.html`, `pricing.html`, `contact.html`, `offline.html`, CSS/JS) via `static/sw.js`.
+- Les formulaires de contact sont validés côté client et mis en attente dans `localStorage` si le réseau est indisponible ; la synchronisation est relancée automatiquement dès le retour en ligne.
+
 ## 🔌 API de contact
 - **POST `/api/contact`** : envoie un JSON `{ email, subject, message }` et enregistre la demande dans `data/messages.json`.
 - **GET `/api/contact`** : retourne les messages reçus (pratique pour vérifier localement).

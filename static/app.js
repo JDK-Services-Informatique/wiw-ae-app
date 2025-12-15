@@ -2,6 +2,25 @@ const slides = Array.from(document.querySelectorAll('.carousel__slide'));
 const feedback = document.querySelector('.form__feedback');
 const controls = document.querySelectorAll('.control');
 const contactForms = Array.from(document.querySelectorAll('form[data-form="contact"]'));
+const offlineIndicator = document.querySelector('[data-status-indicator]');
+const QUEUE_KEY = 'wiw-offline-messages';
+
+function loadQueue() {
+  try {
+    return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+  } catch (error) {
+    console.warn('Lecture du cache offline impossible', error);
+    return [];
+  }
+}
+
+function saveQueue(entries) {
+  try {
+    localStorage.setItem(QUEUE_KEY, JSON.stringify(entries));
+  } catch (error) {
+    console.warn('Sauvegarde offline impossible', error);
+  }
+}
 
 let current = 0;
 
@@ -24,6 +43,59 @@ if (slides.length) {
   });
 
   setActive(0);
+}
+
+async function submitContact(payload) {
+  const response = await fetch('/api/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error || "Impossible d'enregistrer le message.");
+  }
+  return result;
+}
+
+function updateStatusBadge() {
+  if (!offlineIndicator) return;
+  const queued = loadQueue();
+  if (navigator.onLine) {
+    offlineIndicator.textContent = queued.length
+      ? `En ligne • ${queued.length} message(s) à synchroniser`
+      : 'En ligne';
+    offlineIndicator.classList.remove('status--offline');
+    offlineIndicator.classList.add('status--online');
+  } else {
+    offlineIndicator.textContent = 'Hors ligne • vos messages seront mis en attente';
+    offlineIndicator.classList.add('status--offline');
+    offlineIndicator.classList.remove('status--online');
+  }
+}
+
+async function flushQueuedMessages(sourceFeedback) {
+  const queue = loadQueue();
+  if (!queue.length || !navigator.onLine) return;
+
+  const remaining = [];
+  for (const entry of queue) {
+    try {
+      await submitContact(entry);
+    } catch (error) {
+      remaining.push(entry);
+    }
+  }
+  saveQueue(remaining);
+
+  if (sourceFeedback) {
+    sourceFeedback.textContent = remaining.length
+      ? `${remaining.length} message(s) restent en attente de connexion.`
+      : 'Messages en attente synchronisés avec le serveur.';
+    sourceFeedback.style.color = remaining.length ? '#fcd34d' : '#10b981';
+  }
+  updateStatusBadge();
 }
 
 contactForms.forEach((form) => {
@@ -65,28 +137,24 @@ contactForms.forEach((form) => {
       localFeedback.style.color = '#60a5fa';
     }
 
+    const payload = { email, subject, message };
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, subject, message }),
-      });
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Impossible d'enregistrer le message.");
-      }
-
+      const result = await submitContact(payload);
       if (localFeedback) {
         localFeedback.textContent = result.message || 'Message enregistré côté backend Node.';
         localFeedback.style.color = '#10b981';
       }
       form.reset();
+      await flushQueuedMessages(localFeedback);
     } catch (error) {
+      const queue = loadQueue();
+      queue.push({ ...payload, queuedAt: new Date().toISOString() });
+      saveQueue(queue);
       if (localFeedback) {
-        localFeedback.textContent = "Mode déconnecté : formulaire validé côté navigateur.";
+        localFeedback.textContent = 'Mode déconnecté : message mis en attente dans ce navigateur.';
         localFeedback.style.color = '#fcd34d';
       }
+      updateStatusBadge();
     }
   });
 });
@@ -143,3 +211,7 @@ if ('serviceWorker' in navigator) {
     .then(() => console.info('Service worker enregistré'))
     .catch((error) => console.warn('SW error', error));
 }
+
+window.addEventListener('online', () => flushQueuedMessages(feedback));
+updateStatusBadge();
+flushQueuedMessages(feedback);
