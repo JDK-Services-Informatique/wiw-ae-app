@@ -135,3 +135,11 @@ toggle?.addEventListener('change', (event) => {
     label.textContent = yearly ? 'Facturation annuelle (-15%)' : 'Facturation mensuelle';
   }
 });
+
+// Service worker (mise en cache hors ligne)
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/sw.js')
+    .then(() => console.info('Service worker enregistré'))
+    .catch((error) => console.warn('SW error', error));
+}
