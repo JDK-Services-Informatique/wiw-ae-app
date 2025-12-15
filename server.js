@@ -27,6 +27,43 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon',
 };
 
+const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
+const RATE_LIMIT_MAX_ATTEMPTS = 20;
+const rateLimitStore = new Map();
+
+function sanitizeText(value, maxLength) {
+  if (!value && value !== 0) return '';
+  return value
+    .toString()
+    .replace(/[<>]/g, ' ')
+    .replace(/[\r\n]+/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+    .slice(0, maxLength);
+}
+
+function getClientIp(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  return req.socket.remoteAddress || 'inconnu';
+}
+
+function isRateLimited(req) {
+  const ip = getClientIp(req);
+  const now = Date.now();
+  const attempts = rateLimitStore.get(ip) || [];
+  const recent = attempts.filter((ts) => now - ts < RATE_LIMIT_WINDOW_MS);
+  if (recent.length >= RATE_LIMIT_MAX_ATTEMPTS) {
+    rateLimitStore.set(ip, recent);
+    return true;
+  }
+  recent.push(now);
+  rateLimitStore.set(ip, recent);
+  return false;
+}
+
 function ensureDataFile() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -154,6 +191,11 @@ function handleContact(req, res) {
     return res.end('Method Not Allowed');
   }
 
+  if (isRateLimited(req)) {
+    res.setHeader('Retry-After', Math.ceil(RATE_LIMIT_WINDOW_MS / 1000));
+    return sendJson(res, 429, { error: 'Trop de requêtes, merci de réessayer dans quelques minutes.' });
+  }
+
   readBody(req)
     .then((raw) => {
       let data;
@@ -163,15 +205,21 @@ function handleContact(req, res) {
         throw new Error('Invalid JSON');
       }
 
-      const email = (data.email || '').toString().trim();
-      const subject = (data.subject || '').toString().trim();
-      const message = (data.message || '').toString().trim();
+      const email = sanitizeText(data.email || '', 120);
+      const subject = sanitizeText(data.subject || '', 180);
+      const message = sanitizeText(data.message || '', 1200);
 
       if (!email || !email.includes('@')) {
         return sendJson(res, 400, { error: 'Email invalide' });
       }
       if (!message || message.length < 6) {
         return sendJson(res, 400, { error: 'Message trop court' });
+      }
+      if (message.length > 1200) {
+        return sendJson(res, 400, { error: 'Message trop long' });
+      }
+      if (subject && subject.length < 3) {
+        return sendJson(res, 400, { error: "L'objet doit comporter au moins 3 caractères" });
       }
 
       const entries = readMessages();
@@ -189,6 +237,9 @@ function handleContact(req, res) {
     })
     .catch((error) => {
       console.error('Contact error', error.message);
+      if (error.message === 'Invalid JSON') {
+        return sendJson(res, 400, { error: 'Format JSON invalide' });
+      }
       sendJson(res, 500, { error: 'Une erreur est survenue' });
     });
 }
@@ -220,7 +271,7 @@ function handleHealth(req, res) {
   }
 
   ensureDataFile();
-  const entries = JSON.parse(fs.readFileSync(MESSAGE_FILE, 'utf8'));
+  const entries = readMessages();
   const payload = {
     status: 'ok',
     messages: entries.length,

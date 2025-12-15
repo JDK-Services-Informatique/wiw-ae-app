@@ -15,6 +15,11 @@ const queueEmpty = document.querySelector('[data-queue-empty]');
 const QUEUE_KEY = 'wiw-offline-messages';
 let messagesCache = [];
 
+function escapeText(value) {
+  if (value === null || value === undefined) return '';
+  return value.toString().replace(/[<>]/g, '').replace(/[\r\n]+/g, ' ').trim();
+}
+
 function loadQueue() {
   try {
     return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
@@ -137,17 +142,29 @@ function renderMessages(filterTerm = '') {
 
   filtered.forEach((item) => {
     const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${item.id}</td>
-      <td>${item.email}</td>
-      <td>${item.subject || '—'}</td>
-      <td>${item.message}</td>
-      <td>${item.createdAt ? new Date(item.createdAt).toLocaleString('fr-FR') : '—'}</td>
-    `;
+    const createdAt = item.createdAt ? new Date(item.createdAt).toLocaleString('fr-FR') : '—';
+
+    const cells = [
+      escapeText(item.id ?? '—'),
+      escapeText(item.email ?? '—'),
+      escapeText(item.subject || '—'),
+      escapeText(item.message || '—'),
+      escapeText(createdAt),
+    ];
+
+    cells.forEach((text) => {
+      const td = document.createElement('td');
+      td.textContent = text;
+      row.appendChild(td);
+    });
+
     messagesBody.appendChild(row);
   });
 
-  if (messagesEmpty) messagesEmpty.style.display = 'none';
+  if (messagesEmpty) {
+    messagesEmpty.textContent = filtered.length ? '' : 'Aucun message à afficher.';
+    messagesEmpty.style.display = filtered.length ? 'none' : 'block';
+  }
 }
 
 async function loadMessages() {
