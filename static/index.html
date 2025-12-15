@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WIW - Application Événementielle</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="banner">
+    <div class="logo">WIW</div>
+    <nav class="nav">
+      <a href="#features">Fonctionnalités</a>
+      <a href="#screenshots">Aperçu</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__content">
+        <p class="eyebrow">Solution web 100% HTML, CSS et JavaScript</p>
+        <h1>Organisez vos événements sans dépendance framework.</h1>
+        <p class="lead">
+          Cette page statique démontre la version entièrement front-end de WIW,
+          prête à être déployée sur n'importe quel hébergement statique.
+        </p>
+        <div class="hero__cta">
+          <button id="cta-demo" class="btn primary">Essayer la démo</button>
+          <button id="cta-docs" class="btn ghost">Voir la documentation</button>
+        </div>
+      </div>
+      <div class="hero__illustration">
+        <div class="card">Tableau de bord évènement</div>
+        <div class="card muted">Gestion des invités</div>
+        <div class="card outline">Suivi temps réel</div>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <h2>Fonctionnalités clés</h2>
+      <div class="grid">
+        <article class="tile">
+          <h3>Planification visuelle</h3>
+          <p>Créez vos programmes avec une interface épurée et réactive.</p>
+        </article>
+        <article class="tile">
+          <h3>Notifications en direct</h3>
+          <p>Alertes instantanées grâce à JavaScript côté client uniquement.</p>
+        </article>
+        <article class="tile">
+          <h3>Mode hors ligne</h3>
+          <p>Cache statique et service worker prêt pour une PWA légère.</p>
+        </article>
+        <article class="tile">
+          <h3>Design responsive</h3>
+          <p>CSS moderne (flex, grid) pour une expérience mobile optimale.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="screenshots" class="section section--muted">
+      <h2>Aperçu interactif</h2>
+      <div class="carousel" aria-live="polite">
+        <div class="carousel__viewport">
+          <div class="carousel__slide is-active" data-index="0">
+            <p class="slide__title">Vue d'ensemble</p>
+            <p>Survolez pour découvrir les interactions JavaScript.</p>
+          </div>
+          <div class="carousel__slide" data-index="1">
+            <p class="slide__title">Invitations</p>
+            <p>Formulaires validés côté client uniquement.</p>
+          </div>
+          <div class="carousel__slide" data-index="2">
+            <p class="slide__title">Analytique</p>
+            <p>Graphiques dessinés avec Canvas natif.</p>
+          </div>
+        </div>
+        <div class="carousel__controls" role="group" aria-label="Changer de slide">
+          <button class="control" data-direction="prev">◀</button>
+          <button class="control" data-direction="next">▶</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2>Prêt à passer en statique ?</h2>
+      <form class="contact" novalidate>
+        <label>
+          Email
+          <input type="email" name="email" required placeholder="contact@exemple.com" />
+        </label>
+        <label>
+          Message
+          <textarea name="message" rows="4" required placeholder="Décrivez votre besoin"></textarea>
+        </label>
+        <button type="submit" class="btn primary">Envoyer</button>
+        <p class="form__feedback" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>WIW - Interface statique HTML5/CSS/JS. Aucune dépendance backend requise.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
