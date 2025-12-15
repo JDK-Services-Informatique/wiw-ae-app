@@ -33,6 +33,7 @@ contactForms.forEach((form) => {
     event.preventDefault();
     const data = new FormData(form);
     const email = (data.get('email') || '').toString().trim();
+    const subject = (data.get('subject') || '').toString().trim();
     const message = (data.get('message') || '').toString().trim();
 
     if (!email || !email.includes('@')) {
@@ -43,9 +44,17 @@ contactForms.forEach((form) => {
       return;
     }
 
-    if (!message) {
+    if (subject && subject.length < 3) {
       if (localFeedback) {
-        localFeedback.textContent = 'Ajoutez un message pour que nous puissions vous répondre.';
+        localFeedback.textContent = "L'objet doit comporter au moins 3 caractères.";
+        localFeedback.style.color = '#fcd34d';
+      }
+      return;
+    }
+
+    if (!message || message.length < 6) {
+      if (localFeedback) {
+        localFeedback.textContent = 'Ajoutez un message plus détaillé pour que nous puissions vous répondre.';
         localFeedback.style.color = '#fcd34d';
       }
       return;
