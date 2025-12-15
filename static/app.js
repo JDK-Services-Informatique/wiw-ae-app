@@ -3,6 +3,12 @@ const feedback = document.querySelector('.form__feedback');
 const controls = document.querySelectorAll('.control');
 const contactForms = Array.from(document.querySelectorAll('form[data-form="contact"]'));
 const offlineIndicator = document.querySelector('[data-status-indicator]');
+const messagesBody = document.querySelector('[data-messages-body]');
+const messagesEmpty = document.querySelector('[data-messages-empty]');
+const refreshBtn = document.querySelector('[data-messages-refresh]');
+const queueBadge = document.querySelector('[data-queue-badge]');
+const queueList = document.querySelector('[data-queue-list]');
+const queueEmpty = document.querySelector('[data-queue-empty]');
 const QUEUE_KEY = 'wiw-offline-messages';
 
 function loadQueue() {
@@ -75,6 +81,66 @@ function updateStatusBadge() {
   }
 }
 
+function renderQueue() {
+  if (!queueBadge || !queueList || !queueEmpty) return;
+  const queued = loadQueue();
+  queueBadge.textContent = queued.length === 1
+    ? '1 message en attente'
+    : `${queued.length} messages en attente`;
+
+  queueList.innerHTML = '';
+  queued.forEach((item) => {
+    const li = document.createElement('li');
+    const label = item.subject ? `${item.subject} — ` : '';
+    li.textContent = `${label}${item.message}`.slice(0, 140);
+    queueList.appendChild(li);
+  });
+
+  queueList.style.display = queued.length ? 'grid' : 'none';
+  queueEmpty.style.display = queued.length ? 'none' : 'block';
+}
+
+async function loadMessages() {
+  if (!messagesBody) return;
+  messagesBody.innerHTML = '';
+  if (messagesEmpty) {
+    messagesEmpty.textContent = 'Chargement des messages…';
+    messagesEmpty.style.display = 'block';
+  }
+
+  try {
+    const response = await fetch('/api/contact', { method: 'GET' });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || 'Requête échouée');
+
+    const items = Array.isArray(payload.items) ? payload.items : [];
+    if (!items.length && messagesEmpty) {
+      messagesEmpty.textContent = 'Aucun message enregistré pour le moment.';
+      return;
+    }
+
+    items
+      .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+      .forEach((item) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.email}</td>
+          <td>${item.subject || '—'}</td>
+          <td>${item.message}</td>
+          <td>${item.createdAt ? new Date(item.createdAt).toLocaleString('fr-FR') : '—'}</td>
+        `;
+        messagesBody.appendChild(row);
+      });
+
+    if (messagesEmpty) messagesEmpty.style.display = 'none';
+  } catch (error) {
+    if (messagesEmpty) {
+      messagesEmpty.textContent = 'Impossible de récupérer les messages (mode hors ligne ?)';
+    }
+  }
+}
+
 async function flushQueuedMessages(sourceFeedback) {
   const queue = loadQueue();
   if (!queue.length || !navigator.onLine) return;
@@ -96,6 +162,7 @@ async function flushQueuedMessages(sourceFeedback) {
     sourceFeedback.style.color = remaining.length ? '#fcd34d' : '#10b981';
   }
   updateStatusBadge();
+  renderQueue();
 }
 
 contactForms.forEach((form) => {
@@ -155,8 +222,14 @@ contactForms.forEach((form) => {
         localFeedback.style.color = '#fcd34d';
       }
       updateStatusBadge();
+      renderQueue();
     }
   });
+});
+
+refreshBtn?.addEventListener('click', () => {
+  loadMessages();
+  renderQueue();
 });
 
 // CTA interactions
@@ -215,3 +288,5 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('online', () => flushQueuedMessages(feedback));
 updateStatusBadge();
 flushQueuedMessages(feedback);
+renderQueue();
+loadMessages();

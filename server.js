@@ -7,6 +7,13 @@ const PUBLIC_DIR = path.join(__dirname, 'static');
 const DATA_DIR = path.join(__dirname, 'data');
 const MESSAGE_FILE = path.join(DATA_DIR, 'messages.json');
 const PORT = process.env.PORT || 3000;
+const SECURITY_HEADERS = {
+  'Referrer-Policy': 'no-referrer-when-downgrade',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Permissions-Policy': 'geolocation=(), camera=() , microphone=() , interest-cohort=() , browsing-topics=()',
+  'Content-Security-Policy': "default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'",
+};
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -44,11 +51,17 @@ function readBody(req) {
   });
 }
 
+function setSecurityHeaders(res) {
+  Object.entries(SECURITY_HEADERS).forEach(([key, value]) => res.setHeader(key, value));
+}
+
 function sendJson(res, statusCode, payload) {
   const data = JSON.stringify(payload);
+  setSecurityHeaders(res);
   res.writeHead(statusCode, {
     'Content-Type': MIME_TYPES['.json'],
     'Content-Length': Buffer.byteLength(data),
+    'Cache-Control': 'no-store',
   });
   res.end(data);
 }
@@ -76,7 +89,12 @@ function serveStatic(req, res, urlPath) {
   const contentType = MIME_TYPES[ext] || 'application/octet-stream';
   const stream = fs.createReadStream(filePath);
 
-  res.writeHead(200, { 'Content-Type': contentType });
+  setSecurityHeaders(res);
+  const cacheControl = ext === '.html' ? 'no-cache' : 'public, max-age=86400';
+  res.writeHead(200, {
+    'Content-Type': contentType,
+    'Cache-Control': cacheControl,
+  });
   stream.pipe(res);
 }
 
@@ -132,11 +150,40 @@ function handleContact(req, res) {
     });
 }
 
+function handleHealth(req, res) {
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    res.writeHead(405, { Allow: 'GET, HEAD' });
+    return res.end();
+  }
+
+  ensureDataFile();
+  const entries = JSON.parse(fs.readFileSync(MESSAGE_FILE, 'utf8'));
+  const payload = {
+    status: 'ok',
+    messages: entries.length,
+    timestamp: new Date().toISOString(),
+  };
+
+  if (req.method === 'HEAD') {
+    setSecurityHeaders(res);
+    res.writeHead(204, {
+      'Cache-Control': 'no-store',
+    });
+    return res.end();
+  }
+
+  return sendJson(res, 200, payload);
+}
+
 const server = http.createServer((req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
 
   if (parsedUrl.pathname.startsWith('/api/contact')) {
     return handleContact(req, res);
+  }
+
+  if (parsedUrl.pathname === '/health') {
+    return handleHealth(req, res);
   }
 
   serveStatic(req, res, decodeURIComponent(parsedUrl.pathname));

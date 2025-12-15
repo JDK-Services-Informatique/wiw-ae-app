@@ -190,6 +190,16 @@ details { border: 1px solid var(--border); border-radius: 12px; padding: 0.85rem
 summary { cursor: pointer; font-weight: 700; }
 details p { margin-top: 0.45rem; color: var(--text-muted); }
 
+.table__wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow); }
+.table { width: 100%; border-collapse: collapse; min-width: 640px; }
+.table th, .table td { text-align: left; padding: 0.75rem 0.9rem; border-bottom: 1px solid var(--border); }
+.table th { color: var(--text-muted); font-size: 0.95rem; letter-spacing: 0.01em; }
+.table tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+.muted { color: var(--text-muted); margin-top: 0.5rem; }
+
+.queue { display: grid; gap: 0.75rem; }
+.queue .list { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1rem; box-shadow: var(--shadow); }
+
 .list { list-style: disc; padding-left: 1.25rem; color: var(--text-muted); display: grid; gap: 0.25rem; }
 
 .page-offline { display: grid; place-items: center; padding: 2rem; }
