@@ -23,7 +23,8 @@ Cette version du projet WIW est entièrement servie en HTML5, CSS et JavaScript 
 
 ## 🔌 API de contact
 - **POST `/api/contact`** : envoie un JSON `{ email, subject, message }` et enregistre la demande dans `data/messages.json`.
-- **GET `/api/contact`** : retourne les messages reçus (pratique pour vérifier localement).
+- **GET/HEAD `/api/contact`** : retourne les messages reçus et des métadonnées (compteur, dernier enregistrement).
+- **GET/HEAD `/api/contact/export`** : exporte l'ensemble des messages en CSV prêt à être téléchargé.
 - **GET/HEAD `/health`** : renvoie un statut simple avec le nombre de messages stockés.
 
 Cette base peut être étendue ou déployée telle quelle pour une stack 100% HTML5/CSS/JS.

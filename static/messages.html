@@ -28,6 +28,7 @@
         <div class="hero__cta">
           <button class="btn primary" data-messages-refresh>Rafraîchir</button>
           <a class="btn ghost" href="/api/contact" target="_blank" rel="noreferrer">Télécharger en JSON</a>
+          <a class="btn ghost" href="/api/contact/export" target="_blank" rel="noreferrer">Exporter en CSV</a>
         </div>
         <p class="status" data-status-indicator aria-live="polite">Vérification de l'état réseau…</p>
       </div>
@@ -38,10 +39,29 @@
       </div>
     </section>
 
+    <section class="section section--muted">
+      <div class="grid stats">
+        <div class="card card--stat">
+          <p class="text-muted">Messages stockés</p>
+          <p class="stat__value" data-message-count>—</p>
+          <p class="muted">Comptés côté API et servis en JSON/CSV.</p>
+        </div>
+        <div class="card card--stat">
+          <p class="text-muted">Dernier enregistrement</p>
+          <p class="stat__value" data-message-latest>—</p>
+          <p class="muted">Horodatage renvoyé par le serveur.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="section">
       <div class="section__header">
         <h2>Messages synchronisés</h2>
         <p class="text-muted">Les messages sont conservés dans <code>data/messages.json</code> par le serveur Node léger.</p>
+        <label class="field">
+          <span class="field__label">Filtrer</span>
+          <input type="search" placeholder="Rechercher par email, objet ou texte" data-messages-filter />
+        </label>
       </div>
       <div class="table__wrapper">
         <table class="table">

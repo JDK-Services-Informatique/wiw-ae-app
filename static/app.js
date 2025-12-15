@@ -6,10 +6,14 @@ const offlineIndicator = document.querySelector('[data-status-indicator]');
 const messagesBody = document.querySelector('[data-messages-body]');
 const messagesEmpty = document.querySelector('[data-messages-empty]');
 const refreshBtn = document.querySelector('[data-messages-refresh]');
+const messageCount = document.querySelector('[data-message-count]');
+const messageLatest = document.querySelector('[data-message-latest]');
+const messagesFilter = document.querySelector('[data-messages-filter]');
 const queueBadge = document.querySelector('[data-queue-badge]');
 const queueList = document.querySelector('[data-queue-list]');
 const queueEmpty = document.querySelector('[data-queue-empty]');
 const QUEUE_KEY = 'wiw-offline-messages';
+let messagesCache = [];
 
 function loadQueue() {
   try {
@@ -100,6 +104,52 @@ function renderQueue() {
   queueEmpty.style.display = queued.length ? 'none' : 'block';
 }
 
+function updateMessageStats(count, latest) {
+  if (messageCount) {
+    messageCount.textContent = typeof count === 'number' ? count.toString() : '—';
+  }
+  if (messageLatest) {
+    messageLatest.textContent = latest
+      ? new Date(latest).toLocaleString('fr-FR')
+      : 'Pas encore de message';
+  }
+}
+
+function renderMessages(filterTerm = '') {
+  if (!messagesBody) return;
+  const term = filterTerm.trim().toLowerCase();
+  messagesBody.innerHTML = '';
+
+  const filtered = term
+    ? messagesCache.filter((item) => {
+        const text = `${item.email || ''} ${item.subject || ''} ${item.message || ''}`.toLowerCase();
+        return text.includes(term);
+      })
+    : messagesCache;
+
+  if (!filtered.length && messagesEmpty) {
+    messagesEmpty.textContent = term
+      ? 'Aucun message ne correspond au filtre.'
+      : 'Aucun message enregistré pour le moment.';
+    messagesEmpty.style.display = 'block';
+    return;
+  }
+
+  filtered.forEach((item) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${item.id}</td>
+      <td>${item.email}</td>
+      <td>${item.subject || '—'}</td>
+      <td>${item.message}</td>
+      <td>${item.createdAt ? new Date(item.createdAt).toLocaleString('fr-FR') : '—'}</td>
+    `;
+    messagesBody.appendChild(row);
+  });
+
+  if (messagesEmpty) messagesEmpty.style.display = 'none';
+}
+
 async function loadMessages() {
   if (!messagesBody) return;
   messagesBody.innerHTML = '';
@@ -114,26 +164,9 @@ async function loadMessages() {
     if (!response.ok) throw new Error(payload.error || 'Requête échouée');
 
     const items = Array.isArray(payload.items) ? payload.items : [];
-    if (!items.length && messagesEmpty) {
-      messagesEmpty.textContent = 'Aucun message enregistré pour le moment.';
-      return;
-    }
-
-    items
-      .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
-      .forEach((item) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${item.id}</td>
-          <td>${item.email}</td>
-          <td>${item.subject || '—'}</td>
-          <td>${item.message}</td>
-          <td>${item.createdAt ? new Date(item.createdAt).toLocaleString('fr-FR') : '—'}</td>
-        `;
-        messagesBody.appendChild(row);
-      });
-
-    if (messagesEmpty) messagesEmpty.style.display = 'none';
+    messagesCache = items.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    updateMessageStats(payload.count ?? messagesCache.length, payload.latest ?? messagesCache[0]?.createdAt);
+    renderMessages(messagesFilter?.value || '');
   } catch (error) {
     if (messagesEmpty) {
       messagesEmpty.textContent = 'Impossible de récupérer les messages (mode hors ligne ?)';
@@ -230,6 +263,10 @@ contactForms.forEach((form) => {
 refreshBtn?.addEventListener('click', () => {
   loadMessages();
   renderQueue();
+});
+
+messagesFilter?.addEventListener('input', (event) => {
+  renderMessages(event.target.value);
 });
 
 // CTA interactions

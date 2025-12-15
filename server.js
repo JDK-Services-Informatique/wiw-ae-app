@@ -36,6 +36,18 @@ function ensureDataFile() {
   }
 }
 
+function readMessages() {
+  ensureDataFile();
+  try {
+    const content = fs.readFileSync(MESSAGE_FILE, 'utf8');
+    const parsed = JSON.parse(content);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.error('Impossible de lire les messages', error.message);
+    return [];
+  }
+}
+
 function readBody(req) {
   return new Promise((resolve, reject) => {
     let body = '';
@@ -64,6 +76,28 @@ function sendJson(res, statusCode, payload) {
     'Cache-Control': 'no-store',
   });
   res.end(data);
+}
+
+function sendCsv(res, statusCode, rows) {
+  const header = 'id,email,subject,message,createdAt\n';
+  const csv =
+    header +
+    rows
+      .map((item) => {
+        const safe = (value = '') =>
+          `"${value.toString().replace(/"/g, '""').replace(/\n/g, ' ')}"`;
+        return [safe(item.id), safe(item.email), safe(item.subject), safe(item.message), safe(item.createdAt)].join(',');
+      })
+      .join('\n');
+
+  setSecurityHeaders(res);
+  res.writeHead(statusCode, {
+    'Content-Type': 'text/csv; charset=utf-8',
+    'Cache-Control': 'no-store',
+    'Content-Length': Buffer.byteLength(csv),
+    'Content-Disposition': 'attachment; filename="messages.csv"',
+  });
+  res.end(csv);
 }
 
 function serveStatic(req, res, urlPath) {
@@ -100,13 +134,23 @@ function serveStatic(req, res, urlPath) {
 
 function handleContact(req, res) {
   if (req.method === 'GET') {
-    ensureDataFile();
-    const entries = JSON.parse(fs.readFileSync(MESSAGE_FILE, 'utf8'));
-    return sendJson(res, 200, { items: entries });
+    const entries = readMessages();
+    const latest = entries.length ? entries[entries.length - 1].createdAt : null;
+    return sendJson(res, 200, { items: entries, count: entries.length, latest });
+  }
+
+  if (req.method === 'HEAD') {
+    const entries = readMessages();
+    setSecurityHeaders(res);
+    res.writeHead(204, {
+      'Cache-Control': 'no-store',
+      'X-Message-Count': entries.length,
+    });
+    return res.end();
   }
 
   if (req.method !== 'POST') {
-    res.writeHead(405, { Allow: 'POST, GET' });
+    res.writeHead(405, { Allow: 'POST, GET, HEAD' });
     return res.end('Method Not Allowed');
   }
 
@@ -130,8 +174,7 @@ function handleContact(req, res) {
         return sendJson(res, 400, { error: 'Message trop court' });
       }
 
-      ensureDataFile();
-      const entries = JSON.parse(fs.readFileSync(MESSAGE_FILE, 'utf8'));
+      const entries = readMessages();
       const record = {
         id: Date.now(),
         email,
@@ -148,6 +191,26 @@ function handleContact(req, res) {
       console.error('Contact error', error.message);
       sendJson(res, 500, { error: 'Une erreur est survenue' });
     });
+}
+
+function handleExport(req, res) {
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    res.writeHead(405, { Allow: 'GET, HEAD' });
+    return res.end('Method Not Allowed');
+  }
+
+  const entries = readMessages();
+
+  if (req.method === 'HEAD') {
+    setSecurityHeaders(res);
+    res.writeHead(204, {
+      'Cache-Control': 'no-store',
+      'X-Message-Count': entries.length,
+    });
+    return res.end();
+  }
+
+  return sendCsv(res, 200, entries);
 }
 
 function handleHealth(req, res) {
@@ -179,6 +242,9 @@ const server = http.createServer((req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
 
   if (parsedUrl.pathname.startsWith('/api/contact')) {
+    if (parsedUrl.pathname === '/api/contact/export') {
+      return handleExport(req, res);
+    }
     return handleContact(req, res);
   }
 
