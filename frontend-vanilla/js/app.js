@@ -38,6 +38,12 @@ import { AlertesPage } from './pages/alertes.js';
 import { TemplatesPage } from './pages/templates.js';
 import { BETPage } from './pages/bet.js';
 import { DataManagementPage } from './pages/data-management.js';
+import { CataloguePage } from './pages/catalogue.js';
+import { PlansPage } from './pages/plans.js';
+import { ContactPage } from './pages/contact.js';
+import { LegalPage } from './pages/legal.js';
+import { ForgotPasswordPage } from './pages/forgot-password.js';
+import { ResetPasswordPage } from './pages/reset-password.js';
 
 /**
  * Configuration de l'application
@@ -145,23 +151,48 @@ function setupRouter() {
     });
 
     router.route('/pricing', {
-        render: () => renderPricingPage()
+        render: async () => {
+            const page = new PlansPage();
+            const html = page.render();
+            setTimeout(() => page.onMount(), 0);
+            return html;
+        }
     });
 
     router.route('/contact', {
-        render: () => renderContactPage()
+        render: async () => {
+            const page = new ContactPage();
+            const html = page.render();
+            setTimeout(() => page.onMount(), 0);
+            return html;
+        }
     });
 
     router.route('/legal', {
-        render: () => renderLegalPage()
+        render: async () => {
+            const page = new LegalPage();
+            const html = page.render();
+            setTimeout(() => page.onMount(), 0);
+            return html;
+        }
     });
 
     router.route('/forgot-password', {
-        render: () => renderForgotPasswordPage()
+        render: async () => {
+            const page = new ForgotPasswordPage();
+            const html = page.render();
+            setTimeout(() => page.onMount(), 0);
+            return html;
+        }
     });
 
     router.route('/reset-password', {
-        render: () => renderResetPasswordPage()
+        render: async () => {
+            const page = new ResetPasswordPage();
+            const html = page.render();
+            setTimeout(() => page.onMount(), 0);
+            return html;
+        }
     });
 
     // Routes privées avec layout
@@ -182,8 +213,8 @@ function setupRouter() {
         { path: '/datamanagement', component: DataManagementPage },
         { path: '/missions', component: MissionsPage },
         { path: '/alertes', component: AlertesPage },
-        { path: '/catalogue', render: renderCataloguePage },
-        { path: '/plans', render: renderPlansPage },
+        { path: '/catalogue', component: CataloguePage },
+        { path: '/plans', component: PlansPage },
         { path: '/pipeline', component: PipelinePage },
         { path: '/templates', component: TemplatesPage },
         { path: '/bet', component: BETPage },
@@ -230,87 +261,6 @@ function applyTheme(theme) {
     } else {
         removeClass(document.documentElement, 'dark');
     }
-}
-
-// ===============================
-// PAGES PLACEHOLDER
-// À remplacer par de vraies pages
-// ===============================
-
-function renderPricingPage() {
-    return `
-        <div class="landing-page">
-            <section class="py-3xl px-xl">
-                <div class="text-center mb-2xl">
-                    <h1 class="text-3xl font-bold mb-md">Nos tarifs</h1>
-                    <p class="text-secondary">Choisissez le plan adapté à vos besoins</p>
-                </div>
-
-                <div class="pricing-grid">
-                    <div class="pricing-card">
-                        <h3 class="pricing-card-title">Starter</h3>
-                        <div class="pricing-card-price">Gratuit</div>
-                        <div class="pricing-card-features">
-                            <div class="pricing-card-feature">✓ 3 projets</div>
-                            <div class="pricing-card-feature">✓ 1 utilisateur</div>
-                            <div class="pricing-card-feature">✓ Fonctionnalités de base</div>
-                        </div>
-                        <a href="/login" class="btn btn-secondary w-full">Commencer</a>
-                    </div>
-
-                    <div class="pricing-card featured">
-                        <span class="pricing-card-badge">Populaire</span>
-                        <h3 class="pricing-card-title">Premium</h3>
-                        <div class="pricing-card-price">49€<span>/mois</span></div>
-                        <div class="pricing-card-features">
-                            <div class="pricing-card-feature">✓ Projets illimités</div>
-                            <div class="pricing-card-feature">✓ 5 utilisateurs</div>
-                            <div class="pricing-card-feature">✓ Analytique avancée</div>
-                            <div class="pricing-card-feature">✓ Support prioritaire</div>
-                        </div>
-                        <a href="/login" class="btn btn-primary w-full">Essayer gratuit</a>
-                    </div>
-
-                    <div class="pricing-card">
-                        <h3 class="pricing-card-title">Enterprise</h3>
-                        <div class="pricing-card-price">Sur devis</div>
-                        <div class="pricing-card-features">
-                            <div class="pricing-card-feature">✓ Tout illimité</div>
-                            <div class="pricing-card-feature">✓ SSO / SAML</div>
-                            <div class="pricing-card-feature">✓ API dédiée</div>
-                            <div class="pricing-card-feature">✓ Support dédié</div>
-                        </div>
-                        <a href="/contact" class="btn btn-secondary w-full">Nous contacter</a>
-                    </div>
-                </div>
-            </section>
-        </div>
-    `;
-}
-
-function renderContactPage() {
-    return `<div class="page"><h1 class="page-title">Contact</h1><p>Page en construction...</p></div>`;
-}
-
-function renderLegalPage() {
-    return `<div class="page"><h1 class="page-title">Mentions légales</h1><p>Page en construction...</p></div>`;
-}
-
-function renderForgotPasswordPage() {
-    return `<div class="login-page"><div class="login-container"><h1>Mot de passe oublié</h1><p>Page en construction...</p></div></div>`;
-}
-
-function renderResetPasswordPage() {
-    return `<div class="login-page"><div class="login-container"><h1>Réinitialiser le mot de passe</h1><p>Page en construction...</p></div></div>`;
-}
-
-// Pages placeholder restantes (à convertir)
-function renderCataloguePage() {
-    return `<h1 class="page-title">Catalogue</h1><p>Page en construction...</p>`;
-}
-
-function renderPlansPage() {
-    return `<h1 class="page-title">Plans</h1><p>Page en construction...</p>`;
 }
 
 // Lance l'application au chargement du DOM
