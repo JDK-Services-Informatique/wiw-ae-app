@@ -28,6 +28,12 @@ import { ReferencesPage } from './pages/references.js';
 import { SettingsPage } from './pages/settings.js';
 import { CompanyPage } from './pages/company.js';
 import { NouvelleAOPage } from './pages/nouvelle-ao.js';
+import { AnalyticsPage } from './pages/analytics.js';
+import { CalendarPage } from './pages/calendar.js';
+import { ProspectionPage } from './pages/prospection.js';
+import { PipelinePage } from './pages/pipeline.js';
+import { MediaLibraryPage } from './pages/media-library.js';
+import { MissionsPage } from './pages/missions.js';
 
 /**
  * Configuration de l'application
@@ -165,16 +171,16 @@ function setupRouter() {
         { path: '/devis', component: DevisPage },
         { path: '/references', component: ReferencesPage },
         { path: '/settings', component: SettingsPage },
-        { path: '/analytics', render: renderAnalyticsPage },
-        { path: '/calendar', render: renderCalendarPage },
-        { path: '/prospection', render: renderProspectionPage },
-        { path: '/medialibrary', render: renderMediaLibraryPage },
+        { path: '/analytics', component: AnalyticsPage },
+        { path: '/calendar', component: CalendarPage },
+        { path: '/prospection', component: ProspectionPage },
+        { path: '/medialibrary', component: MediaLibraryPage },
         { path: '/datamanagement', render: renderDataManagementPage },
-        { path: '/missions', render: renderMissionsPage },
+        { path: '/missions', component: MissionsPage },
         { path: '/alertes', render: renderAlertesPage },
         { path: '/catalogue', render: renderCataloguePage },
         { path: '/plans', render: renderPlansPage },
-        { path: '/pipeline', render: renderPipelinePage },
+        { path: '/pipeline', component: PipelinePage },
         { path: '/templates', render: renderTemplatesPage },
         { path: '/bet', render: renderBETPage },
     ];
@@ -294,28 +300,9 @@ function renderResetPasswordPage() {
     return `<div class="login-page"><div class="login-container"><h1>Réinitialiser le mot de passe</h1><p>Page en construction...</p></div></div>`;
 }
 
-function renderAnalyticsPage() {
-    return `<h1 class="page-title">Analytique</h1><p>Page en construction...</p>`;
-}
-
-function renderCalendarPage() {
-    return `<h1 class="page-title">Calendrier</h1><p>Page en construction...</p>`;
-}
-
-function renderProspectionPage() {
-    return `<h1 class="page-title">Prospection</h1><p>Page en construction...</p>`;
-}
-
-function renderMediaLibraryPage() {
-    return `<h1 class="page-title">Médiathèque</h1><p>Page en construction...</p>`;
-}
-
+// Pages placeholder restantes (à convertir)
 function renderDataManagementPage() {
     return `<h1 class="page-title">Gestion des données</h1><p>Page en construction...</p>`;
-}
-
-function renderMissionsPage() {
-    return `<h1 class="page-title">Missions</h1><p>Page en construction...</p>`;
 }
 
 function renderAlertesPage() {
@@ -328,10 +315,6 @@ function renderCataloguePage() {
 
 function renderPlansPage() {
     return `<h1 class="page-title">Plans</h1><p>Page en construction...</p>`;
-}
-
-function renderPipelinePage() {
-    return `<h1 class="page-title">Pipeline</h1><p>Page en construction...</p>`;
 }
 
 function renderTemplatesPage() {
