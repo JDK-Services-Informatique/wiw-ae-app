@@ -34,6 +34,10 @@ import { ProspectionPage } from './pages/prospection.js';
 import { PipelinePage } from './pages/pipeline.js';
 import { MediaLibraryPage } from './pages/media-library.js';
 import { MissionsPage } from './pages/missions.js';
+import { AlertesPage } from './pages/alertes.js';
+import { TemplatesPage } from './pages/templates.js';
+import { BETPage } from './pages/bet.js';
+import { DataManagementPage } from './pages/data-management.js';
 
 /**
  * Configuration de l'application
@@ -175,14 +179,14 @@ function setupRouter() {
         { path: '/calendar', component: CalendarPage },
         { path: '/prospection', component: ProspectionPage },
         { path: '/medialibrary', component: MediaLibraryPage },
-        { path: '/datamanagement', render: renderDataManagementPage },
+        { path: '/datamanagement', component: DataManagementPage },
         { path: '/missions', component: MissionsPage },
-        { path: '/alertes', render: renderAlertesPage },
+        { path: '/alertes', component: AlertesPage },
         { path: '/catalogue', render: renderCataloguePage },
         { path: '/plans', render: renderPlansPage },
         { path: '/pipeline', component: PipelinePage },
-        { path: '/templates', render: renderTemplatesPage },
-        { path: '/bet', render: renderBETPage },
+        { path: '/templates', component: TemplatesPage },
+        { path: '/bet', component: BETPage },
     ];
 
     privateRoutes.forEach(({ path, component, render }) => {
@@ -301,28 +305,12 @@ function renderResetPasswordPage() {
 }
 
 // Pages placeholder restantes (à convertir)
-function renderDataManagementPage() {
-    return `<h1 class="page-title">Gestion des données</h1><p>Page en construction...</p>`;
-}
-
-function renderAlertesPage() {
-    return `<h1 class="page-title">Alertes</h1><p>Page en construction...</p>`;
-}
-
 function renderCataloguePage() {
     return `<h1 class="page-title">Catalogue</h1><p>Page en construction...</p>`;
 }
 
 function renderPlansPage() {
     return `<h1 class="page-title">Plans</h1><p>Page en construction...</p>`;
-}
-
-function renderTemplatesPage() {
-    return `<h1 class="page-title">Modèles</h1><p>Page en construction...</p>`;
-}
-
-function renderBETPage() {
-    return `<h1 class="page-title">Partenaires BET</h1><p>Page en construction...</p>`;
 }
 
 // Lance l'application au chargement du DOM
