@@ -91,6 +91,27 @@
         <p class="muted" data-queue-empty>Aucun message en attente pour le moment.</p>
       </div>
     </section>
+
+    <section class="section">
+      <div class="section__header">
+        <h2>Résumé projet</h2>
+        <p class="text-muted">Accès rapide aux informations clés de la stack actuelle.</p>
+      </div>
+      <div class="grid grid--three">
+        <article class="tile tile--border">
+          <h3>Serveur</h3>
+          <p>Node.js minimal, sans dépendances, sert <code>static/</code> et expose les routes `/api/contact`, `/api/contact/export` et `/health`.</p>
+        </article>
+        <article class="tile tile--border">
+          <h3>Stockage</h3>
+          <p>Fichier plat <code>data/messages.json</code> limité aux 500 derniers enregistrements, sauvegarde automatique si corrompu.</p>
+        </article>
+        <article class="tile tile--border">
+          <h3>Offline & sécurité</h3>
+          <p>Queue locale synchronisée au retour réseau, en-têtes CSP et Permissions-Policy, contrôle du <code>Content-Type</code> JSON.</p>
+        </article>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">WIW • Vue opérateur statique HTML/CSS/JS</footer>

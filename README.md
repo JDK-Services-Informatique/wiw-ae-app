@@ -8,6 +8,19 @@ Cette version du projet WIW est entièrement servie en HTML5, CSS et JavaScript 
 - `data/messages.json` : stockage plat des soumissions de formulaire.
 - `package.json` : scripts NPM minimalistes pour lancer le serveur.
 
+## 🧭 Fiche projet consolidée
+- **Stack** : HTML5/CSS/JS vanilla, service worker pour le hors-ligne, serveur Node.js sans dépendance pour exposer les API.
+- **Pages incluses** :
+  - `index.html` (landing + liens navigation)
+  - `pricing.html` (offre et toggle mensuel/annuel)
+  - `contact.html` (formulaire relié à l'API)
+  - `messages.html` (vue opérateur + export JSON/CSV)
+  - `offline.html` (fallback hors ligne)
+- **API** : `/api/contact` (POST/GET/HEAD) pour lire/écrire les messages, `/api/contact/export` pour le CSV, `/health` pour la supervision simple.
+- **Résilience** : queue locale et resoumission automatique au retour réseau, rate-limit (20 requêtes / 5 minutes / IP), nettoyage/backup du fichier corrompu, historique limité à 500 messages.
+- **Sécurité** : en-têtes (CSP, Referrer-Policy, X-Frame-Options, X-Content-Type-Options, Permissions-Policy), contrôle `Content-Type` JSON, échappement côté client lors du rendu des messages.
+- **Scripts** : `npm start` lance le serveur sur `http://localhost:3000` (Node.js >= 18 requis).
+
 ## 🚀 Démarrage
 1. Installez Node.js (>= 18).
 2. Depuis la racine du projet, lancez :
