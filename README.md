@@ -1,66 +1,46 @@
-# WIW-AE+ Application
+# WIW - version HTML5/CSS/JS
 
-Application complète de gestion pour architectes et bureaux d'études techniques.
+Cette version du projet WIW est entièrement servie en HTML5, CSS et JavaScript vanilla. Un petit serveur Node.js (sans dépendances externes) diffuse les pages statiques et expose un point d'entrée pour stocker les messages de contact dans un fichier JSON.
 
-## 🚀 Fonctionnalités
+## 📦 Structure
+- `static/` : pages autonomes (`index.html`, `pricing.html`, `contact.html`, `messages.html`), mode hors ligne (`offline.html`), service worker (`sw.js`), styles (`styles.css`) et interactions (`app.js`).
+- `server.js` : serveur HTTP Node.js qui sert le répertoire `static/` et gère `/api/contact`.
+- `data/messages.json` : stockage plat des soumissions de formulaire.
+- `package.json` : scripts NPM minimalistes pour lancer le serveur.
 
-- **Gestion des Appels d'Offres** : Suivi complet des candidatures et missions
-- **Calcul d'Honoraires** : Formule OPC 1993 intégrée
-- **Gestion d'Équipe** : Collaboration et compétences
-- **Références** : Portfolio de projets et BET
-- **Analytics** : Tableaux de bord de rentabilité
-- **Templates** : Bibliothèque de documents prête à l'emploi
+## 🧭 Fiche projet consolidée
+- **Stack** : HTML5/CSS/JS vanilla, service worker pour le hors-ligne, serveur Node.js sans dépendance pour exposer les API.
+- **Pages incluses** :
+  - `index.html` (landing + liens navigation)
+  - `pricing.html` (offre et toggle mensuel/annuel)
+  - `contact.html` (formulaire relié à l'API)
+  - `messages.html` (vue opérateur + export JSON/CSV)
+  - `offline.html` (fallback hors ligne)
+- **API** : `/api/contact` (POST/GET/HEAD) pour lire/écrire les messages, `/api/contact/export` pour le CSV, `/health` pour la supervision simple.
+- **Résilience** : queue locale et resoumission automatique au retour réseau, rate-limit (20 requêtes / 5 minutes / IP), nettoyage/backup du fichier corrompu, historique limité à 500 messages.
+- **Sécurité** : en-têtes (CSP, Referrer-Policy, X-Frame-Options, X-Content-Type-Options, Permissions-Policy), contrôle `Content-Type` JSON, échappement côté client lors du rendu des messages.
+- **Scripts** : `npm start` lance le serveur sur `http://localhost:3000` (Node.js >= 18 requis).
 
-## 📦 Structure du Projet
+## 🚀 Démarrage
+1. Installez Node.js (>= 18).
+2. Depuis la racine du projet, lancez :
+   ```bash
+   npm start
+   ```
+3. Ouvrez http://localhost:3000 pour naviguer sur les pages HTML5/CSS/JS (un service worker met en cache les pages principales pour le mode hors ligne).
 
-```
-wiw-ae-app/
-├── backend/          # API Node.js + Prisma
-├── frontend/         # Application React + Vite
-├── railway.json      # Configuration Railway
-└── scripts/         # Scripts utilitaires
-```
+### Mode hors ligne
+- Les pages clés sont pré-cachées (`index.html`, `pricing.html`, `contact.html`, `messages.html`, `offline.html`, CSS/JS) via `static/sw.js`.
+- Les formulaires de contact sont validés côté client et mis en attente dans `localStorage` si le réseau est indisponible ; la synchronisation est relancée automatiquement dès le retour en ligne.
+- La page `messages.html` affiche les soumissions reçues par l'API ainsi que la file locale en attente de synchronisation.
 
-## 🛠️ Installation Locale
+## 🔌 API de contact
+- **POST `/api/contact`** : envoie un JSON `{ email, subject, message }`, nettoyé et borné en longueur avant enregistrement dans `data/messages.json`.
+  - Le `Content-Type: application/json` est requis ; les messages sont conservés au maximum sur les 500 dernières entrées pour éviter l'embonpoint du fichier.
+  - Si le fichier `messages.json` est illisible, il est remis à zéro après sauvegarde automatique de la version corrompue.
+- **GET/HEAD `/api/contact`** : retourne les messages reçus et des métadonnées (compteur, dernier enregistrement).
+- **GET/HEAD `/api/contact/export`** : exporte l'ensemble des messages en CSV prêt à être téléchargé.
+- **GET/HEAD `/health`** : renvoie un statut simple avec le nombre de messages stockés.
+- Une protection anti-rafale limite les soumissions à 20 requêtes sur 5 minutes par adresse IP et renvoie `429` le cas échéant (`Retry-After` fourni).
 
-### Backend
-```bash
-cd backend
-npm install
-npx prisma generate
-npx prisma migrate dev
-npm start
-```
-
-### Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## 🌐 Déploiement sur Railway
-
-### Déploiement rapide
-
-1. Connectez votre repository GitHub à Railway
-2. Allez sur https://railway.app
-3. Créez un nouveau projet
-4. Ajoutez PostgreSQL (Database)
-5. Déployez le backend (Root Directory: `backend`)
-6. Déployez le frontend (Root Directory: `frontend`)
-
-Voir [DEPLOY_RAILWAY.md](./DEPLOY_RAILWAY.md) pour le guide complet ou [README_RAILWAY.md](./README_RAILWAY.md) pour le guide rapide.
-
-## 📝 Technologies
-
-- **Frontend** : React, Vite, Tailwind CSS, Lucide React
-- **Backend** : Node.js, Express, Prisma
-- **Base de données** : PostgreSQL
-- **Déploiement** : Railway.app
-
-## 📄 Licence
-
-Propriétaire - Tous droits réservés
-
-
+Cette base peut être étendue ou déployée telle quelle pour une stack 100% HTML5/CSS/JS.

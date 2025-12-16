@@ -1,0 +1,10 @@
+{
+  "name": "wiw-static-site",
+  "version": "1.0.0",
+  "description": "Version HTML5/CSS/JS de WIW servie par un backend Node minimaliste.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["wiw", "html5", "static", "node", "vanilla-js"],
+  "license": "UNLICENSED"
+}

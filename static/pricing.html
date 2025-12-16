@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tarifs WIW pour une expérience front-end autonome en HTML, CSS et JavaScript." />
+  <title>WIW - Tarifs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Passer au contenu principal</a>
+  <header class="banner">
+    <div class="logo">WIW</div>
+    <nav class="nav">
+      <a href="index.html">Accueil</a>
+      <a href="pricing.html">Tarifs</a>
+      <a href="contact.html">Contact</a>
+      <a href="messages.html">Messages</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero__content">
+        <p class="eyebrow">Plans sans backend</p>
+        <h1>Choisissez un pack front-end prêt à l'emploi.</h1>
+        <p class="lead">Chaque plan inclut des assets HTML, CSS et JavaScript autonomes pour déployer WIW sur un hébergement statique.</p>
+        <div class="billing">
+          <label class="billing__label" for="billing-toggle">Facturation mensuelle</label>
+          <input id="billing-toggle" type="checkbox" data-toggle="pricing" />
+          <span class="pill">-15% annuel</span>
+        </div>
+      </div>
+      <div class="hero__illustration">
+        <div class="card">Support par e-mail</div>
+        <div class="card muted">Mises à jour statiques</div>
+        <div class="card outline">Accès aux composants UI</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section__header">
+        <h2>Plans WIW</h2>
+        <p class="text-muted">Tous les plans incluent le design responsive, la validation côté client et les interactions de base.</p>
+      </div>
+      <div class="pricing">
+        <article class="plan">
+          <div class="plan__header">
+            <h3>Starter</h3>
+            <span class="plan__price" data-price="19€" data-yearly="16€">19€</span>
+          </div>
+          <p class="text-muted">Pour tester WIW en statique sur un premier événement.</p>
+          <ul>
+            <li>Landing page responsive</li>
+            <li>Formulaire de contact validé</li>
+            <li>Carousel JavaScript léger</li>
+          </ul>
+          <button class="btn ghost">Choisir Starter</button>
+        </article>
+        <article class="plan plan--highlight">
+          <div class="plan__header">
+            <h3>Pro</h3>
+            <span class="plan__price" data-price="49€" data-yearly="42€">49€</span>
+          </div>
+          <p class="text-muted">Pour gérer plusieurs événements avec des assets mutualisés.</p>
+          <ul>
+            <li>Composants UI avancés</li>
+            <li>Sections multipages (Tarifs, Contact)</li>
+            <li>Support prioritaire</li>
+          </ul>
+          <button class="btn primary">Choisir Pro</button>
+        </article>
+        <article class="plan">
+          <div class="plan__header">
+            <h3>Entreprise</h3>
+            <span class="plan__price" data-price="89€" data-yearly="75€">89€</span>
+          </div>
+          <p class="text-muted">Pour des déploiements custom sur CDN et environnements sécurisés.</p>
+          <ul>
+            <li>Kit complet de composants</li>
+            <li>Assistance migration front-only</li>
+            <li>Audit accessibilité</li>
+          </ul>
+          <button class="btn ghost">Parler à un expert</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section__header">
+        <h2>Questions fréquentes</h2>
+        <p class="text-muted">Les réponses pour adopter la version 100% HTML/CSS/JS.</p>
+      </div>
+      <div class="faq">
+        <details data-accordion>
+          <summary>Comment déployer ces pages ?</summary>
+          <p>Il suffit d'héberger le dossier <code>static/</code> sur un CDN, GitHub Pages ou tout serveur de fichiers.</p>
+        </details>
+        <details data-accordion>
+          <summary>Y a-t-il des dépendances ?</summary>
+          <p>Aucune. Tout est écrit en HTML5, CSS et JavaScript vanilla pour rester autonome.</p>
+        </details>
+        <details data-accordion>
+          <summary>Puis-je personnaliser le style ?</summary>
+          <p>Oui, modifiez <code>styles.css</code> et réutilisez les classes utilitaires (cards, steps, plans).</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section__header">
+        <h2>Comparatif express</h2>
+        <p class="text-muted">Un coup d'œil rapide sur ce que chaque pack inclut.</p>
+      </div>
+      <div class="comparison">
+        <div class="comparison__row comparison__row--head">
+          <span>Éléments</span>
+          <span>Starter</span>
+          <span>Pro</span>
+          <span>Entreprise</span>
+        </div>
+        <div class="comparison__row">
+          <span>Pages statiques</span>
+          <span>3</span>
+          <span>5</span>
+          <span>10+</span>
+        </div>
+        <div class="comparison__row">
+          <span>Support</span>
+          <span>Standard</span>
+          <span>Prioritaire</span>
+          <span>Expert dédié</span>
+        </div>
+        <div class="comparison__row">
+          <span>Personnalisation</span>
+          <span>Palette basique</span>
+          <span>Styles avancés</span>
+          <span>Charte sur-mesure</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>WIW - Packs statiques prêts à être déployés.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

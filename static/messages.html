@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Consultez les messages reçus et ceux en attente dans le mode hors ligne de WIW." />
+  <title>WIW - Messages</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Passer au contenu principal</a>
+  <header class="banner">
+    <div class="logo">WIW</div>
+    <nav class="nav">
+      <a href="index.html">Accueil</a>
+      <a href="pricing.html">Tarifs</a>
+      <a href="contact.html">Contact</a>
+      <a href="messages.html">Messages</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero__content">
+        <p class="eyebrow">Vue opérateur</p>
+        <h1>Messages reçus et file d'attente hors ligne</h1>
+        <p class="lead">Consultez les messages enregistrés par l'API Node et gardez un œil sur les envois en attente côté navigateur.</p>
+        <div class="hero__cta">
+          <button class="btn primary" data-messages-refresh>Rafraîchir</button>
+          <a class="btn ghost" href="/api/contact" target="_blank" rel="noreferrer">Télécharger en JSON</a>
+          <a class="btn ghost" href="/api/contact/export" target="_blank" rel="noreferrer">Exporter en CSV</a>
+        </div>
+        <p class="status" data-status-indicator aria-live="polite">Vérification de l'état réseau…</p>
+      </div>
+      <div class="hero__illustration">
+        <div class="card">Requêtes GET/POST</div>
+        <div class="card muted">Stockage local JSON</div>
+        <div class="card outline">Queue offline</div>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="grid stats">
+        <div class="card card--stat">
+          <p class="text-muted">Messages stockés</p>
+          <p class="stat__value" data-message-count>—</p>
+          <p class="muted">Comptés côté API et servis en JSON/CSV.</p>
+        </div>
+        <div class="card card--stat">
+          <p class="text-muted">Dernier enregistrement</p>
+          <p class="stat__value" data-message-latest>—</p>
+          <p class="muted">Horodatage renvoyé par le serveur.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section__header">
+        <h2>Messages synchronisés</h2>
+        <p class="text-muted">Les messages sont conservés dans <code>data/messages.json</code> par le serveur Node léger.</p>
+        <label class="field">
+          <span class="field__label">Filtrer</span>
+          <input type="search" placeholder="Rechercher par email, objet ou texte" data-messages-filter />
+        </label>
+      </div>
+      <div class="table__wrapper">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Email</th>
+              <th>Objet</th>
+              <th>Message</th>
+              <th>Reçu le</th>
+            </tr>
+          </thead>
+          <tbody data-messages-body></tbody>
+        </table>
+        <p class="muted" data-messages-empty>Chargement des messages…</p>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section__header">
+        <h2>File d'attente hors ligne</h2>
+        <p class="text-muted">Messages mis en attente dans ce navigateur et qui seront synchronisés dès que la connexion revient.</p>
+      </div>
+      <div class="queue">
+        <p class="pill" data-queue-badge>0 message en attente</p>
+        <ul class="list" data-queue-list></ul>
+        <p class="muted" data-queue-empty>Aucun message en attente pour le moment.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section__header">
+        <h2>Résumé projet</h2>
+        <p class="text-muted">Accès rapide aux informations clés de la stack actuelle.</p>
+      </div>
+      <div class="grid grid--three">
+        <article class="tile tile--border">
+          <h3>Serveur</h3>
+          <p>Node.js minimal, sans dépendances, sert <code>static/</code> et expose les routes `/api/contact`, `/api/contact/export` et `/health`.</p>
+        </article>
+        <article class="tile tile--border">
+          <h3>Stockage</h3>
+          <p>Fichier plat <code>data/messages.json</code> limité aux 500 derniers enregistrements, sauvegarde automatique si corrompu.</p>
+        </article>
+        <article class="tile tile--border">
+          <h3>Offline & sécurité</h3>
+          <p>Queue locale synchronisée au retour réseau, en-têtes CSP et Permissions-Policy, contrôle du <code>Content-Type</code> JSON.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">WIW • Vue opérateur statique HTML/CSS/JS</footer>
+  <script src="app.js" type="module"></script>
+</body>
+</html>

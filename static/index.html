@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="WIW en mode 100% statique : HTML5, CSS et JavaScript sans dépendance serveur pour vos événements." />
+  <title>WIW - Application Événementielle</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Passer au contenu principal</a>
+  <header class="banner">
+    <div class="logo">WIW</div>
+    <nav class="nav">
+      <a href="#features">Fonctionnalités</a>
+      <a href="#screenshots">Aperçu</a>
+      <a href="pricing.html">Tarifs</a>
+      <a href="contact.html">Contact</a>
+      <a href="messages.html">Messages</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="notice">
+      <p class="notice__label">Stack statique</p>
+      <p class="notice__text">Code 100% HTML5, CSS et JavaScript vanilla, prêt pour GitHub Pages, Netlify ou un simple CDN.</p>
+    </section>
+
+    <section class="hero">
+      <div class="hero__content">
+        <p class="eyebrow">Solution web 100% HTML, CSS et JavaScript</p>
+        <h1>Organisez vos événements sans dépendance framework.</h1>
+        <p class="lead">
+          Cette page statique démontre la version entièrement front-end de WIW,
+          prête à être déployée sur n'importe quel hébergement statique.
+        </p>
+        <div class="hero__cta">
+          <button id="cta-demo" class="btn primary">Essayer la démo</button>
+          <button id="cta-docs" class="btn ghost">Voir la documentation</button>
+        </div>
+      </div>
+      <div class="hero__illustration">
+        <div class="card">Tableau de bord évènement</div>
+        <div class="card muted">Gestion des invités</div>
+        <div class="card outline">Suivi temps réel</div>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section__header">
+        <h2>Pourquoi du front-only&nbsp;?</h2>
+        <p class="text-muted">Moins de dépendances, plus de vitesse de déploiement et une maintenance réduite.</p>
+      </div>
+      <div class="pill-list">
+        <span class="pill">Zéro build step</span>
+        <span class="pill">Déploiement CDN</span>
+        <span class="pill">Accessibilité soignée</span>
+        <span class="pill">SEO optimisé</span>
+      </div>
+      <div class="grid grid--two">
+        <article class="tile tile--border">
+          <h3>Livraison immédiate</h3>
+          <p>Un dossier <code>static/</code> autonome : copiez-collez sur votre hébergeur et c'est en ligne.</p>
+        </article>
+        <article class="tile tile--border">
+          <h3>Interopérable</h3>
+          <p>Compatible avec vos outils (analytics, formulaires tiers, CDN) via simples balises script.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <h2>Fonctionnalités clés</h2>
+      <div class="grid">
+        <article class="tile">
+          <h3>Planification visuelle</h3>
+          <p>Créez vos programmes avec une interface épurée et réactive.</p>
+        </article>
+        <article class="tile">
+          <h3>Notifications en direct</h3>
+          <p>Alertes instantanées grâce à JavaScript côté client uniquement.</p>
+        </article>
+        <article class="tile">
+          <h3>Mode hors ligne</h3>
+          <p>Cache statique et service worker prêt pour une PWA légère.</p>
+        </article>
+        <article class="tile">
+          <h3>Design responsive</h3>
+          <p>CSS moderne (flex, grid) pour une expérience mobile optimale.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="screenshots" class="section section--muted">
+      <h2>Aperçu interactif</h2>
+      <div class="carousel" aria-live="polite">
+        <div class="carousel__viewport">
+          <div class="carousel__slide is-active" data-index="0">
+            <p class="slide__title">Vue d'ensemble</p>
+            <p>Survolez pour découvrir les interactions JavaScript.</p>
+          </div>
+          <div class="carousel__slide" data-index="1">
+            <p class="slide__title">Invitations</p>
+            <p>Formulaires validés côté client uniquement.</p>
+          </div>
+          <div class="carousel__slide" data-index="2">
+            <p class="slide__title">Analytique</p>
+            <p>Graphiques dessinés avec Canvas natif.</p>
+          </div>
+        </div>
+        <div class="carousel__controls" role="group" aria-label="Changer de slide">
+          <button class="control" data-direction="prev">◀</button>
+          <button class="control" data-direction="next">▶</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow" class="section">
+      <div class="section__header">
+        <h2>Un parcours complet en 3 étapes</h2>
+        <p class="text-muted">Planifiez, lancez et mesurez vos événements avec une approche 100% front-end.</p>
+      </div>
+      <div class="steps">
+        <article class="step">
+          <div class="step__badge">01</div>
+          <div>
+            <h3>Planifier</h3>
+            <p>Configurez vos sessions, intervenants et lieux depuis une interface statique optimisée.</p>
+          </div>
+        </article>
+        <article class="step">
+          <div class="step__badge">02</div>
+          <div>
+            <h3>Lancer</h3>
+            <p>Publiez vos formulaires d'inscription et notifications temps réel sans serveur.</p>
+          </div>
+        </article>
+        <article class="step">
+          <div class="step__badge">03</div>
+          <div>
+            <h3>Analyser</h3>
+            <p>Visualisez les taux de réponse et la satisfaction via des composants HTML/CSS/JS.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section__header">
+        <h2>Ressources prêtes à l'emploi</h2>
+        <p class="text-muted">Servez-vous des assets inclus pour présenter WIW à votre équipe.</p>
+      </div>
+      <div class="grid grid--three">
+        <article class="tile tile--border">
+          <h3>Kit marketing</h3>
+          <p>Hero, témoignages, métriques et call-to-actions prêts à intégrer.</p>
+          <a class="btn ghost" href="pricing.html">Voir les packs</a>
+        </article>
+        <article class="tile tile--border">
+          <h3>Modèle contact</h3>
+          <p>Formulaire validé côté client avec feedback immédiat.</p>
+          <a class="btn ghost" href="contact.html">Essayer</a>
+        </article>
+        <article class="tile tile--border">
+          <h3>Structure multi-pages</h3>
+          <p>Navigation, sections et styles communs pour rester cohérent.</p>
+          <a class="btn ghost" href="#features">Parcourir</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section--muted">
+      <div class="section__header">
+        <h2>Mode hors ligne prêt à l'emploi</h2>
+        <p class="text-muted">Un service worker met en cache les pages principales et affiche une page dédiée si le réseau disparaît.</p>
+      </div>
+      <div class="grid grid--two">
+        <article class="tile">
+          <h3>Pages pré-cachées</h3>
+          <p>Accueil, Tarifs, Contact et une page <code>offline.html</code> sont servis depuis le cache si besoin.</p>
+        </article>
+        <article class="tile">
+          <h3>Expérience continue</h3>
+          <p>La navigation reste accessible et les formulaires se valident côté client, même sans connexion.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section__header">
+        <h2>Détails du projet</h2>
+        <p class="text-muted">Synthèse rapide de la stack et des points clés pour déployer ou auditer WIW.</p>
+      </div>
+      <div class="grid grid--three">
+        <article class="tile tile--border">
+          <h3>Stack</h3>
+          <p>HTML5, CSS, JavaScript vanilla + service worker. Aucun build, prêt pour CDN ou GitHub Pages.</p>
+        </article>
+        <article class="tile tile--border">
+          <h3>API & données</h3>
+          <p>Serveur Node minimal : `/api/contact` (JSON, CSV), `/health` et stockage plat dans <code>data/messages.json</code>.</p>
+        </article>
+        <article class="tile tile--border">
+          <h3>Résilience & sécurité</h3>
+          <p>Queue locale offline, rate-limit, nettoyage des fichiers corrompus, en-têtes de sécurité et CSP strict.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2>Prêt à passer en statique ?</h2>
+      <p class="status" data-status-indicator aria-live="polite">Vérification de l'état réseau…</p>
+      <form class="contact" data-form="contact" novalidate>
+        <label>
+          Email
+          <input type="email" name="email" required placeholder="contact@exemple.com" />
+        </label>
+        <label>
+          Objet
+          <input type="text" name="subject" placeholder="Lancement d'un site statique" />
+        </label>
+        <label>
+          Message
+          <textarea name="message" rows="4" required placeholder="Décrivez votre besoin"></textarea>
+        </label>
+        <button type="submit" class="btn primary">Envoyer</button>
+        <p class="form__feedback" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>WIW - Interface statique HTML5/CSS/JS. Aucune dépendance backend requise.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
