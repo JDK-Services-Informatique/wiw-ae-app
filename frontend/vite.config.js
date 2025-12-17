@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { copyFileSync } from 'fs';
+import { copyFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
 export default defineConfig({
@@ -10,13 +10,18 @@ export default defineConfig({
       name: 'copy-service-worker',
       closeBundle() {
         // Copier le service worker dans le dossier dist après le build
-        try {
-          copyFileSync(
-            join(__dirname, 'public/sw.js'),
-            join(__dirname, 'dist/sw.js')
-          );
-        } catch (error) {
-          console.warn('Service Worker non copié:', error);
+        const swSource = join(__dirname, 'public/sw.js');
+        const swDest = join(__dirname, 'dist/sw.js');
+
+        if (existsSync(swSource)) {
+          try {
+            copyFileSync(swSource, swDest);
+            console.log('Service Worker copié avec succès');
+          } catch (error) {
+            console.log('Service Worker: copie ignorée -', error.message);
+          }
+        } else {
+          console.log('Service Worker: fichier source non trouvé, copie ignorée');
         }
       }
     }
